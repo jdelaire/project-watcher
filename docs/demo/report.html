@@ -644,6 +644,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+      align-items: center;
       margin: 18px 0;
     }
 
@@ -658,13 +659,32 @@
       outline: 0;
     }
 
-    label.toggle {
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
-      min-height: 44px;
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .filter-chip {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.56);
       color: var(--muted);
-      font-size: 0.9rem;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 0 10px;
+      text-transform: uppercase;
+      transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+
+    .filter-chip.active,
+    .filter-chip:hover {
+      background: rgba(217, 119, 6, 0.11);
+      border-color: rgba(217, 119, 6, 0.42);
+      color: var(--ink);
     }
 
     table {
@@ -716,6 +736,22 @@
     .pill.dirty {
       border-color: rgba(180, 35, 24, 0.35);
       color: var(--danger);
+    }
+
+    .pill.stale {
+      border-color: rgba(180, 35, 24, 0.35);
+      color: var(--danger);
+    }
+
+    .pill.release-due,
+    .pill.watch {
+      border-color: rgba(217, 119, 6, 0.38);
+      color: var(--accent);
+    }
+
+    .pill.fresh {
+      border-color: rgba(22, 121, 76, 0.34);
+      color: var(--ok);
     }
 
     .path {
@@ -1090,7 +1126,9 @@
         </div>
         <div class="toolbar">
           <input id="repo-search" type="search" placeholder="Filter repositories">
-          <label class="toggle"><input id="dirty-only" type="checkbox"> Dirty only</label>
+          <div class="filter-chips" role="group" aria-label="Repository filters">
+            <button class="filter-chip active" type="button" data-filter="all" aria-pressed="true">All</button><button class="filter-chip" type="button" data-filter="stale" aria-pressed="false">Stale</button><button class="filter-chip" type="button" data-filter="release-due" aria-pressed="false">Release due</button><button class="filter-chip" type="button" data-filter="watch" aria-pressed="false">Watch</button><button class="filter-chip" type="button" data-filter="dirty" aria-pressed="false">Dirty</button><button class="filter-chip" type="button" data-filter="no-changelog" aria-pressed="false">No changelog</button>
+          </div>
         </div>
         <table>
           <thead>
@@ -1102,11 +1140,12 @@
               <th class="numeric">30d</th>
               <th class="numeric">Tags</th>
               <th class="numeric">Docs</th>
+              <th>Release</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody id="repo-rows">
-            <tr data-search="atlas-app /demo/workspace/atlas-app main markdown typescript docs/architecture/events.md event flow docs/changelog.md changelog docs/readme.md atlas docs" data-dirty="false">
+            <tr data-search="atlas-app /demo/workspace/atlas-app main markdown typescript watch changelog clean docs/architecture/events.md event flow docs/changelog.md changelog docs/readme.md atlas docs" data-release-status="watch" data-dirty="false" data-changelog="true">
     <td><strong><a href="./repos/atlas-app.html">atlas-app</a></strong><div class="path">/demo/workspace/atlas-app</div></td>
     <td>main</td>
     <td class="numeric">16</td>
@@ -1114,8 +1153,9 @@
     <td class="numeric">3</td>
     <td class="numeric">3</td>
     <td class="numeric"><a href="./repos/atlas-app.html#docs">3</a></td>
+    <td><span class="pill watch">watch</span></td>
     <td><span class="pill">clean</span></td>
-  </tr><tr data-search="design-system /demo/workspace/design-system main markdown typescript other docs/changelog.md changelog docs/components/button.md button docs/components/tokens.md tokens" data-dirty="false">
+  </tr><tr data-search="design-system /demo/workspace/design-system main markdown typescript other watch changelog clean docs/changelog.md changelog docs/components/button.md button docs/components/tokens.md tokens" data-release-status="watch" data-dirty="false" data-changelog="true">
     <td><strong><a href="./repos/design-system.html">design-system</a></strong><div class="path">/demo/workspace/design-system</div></td>
     <td>main</td>
     <td class="numeric">13</td>
@@ -1123,8 +1163,9 @@
     <td class="numeric">3</td>
     <td class="numeric">2</td>
     <td class="numeric"><a href="./repos/design-system.html#docs">3</a></td>
+    <td><span class="pill watch">watch</span></td>
     <td><span class="pill">clean</span></td>
-  </tr><tr data-search="ledger-api /demo/workspace/ledger-api main markdown go docs/api.md api reference docs/changelog.md changelog docs/reference/webhooks.md webhooks" data-dirty="false">
+  </tr><tr data-search="ledger-api /demo/workspace/ledger-api main markdown go watch changelog clean docs/api.md api reference docs/changelog.md changelog docs/reference/webhooks.md webhooks" data-release-status="watch" data-dirty="false" data-changelog="true">
     <td><strong><a href="./repos/ledger-api.html">ledger-api</a></strong><div class="path">/demo/workspace/ledger-api</div></td>
     <td>main</td>
     <td class="numeric">12</td>
@@ -1132,6 +1173,7 @@
     <td class="numeric">3</td>
     <td class="numeric">2</td>
     <td class="numeric"><a href="./repos/ledger-api.html#docs">3</a></td>
+    <td><span class="pill watch">watch</span></td>
     <td><span class="pill">clean</span></td>
   </tr>
           </tbody>
@@ -1221,22 +1263,34 @@
   </main>
   <script>
     const search = document.querySelector('#repo-search');
-    const dirtyOnly = document.querySelector('#dirty-only');
+    const filterButtons = [...document.querySelectorAll('[data-filter]')];
     const rows = [...document.querySelectorAll('#repo-rows tr')];
+    let activeFilter = 'all';
 
     function applyFilters() {
       const query = search.value.trim().toLowerCase();
-      const onlyDirty = dirtyOnly.checked;
 
       for (const row of rows) {
         const matchesQuery = !query || row.dataset.search.includes(query);
-        const matchesDirty = !onlyDirty || row.dataset.dirty === 'true';
-        row.hidden = !matchesQuery || !matchesDirty;
+        const matchesFilter = activeFilter === 'all'
+          || (activeFilter === 'dirty' && row.dataset.dirty === 'true')
+          || (activeFilter === 'no-changelog' && row.dataset.changelog === 'false')
+          || row.dataset.releaseStatus === activeFilter;
+        row.hidden = !matchesQuery || !matchesFilter;
       }
     }
 
     search.addEventListener('input', applyFilters);
-    dirtyOnly.addEventListener('change', applyFilters);
+    for (const button of filterButtons) {
+      button.addEventListener('click', () => {
+        activeFilter = button.dataset.filter;
+        for (const item of filterButtons) {
+          item.classList.toggle('active', item === button);
+          item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
+        }
+        applyFilters();
+      });
+    }
   </script>
 </body>
 </html>

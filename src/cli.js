@@ -4391,6 +4391,7 @@ function renderHtml(report) {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+      align-items: center;
       margin: 18px 0;
     }
 
@@ -4405,13 +4406,32 @@ function renderHtml(report) {
       outline: 0;
     }
 
-    label.toggle {
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
-      min-height: 44px;
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .filter-chip {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.56);
       color: var(--muted);
-      font-size: 0.9rem;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 0 10px;
+      text-transform: uppercase;
+      transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+
+    .filter-chip.active,
+    .filter-chip:hover {
+      background: rgba(217, 119, 6, 0.11);
+      border-color: rgba(217, 119, 6, 0.42);
+      color: var(--ink);
     }
 
     table {
@@ -4463,6 +4483,22 @@ function renderHtml(report) {
     .pill.dirty {
       border-color: rgba(180, 35, 24, 0.35);
       color: var(--danger);
+    }
+
+    .pill.stale {
+      border-color: rgba(180, 35, 24, 0.35);
+      color: var(--danger);
+    }
+
+    .pill.release-due,
+    .pill.watch {
+      border-color: rgba(217, 119, 6, 0.38);
+      color: var(--accent);
+    }
+
+    .pill.fresh {
+      border-color: rgba(22, 121, 76, 0.34);
+      color: var(--ok);
     }
 
     .path {
@@ -4761,7 +4797,9 @@ function renderHtml(report) {
         </div>
         <div class="toolbar">
           <input id="repo-search" type="search" placeholder="Filter repositories">
-          <label class="toggle"><input id="dirty-only" type="checkbox"> Dirty only</label>
+          <div class="filter-chips" role="group" aria-label="Repository filters">
+            ${repoFilterButtonsHtml()}
+          </div>
         </div>
         <table>
           <thead>
@@ -4773,6 +4811,7 @@ function renderHtml(report) {
               <th class="numeric">30d</th>
               <th class="numeric">Tags</th>
               <th class="numeric">Docs</th>
+              <th>Release</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -4829,22 +4868,34 @@ function renderHtml(report) {
   </main>
   <script>
     const search = document.querySelector('#repo-search');
-    const dirtyOnly = document.querySelector('#dirty-only');
+    const filterButtons = [...document.querySelectorAll('[data-filter]')];
     const rows = [...document.querySelectorAll('#repo-rows tr')];
+    let activeFilter = 'all';
 
     function applyFilters() {
       const query = search.value.trim().toLowerCase();
-      const onlyDirty = dirtyOnly.checked;
 
       for (const row of rows) {
         const matchesQuery = !query || row.dataset.search.includes(query);
-        const matchesDirty = !onlyDirty || row.dataset.dirty === 'true';
-        row.hidden = !matchesQuery || !matchesDirty;
+        const matchesFilter = activeFilter === 'all'
+          || (activeFilter === 'dirty' && row.dataset.dirty === 'true')
+          || (activeFilter === 'no-changelog' && row.dataset.changelog === 'false')
+          || row.dataset.releaseStatus === activeFilter;
+        row.hidden = !matchesQuery || !matchesFilter;
       }
     }
 
     search.addEventListener('input', applyFilters);
-    dirtyOnly.addEventListener('change', applyFilters);
+    for (const button of filterButtons) {
+      button.addEventListener('click', () => {
+        activeFilter = button.dataset.filter;
+        for (const item of filterButtons) {
+          item.classList.toggle('active', item === button);
+          item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
+        }
+        applyFilters();
+      });
+    }
   </script>
 </body>
 </html>
@@ -4887,6 +4938,23 @@ function dashboardQuickLinksHtml() {
 
   return links
     .map(([label, id]) => `<a class="quick-link" href="#${escapeHtml(id)}">${escapeHtml(label)}</a>`)
+    .join('');
+}
+
+function repoFilterButtonsHtml() {
+  const filters = [
+    ['all', 'All'],
+    ['stale', 'Stale'],
+    ['release-due', 'Release due'],
+    ['watch', 'Watch'],
+    ['dirty', 'Dirty'],
+    ['no-changelog', 'No changelog']
+  ];
+
+  return filters
+    .map(([value, label], index) => (
+      `<button class="filter-chip${index === 0 ? ' active' : ''}" type="button" data-filter="${escapeHtml(value)}" aria-pressed="${index === 0 ? 'true' : 'false'}">${escapeHtml(label)}</button>`
+    ))
     .join('');
 }
 
@@ -5146,16 +5214,29 @@ function relativeReportPath(fromPath, toPath) {
 function repoTableRowHtml(repo) {
   const languages = repo.loc.byLanguage.slice(0, 4).map((language) => language.language).join(' ');
   const docs = repo.docs?.files || [];
-  const search = [repo.name, repo.path, repo.branch, languages, docs.map((doc) => `${doc.path} ${doc.title}`).join(' ')].join(' ').toLowerCase();
+  const releaseStatus = repo.releaseReadiness?.status || 'unknown';
+  const releaseFilter = releaseStatusFilterValue(releaseStatus);
+  const hasChangelog = Boolean(repo.changelog?.detailPath);
+  const search = [
+    repo.name,
+    repo.path,
+    repo.branch,
+    languages,
+    releaseStatus,
+    hasChangelog ? 'changelog' : 'no changelog',
+    repo.isDirty ? 'dirty' : 'clean',
+    docs.map((doc) => `${doc.path} ${doc.title}`).join(' ')
+  ].join(' ').toLowerCase();
   const status = repo.isDirty
     ? `<span class="pill dirty">${formatNumber(repo.dirtyFileCount)} dirty</span>`
     : '<span class="pill">clean</span>';
+  const release = `<span class="pill ${escapeHtml(releaseFilter)}">${escapeHtml(releaseStatus)}</span>`;
   const docsCount = repo.docs?.markdownFiles || 0;
   const docsCell = docsCount > 0 && repo.detailPath
     ? `<a href="./${escapeHtml(repo.detailPath)}#docs">${formatNumber(docsCount)}</a>`
     : formatNumber(docsCount);
 
-  return `<tr data-search="${escapeHtml(search)}" data-dirty="${repo.isDirty ? 'true' : 'false'}">
+  return `<tr data-search="${escapeHtml(search)}" data-release-status="${escapeHtml(releaseFilter)}" data-dirty="${repo.isDirty ? 'true' : 'false'}" data-changelog="${hasChangelog ? 'true' : 'false'}">
     <td><strong>${repoLinkHtml(repo)}</strong><div class="path">${escapeHtml(repo.path)}</div></td>
     <td>${escapeHtml(repo.branch || '')}</td>
     <td class="numeric">${formatNumber(repo.loc.codeLines)}</td>
@@ -5163,8 +5244,13 @@ function repoTableRowHtml(repo) {
     <td class="numeric">${formatNumber(repo.commits.last30Days)}</td>
     <td class="numeric">${formatNumber(repo.releases.tags)}</td>
     <td class="numeric">${docsCell}</td>
+    <td>${release}</td>
     <td>${status}</td>
   </tr>`;
+}
+
+function releaseStatusFilterValue(status) {
+  return slugify(status || 'unknown') || 'unknown';
 }
 
 function sparkline(items, key, width, height, color) {

@@ -150,6 +150,13 @@ assert(html.includes('(changelog.md)'), 'expected changelog label in release sec
 assert(!html.includes('<details class="release-overflow">'), 'expected no collapsed releases when only five or fewer releases exist');
 assert(html.includes('CSV exports'), 'expected csv export section');
 assert(html.includes('<th class="numeric">Docs</th>'), 'expected docs table column');
+assert(html.includes('<th>Release</th>'), 'expected release status table column');
+for (const filter of ['all', 'stale', 'release-due', 'watch', 'dirty', 'no-changelog']) {
+  assert(html.includes(`data-filter="${filter}"`), `expected ${filter} table filter`);
+}
+assert(html.includes('data-release-status="watch"'), 'expected watch release status row data');
+assert(html.includes('data-changelog="true"'), 'expected changelog row data');
+assert(!html.includes('id="dirty-only"'), 'expected dirty checkbox replaced by filter chips');
 assert(html.includes('Contributors'), 'expected contributor section');
 assert(html.includes('href="./repos/'), 'expected repository drilldown links');
 assert(html.includes('./assets/agents/claude.svg'), 'expected local Claude icon');
@@ -201,6 +208,7 @@ assert(exampleReadiness.unreleasedWork.authors[0].name === 'Smoke Test', 'expect
 assert(secondHtml.includes('Unreleased work'), 'expected unreleased work details in dashboard');
 assert(secondHtml.includes('Add tracked change'), 'expected unreleased commit in dashboard');
 assert(secondHtml.includes('git log v0.1.0..HEAD --oneline'), 'expected unreleased git command in dashboard');
+assert(secondHtml.includes('data-release-status="release-due"'), 'expected release due table filter data');
 assert(unreleasedWorkCsv.includes('Add tracked change'), 'expected unreleased commit in csv');
 
 const unreleasedRepoPath = path.join(tempRoot, 'unreleased-repo');
@@ -234,6 +242,7 @@ assert(report.releaseReadiness.repositories[0].status === 'stale', 'expected unr
 assert(report.releaseReadiness.repositories[0].unreleasedWork.command === 'git log --oneline', 'expected no-tag git command');
 assert(report.releaseReadiness.repositories[0].unreleasedWork.commits[0].subject === 'Initial commit', 'expected no-tag latest commit');
 assert(releaseHtml.includes('git log --oneline'), 'expected no-tag command in dashboard');
+assert(releaseHtml.includes('data-release-status="stale"'), 'expected stale table filter data');
 
 const servePort = await getFreePort();
 const server = spawn(process.execPath, [

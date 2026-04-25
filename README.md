@@ -233,6 +233,7 @@ npm run test:package
 - Release activity from local Git tags, including recent tag windows and latest tags
 - Release readiness status by repository, including commits/files since latest tag, changelog presence, and dirty working tree state
 - Unreleased work summaries from Git, including recent commit subjects, changed files, authors, and `git log` command hints
+- Repository table filters for release state, dirty repos, and missing changelogs
 - Contributor totals across repositories, including multi-repo contributors
 - CSV exports for repositories, languages, file types, weekly activity, AI agents, releases, release readiness, unreleased work, and contributors
 - Per-repository HTML drilldown pages
