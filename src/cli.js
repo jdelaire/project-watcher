@@ -2163,6 +2163,10 @@ function checkConfigIgnored(configPath) {
     return warnCheck('Config ignore', 'config is outside this Git repository');
   }
 
+  if (relativePath === 'project-watcher.config.example.json' || relativePath === 'test/ci.config.json') {
+    return okCheck('Config ignore', `${relativePath} is a commit-safe config`);
+  }
+
   const status = gitStatus(repoRoot, ['check-ignore', '-q', relativePath]);
   if (status === 0) {
     return okCheck('Config ignore', `${relativePath} is ignored`);

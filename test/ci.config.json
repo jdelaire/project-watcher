@@ -1,0 +1,21 @@
+{
+  "paths": [
+    ".."
+  ],
+  "maxDepth": 0,
+  "outputDir": "../tmp/ci-report",
+  "excludeDirs": [
+    ".git",
+    "node_modules",
+    "reports",
+    "tmp"
+  ],
+  "excludeFiles": [
+    ".DS_Store"
+  ],
+  "maxFileBytes": 1048576,
+  "locTool": "builtin",
+  "countDuplicateFiles": false,
+  "fileScope": "tracked",
+  "maxSnapshots": 2
+}

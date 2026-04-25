@@ -1,5 +1,7 @@
 # Project Watcher
 
+[![CI](https://github.com/jdelaire/project-watcher/actions/workflows/ci.yml/badge.svg)](https://github.com/jdelaire/project-watcher/actions/workflows/ci.yml)
+
 Local reporting for Git repositories on your machine.
 
 The tool reads a config file containing project directories, discovers Git repositories, collects Git and line-count metrics, then writes JSON, Markdown, HTML, and historical snapshots.
@@ -119,6 +121,10 @@ Every scan writes one detail page per repository under `reports/repos/`. These p
 ## Doctor
 
 Run `npm run doctor` to validate the local setup before scanning. It checks config parsing, configured paths, output permissions, repository discovery, LOC tools, snapshot retention, and whether the local config file is ignored by Git.
+
+## CI
+
+GitHub Actions runs syntax checks, `doctor` with a CI-safe config, and the smoke test on Node 20 and Node 22.
 
 ## Metrics
 
