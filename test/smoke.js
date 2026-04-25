@@ -143,6 +143,7 @@ for (const sectionId of [
 assert(html.includes('Release activity'), 'expected release section');
 assert(html.includes('Release gaps'), 'expected release gap overview');
 assert(html.includes('Release readiness'), 'expected release readiness overview');
+assert(!html.includes('Unreleased work'), 'expected no unreleased work control when there are no commits');
 assert(html.includes('class="release-project"'), 'expected prominent release project names');
 assert(html.includes('class="release-changelog"'), 'expected changelog link in release section');
 assert(html.includes('(changelog.md)'), 'expected changelog label in release section');

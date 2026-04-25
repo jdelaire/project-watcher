@@ -5056,6 +5056,10 @@ function releaseReadinessHtml(row) {
 function unreleasedWorkHtml(row) {
   const work = row.unreleasedWork || {};
   const commits = work.commits || [];
+  if (commits.length === 0) {
+    return '';
+  }
+
   const changedFiles = work.changedFiles || [];
   const authors = work.authors || [];
   const commitItems = commits.slice(0, 3).map((commit) => (
@@ -5068,7 +5072,7 @@ function unreleasedWorkHtml(row) {
 
   return `<details class="unreleased-work">
     <summary>Unreleased work</summary>
-    ${commits.length > 0 ? `<ul>${commitItems}</ul>` : '<p class="release-meta">No committed work since latest tag.</p>'}
+    <ul>${commitItems}</ul>
     ${changedFiles.length > 0 ? `<ul>${fileItems}</ul>` : ''}
     ${authorSummary ? `<span class="release-meta">${escapeHtml(authorSummary)}</span>` : ''}
     ${work.command ? `<code class="unreleased-command">${escapeHtml(work.command)}</code>` : ''}
