@@ -4870,7 +4870,37 @@ function renderHtml(report) {
     const search = document.querySelector('#repo-search');
     const filterButtons = [...document.querySelectorAll('[data-filter]')];
     const rows = [...document.querySelectorAll('#repo-rows tr')];
-    let activeFilter = 'all';
+    const filters = new Set(filterButtons.map((button) => button.dataset.filter));
+    const params = new URLSearchParams(window.location.search);
+    let activeFilter = filters.has(params.get('filter')) ? params.get('filter') : 'all';
+    search.value = params.get('q') || '';
+
+    function syncFilterButtons() {
+      for (const item of filterButtons) {
+        const isActive = item.dataset.filter === activeFilter;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      }
+    }
+
+    function updateTableUrl() {
+      const next = new URL(window.location.href);
+      const query = search.value.trim();
+
+      if (activeFilter === 'all') {
+        next.searchParams.delete('filter');
+      } else {
+        next.searchParams.set('filter', activeFilter);
+      }
+
+      if (query) {
+        next.searchParams.set('q', query);
+      } else {
+        next.searchParams.delete('q');
+      }
+
+      window.history.replaceState(null, '', next);
+    }
 
     function applyFilters() {
       const query = search.value.trim().toLowerCase();
@@ -4883,19 +4913,21 @@ function renderHtml(report) {
           || row.dataset.releaseStatus === activeFilter;
         row.hidden = !matchesQuery || !matchesFilter;
       }
+
+      updateTableUrl();
     }
 
     search.addEventListener('input', applyFilters);
     for (const button of filterButtons) {
       button.addEventListener('click', () => {
         activeFilter = button.dataset.filter;
-        for (const item of filterButtons) {
-          item.classList.toggle('active', item === button);
-          item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
-        }
+        syncFilterButtons();
         applyFilters();
       });
     }
+
+    syncFilterButtons();
+    applyFilters();
   </script>
 </body>
 </html>

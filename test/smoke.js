@@ -157,6 +157,10 @@ for (const filter of ['all', 'stale', 'release-due', 'watch', 'dirty', 'no-chang
 assert(html.includes('data-release-status="watch"'), 'expected watch release status row data');
 assert(html.includes('data-changelog="true"'), 'expected changelog row data');
 assert(!html.includes('id="dirty-only"'), 'expected dirty checkbox replaced by filter chips');
+assert(html.includes("params.get('filter')"), 'expected table filter restored from URL');
+assert(html.includes("params.get('q')"), 'expected table search restored from URL');
+assert(html.includes("next.searchParams.set('filter', activeFilter)"), 'expected filter persisted to URL');
+assert(html.includes("next.searchParams.set('q', query)"), 'expected search persisted to URL');
 assert(html.includes('Contributors'), 'expected contributor section');
 assert(html.includes('href="./repos/'), 'expected repository drilldown links');
 assert(html.includes('./assets/agents/claude.svg'), 'expected local Claude icon');
