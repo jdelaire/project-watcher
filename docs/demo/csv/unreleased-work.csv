@@ -1,0 +1,4 @@
+repo,path,latestTag,range,commitsSinceLatestTag,filesChangedSinceLatestTag,authors,topChangedFiles,recentCommits,command
+atlas-app,/demo/workspace/atlas-app,v1.4.0,v1.4.0..HEAD,2,2,Demo Author (1); Demo Maintainer (1),CHANGELOG.md (+5/-0); CHANGELOG.md => docs/changelog.md (+0/-0),03d1588 Move changelog into docs; 6ec8917 Add changelog,git log v1.4.0..HEAD --oneline
+design-system,/demo/workspace/design-system,v2.1.0,v2.1.0..HEAD,2,2,Demo Author (1); Demo Maintainer (1),CHANGELOG.md (+5/-0); CHANGELOG.md => docs/changelog.md (+0/-0),5b96a12 Move changelog into docs; 47ff504 Add changelog,git log v2.1.0..HEAD --oneline
+ledger-api,/demo/workspace/ledger-api,v0.9.0,v0.9.0..HEAD,2,2,Demo Author (1); Demo Maintainer (1),CHANGELOG.md (+5/-0); CHANGELOG.md => docs/changelog.md (+0/-0),50169b6 Move changelog into docs; e09c1eb Add changelog,git log v0.9.0..HEAD --oneline

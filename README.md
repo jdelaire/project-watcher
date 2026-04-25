@@ -160,6 +160,7 @@ Every scan writes spreadsheet-friendly exports under `reports/csv/`:
 - `ai-agents.csv`
 - `releases.csv`
 - `release-readiness.csv`
+- `unreleased-work.csv`
 - `contributors.csv`
 
 ## Repository Drilldowns
@@ -231,8 +232,9 @@ npm run test:package
 - AI agent footprint by tracked instruction/config files, with agent icons where official favicons are available
 - Release activity from local Git tags, including recent tag windows and latest tags
 - Release readiness status by repository, including commits/files since latest tag, changelog presence, and dirty working tree state
+- Unreleased work summaries from Git, including recent commit subjects, changed files, authors, and `git log` command hints
 - Contributor totals across repositories, including multi-repo contributors
-- CSV exports for repositories, languages, file types, weekly activity, AI agents, releases, release readiness, and contributors
+- CSV exports for repositories, languages, file types, weekly activity, AI agents, releases, release readiness, unreleased work, and contributors
 - Per-repository HTML drilldown pages
 - Doctor checks for config, paths, output, LOC tooling, retention, and ignored local config
 - Snapshot retention via `maxSnapshots`

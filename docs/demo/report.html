@@ -409,6 +409,54 @@
       font-size: 0.86rem;
     }
 
+    .unreleased-work {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .unreleased-work summary {
+      cursor: pointer;
+      display: inline-flex;
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      list-style: none;
+      text-transform: uppercase;
+    }
+
+    .unreleased-work summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .unreleased-work summary::after {
+      content: "+";
+      margin-left: 8px;
+    }
+
+    .unreleased-work[open] summary::after {
+      content: "-";
+    }
+
+    .unreleased-work ul {
+      display: grid;
+      gap: 4px;
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .unreleased-work code {
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.78rem;
+    }
+
+    .unreleased-command {
+      display: block;
+      margin-top: 8px;
+      word-break: break-word;
+    }
+
     .release-badge {
       justify-self: end;
       color: var(--muted);
@@ -801,7 +849,25 @@
         <p class="note">3 need attention · stale after 90d</p>
       </div>
       <div class="repo-list">
-        <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.4.0 · 1d since release · 2 commits since tag · 1 files changed · changelog · clean</span></div><span class="release-badge warm">watch</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a> <a class="release-changelog" href="./repos/design-system/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v2.1.0 · 1d since release · 2 commits since tag · 1 files changed · changelog · clean</span></div><span class="release-badge warm">watch</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a> <a class="release-changelog" href="./repos/ledger-api/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v0.9.0 · 1d since release · 2 commits since tag · 1 files changed · changelog · clean</span></div><span class="release-badge warm">watch</span></div>
+        <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.4.0 · 1d since release · 2 commits since tag · 2 files changed · changelog · clean</span><details class="unreleased-work">
+    <summary>Unreleased work</summary>
+    <ul><li><code>03d1588</code> Move changelog into docs <span class="release-meta">Demo Author</span></li><li><code>6ec8917</code> Add changelog <span class="release-meta">Demo Maintainer</span></li></ul>
+    <ul><li><code>CHANGELOG.md</code> +5 / -0</li><li><code>CHANGELOG.md =&gt; docs/changelog.md</code> 0 / -0</li></ul>
+    <span class="release-meta">Demo Author 1 · Demo Maintainer 1</span>
+    <code class="unreleased-command">git log v1.4.0..HEAD --oneline</code>
+  </details></div><span class="release-badge warm">watch</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a> <a class="release-changelog" href="./repos/design-system/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v2.1.0 · 1d since release · 2 commits since tag · 2 files changed · changelog · clean</span><details class="unreleased-work">
+    <summary>Unreleased work</summary>
+    <ul><li><code>5b96a12</code> Move changelog into docs <span class="release-meta">Demo Author</span></li><li><code>47ff504</code> Add changelog <span class="release-meta">Demo Maintainer</span></li></ul>
+    <ul><li><code>CHANGELOG.md</code> +5 / -0</li><li><code>CHANGELOG.md =&gt; docs/changelog.md</code> 0 / -0</li></ul>
+    <span class="release-meta">Demo Author 1 · Demo Maintainer 1</span>
+    <code class="unreleased-command">git log v2.1.0..HEAD --oneline</code>
+  </details></div><span class="release-badge warm">watch</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a> <a class="release-changelog" href="./repos/ledger-api/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v0.9.0 · 1d since release · 2 commits since tag · 2 files changed · changelog · clean</span><details class="unreleased-work">
+    <summary>Unreleased work</summary>
+    <ul><li><code>50169b6</code> Move changelog into docs <span class="release-meta">Demo Author</span></li><li><code>e09c1eb</code> Add changelog <span class="release-meta">Demo Maintainer</span></li></ul>
+    <ul><li><code>CHANGELOG.md</code> +5 / -0</li><li><code>CHANGELOG.md =&gt; docs/changelog.md</code> 0 / -0</li></ul>
+    <span class="release-meta">Demo Author 1 · Demo Maintainer 1</span>
+    <code class="unreleased-command">git log v0.9.0..HEAD --oneline</code>
+  </details></div><span class="release-badge warm">watch</span></div>
       </div>
     </section>
 
@@ -1083,7 +1149,7 @@
           <p class="note">spreadsheet-ready files</p>
         </div>
         <div class="link-list">
-          <a class="export-link" href="./csv/repositories.csv"><strong>Repos</strong><span>open</span></a><a class="export-link" href="./csv/languages.csv"><strong>Languages</strong><span>open</span></a><a class="export-link" href="./csv/file-types.csv"><strong>File types</strong><span>open</span></a><a class="export-link" href="./csv/weekly-repositories.csv"><strong>Weekly</strong><span>open</span></a><a class="export-link" href="./csv/ai-agents.csv"><strong>Agents</strong><span>open</span></a><a class="export-link" href="./csv/releases.csv"><strong>Releases</strong><span>open</span></a><a class="export-link" href="./csv/contributors.csv"><strong>Contributors</strong><span>open</span></a><a class="export-link" href="./report.json"><strong>JSON</strong><span>open</span></a><a class="export-link" href="./report.md"><strong>Markdown</strong><span>open</span></a>
+          <a class="export-link" href="./csv/repositories.csv"><strong>Repos</strong><span>open</span></a><a class="export-link" href="./csv/languages.csv"><strong>Languages</strong><span>open</span></a><a class="export-link" href="./csv/file-types.csv"><strong>File types</strong><span>open</span></a><a class="export-link" href="./csv/weekly-repositories.csv"><strong>Weekly</strong><span>open</span></a><a class="export-link" href="./csv/ai-agents.csv"><strong>Agents</strong><span>open</span></a><a class="export-link" href="./csv/releases.csv"><strong>Releases</strong><span>open</span></a><a class="export-link" href="./csv/unreleased-work.csv"><strong>Unreleased</strong><span>open</span></a><a class="export-link" href="./csv/contributors.csv"><strong>Contributors</strong><span>open</span></a><a class="export-link" href="./report.json"><strong>JSON</strong><span>open</span></a><a class="export-link" href="./report.md"><strong>Markdown</strong><span>open</span></a>
         </div>
       </section>
     </div>

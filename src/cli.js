@@ -159,6 +159,9 @@ const RELEASE_READINESS_RANK = new Map([
   ['release due', 2],
   ['stale', 3]
 ]);
+const UNRELEASED_COMMIT_LIMIT = 10;
+const UNRELEASED_FILE_LIMIT = 10;
+const UNRELEASED_AUTHOR_LIMIT = 8;
 const HOURS_TO_MS = 60 * 60 * 1000;
 const DEFAULT_SERVE_SCAN_INTERVAL_HOURS = 12;
 const DOCS_DIR = 'docs';
@@ -864,6 +867,7 @@ async function analyzeRepository(repoPath, config) {
       daysSinceLatestTag: tags[0]?.date ? daysSince(tags[0].date) : null,
       commitsSinceLatestTag: releaseWork.commitsSinceLatestTag,
       filesChangedSinceLatestTag: releaseWork.filesChangedSinceLatestTag,
+      unreleasedWork: releaseWork.unreleasedWork,
       recentTags: tags.slice(0, 10)
     },
     lastCommit,
@@ -916,29 +920,109 @@ function getTags(repoPath) {
 }
 
 function getReleaseWorkSinceLatestTag(repoPath, latestTag, totalCommits, config) {
+  const hasLatestTag = Boolean(latestTag?.name);
+  const range = hasLatestTag ? `${latestTag.name}..HEAD` : 'HEAD';
+  const commits = getRecentCommitsForRange(repoPath, range, UNRELEASED_COMMIT_LIMIT);
+  const changedFiles = getChangedFilesForRange(repoPath, range, config);
+  const authors = getAuthorsForRange(repoPath, range).slice(0, UNRELEASED_AUTHOR_LIMIT);
+  const command = hasLatestTag
+    ? `git log ${shellQuote(range)} --oneline`
+    : 'git log --oneline';
+
   if (!latestTag?.name) {
     return {
       commitsSinceLatestTag: totalCommits,
-      filesChangedSinceLatestTag: listTrackedFiles(repoPath)
-        .map(normalizeReportPath)
-        .filter((relativePath) => shouldIncludeRelativePath(relativePath, config))
-        .length
+      filesChangedSinceLatestTag: changedFiles.length,
+      unreleasedWork: {
+        baseTag: null,
+        range,
+        command,
+        commits,
+        changedFiles: changedFiles.slice(0, UNRELEASED_FILE_LIMIT),
+        authors
+      }
     };
   }
 
-  const range = `${latestTag.name}..HEAD`;
-  const changedFiles = listFromGit(repoPath, ['diff', '--name-only', range, '--'])
-    .map(normalizeReportPath)
-    .filter((relativePath) => shouldIncludeRelativePath(relativePath, config));
-
   return {
     commitsSinceLatestTag: numberFromGit(repoPath, ['rev-list', '--count', range]),
-    filesChangedSinceLatestTag: changedFiles.length
+    filesChangedSinceLatestTag: changedFiles.length,
+    unreleasedWork: {
+      baseTag: latestTag.name,
+      range,
+      command,
+      commits,
+      changedFiles: changedFiles.slice(0, UNRELEASED_FILE_LIMIT),
+      authors
+    }
   };
 }
 
+function getRecentCommitsForRange(repoPath, range, limit) {
+  return listFromGit(repoPath, [
+    'log',
+    range,
+    `--max-count=${limit}`,
+    '--format=%H%x09%h%x09%aI%x09%an%x09%s'
+  ]).map((line) => {
+    const [hash, shortHash, date, author, ...subjectParts] = line.split('\t');
+    return {
+      hash,
+      shortHash,
+      date,
+      author,
+      subject: subjectParts.join('\t')
+    };
+  }).filter((commit) => commit.hash && commit.subject);
+}
+
+function getChangedFilesForRange(repoPath, range, config) {
+  const files = new Map();
+  const output = gitRaw(repoPath, ['log', range, '--numstat', '--format=']);
+
+  for (const line of output.split('\n')) {
+    const parsed = parseNumstatLine(line);
+    if (!parsed) {
+      continue;
+    }
+
+    const relativePath = normalizeReportPath(parsed.path);
+    if (!shouldIncludeRelativePath(relativePath, config)) {
+      continue;
+    }
+
+    const current = files.get(relativePath) || {
+      path: relativePath,
+      additions: 0,
+      deletions: 0,
+      churn: 0,
+      touches: 0
+    };
+
+    current.additions += parsed.additions;
+    current.deletions += parsed.deletions;
+    current.churn += parsed.additions + parsed.deletions;
+    current.touches += 1;
+    files.set(relativePath, current);
+  }
+
+  return [...files.values()].sort((a, b) => (
+    b.churn - a.churn
+    || b.touches - a.touches
+    || a.path.localeCompare(b.path)
+  ));
+}
+
+function getAuthorsForRange(repoPath, range) {
+  return parseShortlog(listFromGit(repoPath, ['shortlog', '-sn', range]));
+}
+
 function getContributors(repoPath) {
-  return listFromGit(repoPath, ['shortlog', '-sn', '--all']).map((line) => {
+  return parseShortlog(listFromGit(repoPath, ['shortlog', '-sn', '--all']));
+}
+
+function parseShortlog(lines) {
+  return lines.map((line) => {
     const match = line.trim().match(/^(\d+)\s+(.+)$/);
     if (!match) {
       return { name: line.trim(), commits: 0 };
@@ -948,7 +1032,7 @@ function getContributors(repoPath) {
       name: match[2],
       commits: Number.parseInt(match[1], 10)
     };
-  });
+  }).filter((item) => item.name);
 }
 
 function getWeeklyActivity(repoPath, weekCount = 8) {
@@ -1965,6 +2049,7 @@ function aggregateReleases(repositories) {
       daysSinceLatestTag: releases.daysSinceLatestTag ?? null,
       commitsSinceLatestTag: releases.commitsSinceLatestTag ?? 0,
       filesChangedSinceLatestTag: releases.filesChangedSinceLatestTag ?? 0,
+      unreleasedWork: releases.unreleasedWork || null,
       changelog: repo.changelog || null
     });
 
@@ -2036,6 +2121,7 @@ function releaseReadinessRow(repo, thresholds) {
   const days = latestTag?.date ? daysSince(latestTag.date) : null;
   const commitsSinceLatestTag = repo.releases?.commitsSinceLatestTag ?? repo.commits?.total ?? 0;
   const filesChangedSinceLatestTag = repo.releases?.filesChangedSinceLatestTag ?? 0;
+  const unreleasedWork = repo.releases?.unreleasedWork || null;
   const changelogFound = Boolean(repo.changelog?.detailPath);
   const reasons = [];
 
@@ -2064,6 +2150,7 @@ function releaseReadinessRow(repo, thresholds) {
     days,
     commitsSinceLatestTag,
     filesChangedSinceLatestTag,
+    unreleasedWork,
     changelogFound,
     isDirty: repo.isDirty
   }, thresholds);
@@ -2077,6 +2164,7 @@ function releaseReadinessRow(repo, thresholds) {
     daysSinceLatestTag: days,
     commitsSinceLatestTag,
     filesChangedSinceLatestTag,
+    unreleasedWork,
     changelogFound,
     changelog: repo.changelog || null,
     isDirty: repo.isDirty,
@@ -2325,10 +2413,14 @@ function renderMarkdown(report) {
   lines.push('');
 
   if (report.releaseReadiness.repositories.length > 0) {
-    lines.push('| Repo | Status | Latest tag | Days | Commits since tag | Files changed | Changelog | Dirty |');
-    lines.push('| --- | --- | --- | ---: | ---: | ---: | --- | ---: |');
+    lines.push('| Repo | Status | Latest tag | Days | Commits since tag | Files changed | Recent commits | Changelog | Dirty |');
+    lines.push('| --- | --- | --- | ---: | ---: | ---: | --- | --- | ---: |');
     for (const repo of report.releaseReadiness.repositories.slice(0, 15)) {
-      lines.push(`| ${markdownCell(repo.name)} | ${markdownCell(repo.status)} | ${markdownCell(repo.latestTag?.name || 'none')} | ${repo.daysSinceLatestTag ?? ''} | ${formatNumber(repo.commitsSinceLatestTag)} | ${formatNumber(repo.filesChangedSinceLatestTag)} | ${repo.changelogFound ? 'yes' : 'no'} | ${formatNumber(repo.dirtyFileCount)} |`);
+      const recentCommits = (repo.unreleasedWork?.commits || [])
+        .slice(0, 3)
+        .map((commit) => `${commit.shortHash} ${commit.subject}`)
+        .join('; ');
+      lines.push(`| ${markdownCell(repo.name)} | ${markdownCell(repo.status)} | ${markdownCell(repo.latestTag?.name || 'none')} | ${repo.daysSinceLatestTag ?? ''} | ${formatNumber(repo.commitsSinceLatestTag)} | ${formatNumber(repo.filesChangedSinceLatestTag)} | ${markdownCell(recentCommits)} | ${repo.changelogFound ? 'yes' : 'no'} | ${formatNumber(repo.dirtyFileCount)} |`);
     }
     lines.push('');
   }
@@ -2453,6 +2545,7 @@ function renderMarkdown(report) {
   lines.push('- csv/ai-agents.csv');
   lines.push('- csv/releases.csv');
   lines.push('- csv/release-readiness.csv');
+  lines.push('- csv/unreleased-work.csv');
   lines.push('- csv/contributors.csv');
 
   lines.push('');
@@ -2478,6 +2571,7 @@ async function writeCsvExports(outputDir, report) {
     ['ai-agents.csv', csvAiAgents(report)],
     ['releases.csv', csvReleases(report)],
     ['release-readiness.csv', csvReleaseReadiness(report)],
+    ['unreleased-work.csv', csvUnreleasedWork(report)],
     ['contributors.csv', csvContributors(report)]
   ]);
 
@@ -2630,6 +2724,7 @@ function csvReleaseReadiness(report) {
       'filesChangedSinceLatestTag',
       'changelogFound',
       'dirtyFileCount',
+      'unreleasedCommand',
       'reasons'
     ],
     ...report.releaseReadiness.repositories.map((repo) => [
@@ -2642,8 +2737,41 @@ function csvReleaseReadiness(report) {
       repo.filesChangedSinceLatestTag,
       repo.changelogFound ? 'true' : 'false',
       repo.dirtyFileCount,
+      repo.unreleasedWork?.command || '',
       repo.reasons.join('; ')
     ])
+  ];
+}
+
+function csvUnreleasedWork(report) {
+  return [
+    [
+      'repo',
+      'path',
+      'latestTag',
+      'range',
+      'commitsSinceLatestTag',
+      'filesChangedSinceLatestTag',
+      'authors',
+      'topChangedFiles',
+      'recentCommits',
+      'command'
+    ],
+    ...report.releaseReadiness.repositories.map((repo) => {
+      const work = repo.unreleasedWork || {};
+      return [
+        repo.name,
+        repo.path,
+        repo.latestTag?.name || '',
+        work.range || '',
+        repo.commitsSinceLatestTag,
+        repo.filesChangedSinceLatestTag,
+        (work.authors || []).map((author) => `${author.name} (${formatNumber(author.commits)})`).join('; '),
+        (work.changedFiles || []).map((file) => `${file.path} (+${formatNumber(file.additions)}/-${formatNumber(file.deletions)})`).join('; '),
+        (work.commits || []).map((commit) => `${commit.shortHash} ${commit.subject}`).join('; '),
+        work.command || ''
+      ];
+    })
   ];
 }
 
@@ -2810,6 +2938,7 @@ function renderRepositoryHtml(report, repo) {
           ${factHtml('Release status', repo.releaseReadiness?.status || 'unknown')}
           ${factHtml('Commits since tag', formatNumber(repo.releases.commitsSinceLatestTag || 0))}
           ${factHtml('Files since tag', formatNumber(repo.releases.filesChangedSinceLatestTag || 0))}
+          ${factHtml('Unreleased command', repo.releases.unreleasedWork?.command || 'git log --oneline')}
           ${factHtml('Changelog', repo.changelog?.path || 'missing')}
         </dl>
       </section>
@@ -4027,6 +4156,54 @@ function renderHtml(report) {
       font-size: 0.86rem;
     }
 
+    .unreleased-work {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .unreleased-work summary {
+      cursor: pointer;
+      display: inline-flex;
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      list-style: none;
+      text-transform: uppercase;
+    }
+
+    .unreleased-work summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .unreleased-work summary::after {
+      content: "+";
+      margin-left: 8px;
+    }
+
+    .unreleased-work[open] summary::after {
+      content: "-";
+    }
+
+    .unreleased-work ul {
+      display: grid;
+      gap: 4px;
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .unreleased-work code {
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.78rem;
+    }
+
+    .unreleased-command {
+      display: block;
+      margin-top: 8px;
+      word-break: break-word;
+    }
+
     .release-badge {
       justify-self: end;
       color: var(--muted);
@@ -4873,7 +5050,29 @@ function releaseReadinessHtml(row) {
     row.isDirty ? `${formatNumber(row.dirtyFileCount)} dirty` : 'clean'
   ];
 
-  return `<div class="release-row"><div><strong class="release-project">${project}</strong><span class="release-meta">${escapeHtml(meta.join(' · '))}</span></div><span class="release-badge ${readinessBadgeClass(row.status)}">${escapeHtml(row.status)}</span></div>`;
+  return `<div class="release-row"><div><strong class="release-project">${project}</strong><span class="release-meta">${escapeHtml(meta.join(' · '))}</span>${unreleasedWorkHtml(row)}</div><span class="release-badge ${readinessBadgeClass(row.status)}">${escapeHtml(row.status)}</span></div>`;
+}
+
+function unreleasedWorkHtml(row) {
+  const work = row.unreleasedWork || {};
+  const commits = work.commits || [];
+  const changedFiles = work.changedFiles || [];
+  const authors = work.authors || [];
+  const commitItems = commits.slice(0, 3).map((commit) => (
+    `<li><code>${escapeHtml(commit.shortHash)}</code> ${escapeHtml(commit.subject)} <span class="release-meta">${escapeHtml(commit.author || 'unknown author')}</span></li>`
+  )).join('');
+  const fileItems = changedFiles.slice(0, 3).map((file) => (
+    `<li><code>${escapeHtml(file.path)}</code> ${formatSignedNumber(file.additions)} / -${formatNumber(file.deletions)}</li>`
+  )).join('');
+  const authorSummary = authors.slice(0, 3).map((author) => `${author.name} ${formatNumber(author.commits)}`).join(' · ');
+
+  return `<details class="unreleased-work">
+    <summary>Unreleased work</summary>
+    ${commits.length > 0 ? `<ul>${commitItems}</ul>` : '<p class="release-meta">No committed work since latest tag.</p>'}
+    ${changedFiles.length > 0 ? `<ul>${fileItems}</ul>` : ''}
+    ${authorSummary ? `<span class="release-meta">${escapeHtml(authorSummary)}</span>` : ''}
+    ${work.command ? `<code class="unreleased-command">${escapeHtml(work.command)}</code>` : ''}
+  </details>`;
 }
 
 function readinessBadgeClass(status) {
@@ -4918,6 +5117,7 @@ function csvExportLinksHtml() {
     ['Weekly', './csv/weekly-repositories.csv'],
     ['Agents', './csv/ai-agents.csv'],
     ['Releases', './csv/releases.csv'],
+    ['Unreleased', './csv/unreleased-work.csv'],
     ['Contributors', './csv/contributors.csv'],
     ['JSON', './report.json'],
     ['Markdown', './report.md']
@@ -5076,6 +5276,15 @@ function regexUnion(values) {
 
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function shellQuote(value) {
+  const text = String(value);
+  if (/^[A-Za-z0-9_./:@%+=,-]+$/.test(text)) {
+    return text;
+  }
+
+  return `'${text.replace(/'/g, "'\\''")}'`;
 }
 
 function numberOrZero(value) {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T10:22:39.092Z",
+  "generatedAt": "2026-04-25T10:45:43.606Z",
   "configPath": "/demo/tmp/demo-config.json",
   "roots": [
     "/demo/workspace"
@@ -296,7 +296,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v1.4.0",
+          "range": "v1.4.0..HEAD",
+          "command": "git log v1.4.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "03d15889635a0fbee4310ca15cbeb7801b3e0463",
+              "shortHash": "03d1588",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "6ec89172277bf91b3748c9a41ea3af7ed62f41bb",
+              "shortHash": "6ec8917",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelog": {
           "path": "docs/changelog.md",
           "title": "Changelog",
@@ -322,7 +369,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v2.1.0",
+          "range": "v2.1.0..HEAD",
+          "command": "git log v2.1.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "5b96a12dd0d34fc9504e367b12c0e76ec5feec31",
+              "shortHash": "5b96a12",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "47ff50473479eb7f2701f7343adc0177b757bc78",
+              "shortHash": "47ff504",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelog": {
           "path": "docs/changelog.md",
           "title": "Changelog",
@@ -348,7 +442,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v0.9.0",
+          "range": "v0.9.0..HEAD",
+          "command": "git log v0.9.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "50169b6c82c2e7c8d38aa3720c928da9c2f26b90",
+              "shortHash": "50169b6",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "e09c1eb08e08cd5ee561ce3b441926a7a80e3dba",
+              "shortHash": "e09c1eb",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelog": {
           "path": "docs/changelog.md",
           "title": "Changelog",
@@ -387,7 +528,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v1.4.0",
+          "range": "v1.4.0..HEAD",
+          "command": "git log v1.4.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "03d15889635a0fbee4310ca15cbeb7801b3e0463",
+              "shortHash": "03d1588",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "6ec89172277bf91b3748c9a41ea3af7ed62f41bb",
+              "shortHash": "6ec8917",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelogFound": true,
         "changelog": {
           "path": "docs/changelog.md",
@@ -403,7 +591,7 @@
         "reasons": [
           "1d since latest tag",
           "2 commits since tag",
-          "1 files changed since tag",
+          "2 files changed since tag",
           "changelog found"
         ]
       },
@@ -418,7 +606,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v2.1.0",
+          "range": "v2.1.0..HEAD",
+          "command": "git log v2.1.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "5b96a12dd0d34fc9504e367b12c0e76ec5feec31",
+              "shortHash": "5b96a12",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "47ff50473479eb7f2701f7343adc0177b757bc78",
+              "shortHash": "47ff504",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelogFound": true,
         "changelog": {
           "path": "docs/changelog.md",
@@ -434,7 +669,7 @@
         "reasons": [
           "1d since latest tag",
           "2 commits since tag",
-          "1 files changed since tag",
+          "2 files changed since tag",
           "changelog found"
         ]
       },
@@ -449,7 +684,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v0.9.0",
+          "range": "v0.9.0..HEAD",
+          "command": "git log v0.9.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "50169b6c82c2e7c8d38aa3720c928da9c2f26b90",
+              "shortHash": "50169b6",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "e09c1eb08e08cd5ee561ce3b441926a7a80e3dba",
+              "shortHash": "e09c1eb",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelogFound": true,
         "changelog": {
           "path": "docs/changelog.md",
@@ -465,7 +747,7 @@
         "reasons": [
           "1d since latest tag",
           "2 commits since tag",
-          "1 files changed since tag",
+          "2 files changed since tag",
           "changelog found"
         ]
       }
@@ -830,7 +1112,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v1.4.0",
+          "range": "v1.4.0..HEAD",
+          "command": "git log v1.4.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "03d15889635a0fbee4310ca15cbeb7801b3e0463",
+              "shortHash": "03d1588",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "6ec89172277bf91b3748c9a41ea3af7ed62f41bb",
+              "shortHash": "6ec8917",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "recentTags": [
           {
             "name": "v1.4.0",
@@ -1088,7 +1417,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v1.4.0",
+          "range": "v1.4.0..HEAD",
+          "command": "git log v1.4.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "03d15889635a0fbee4310ca15cbeb7801b3e0463",
+              "shortHash": "03d1588",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "6ec89172277bf91b3748c9a41ea3af7ed62f41bb",
+              "shortHash": "6ec8917",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelogFound": true,
         "changelog": {
           "path": "docs/changelog.md",
@@ -1104,7 +1480,7 @@
         "reasons": [
           "1d since latest tag",
           "2 commits since tag",
-          "1 files changed since tag",
+          "2 files changed since tag",
           "changelog found"
         ]
       }
@@ -1160,7 +1536,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v2.1.0",
+          "range": "v2.1.0..HEAD",
+          "command": "git log v2.1.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "5b96a12dd0d34fc9504e367b12c0e76ec5feec31",
+              "shortHash": "5b96a12",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "47ff50473479eb7f2701f7343adc0177b757bc78",
+              "shortHash": "47ff504",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "recentTags": [
           {
             "name": "v2.1.0",
@@ -1416,7 +1839,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v2.1.0",
+          "range": "v2.1.0..HEAD",
+          "command": "git log v2.1.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "5b96a12dd0d34fc9504e367b12c0e76ec5feec31",
+              "shortHash": "5b96a12",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "47ff50473479eb7f2701f7343adc0177b757bc78",
+              "shortHash": "47ff504",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelogFound": true,
         "changelog": {
           "path": "docs/changelog.md",
@@ -1432,7 +1902,7 @@
         "reasons": [
           "1d since latest tag",
           "2 commits since tag",
-          "1 files changed since tag",
+          "2 files changed since tag",
           "changelog found"
         ]
       }
@@ -1488,7 +1958,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v0.9.0",
+          "range": "v0.9.0..HEAD",
+          "command": "git log v0.9.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "50169b6c82c2e7c8d38aa3720c928da9c2f26b90",
+              "shortHash": "50169b6",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "e09c1eb08e08cd5ee561ce3b441926a7a80e3dba",
+              "shortHash": "e09c1eb",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "recentTags": [
           {
             "name": "v0.9.0",
@@ -1725,7 +2242,54 @@
         },
         "daysSinceLatestTag": 1,
         "commitsSinceLatestTag": 2,
-        "filesChangedSinceLatestTag": 1,
+        "filesChangedSinceLatestTag": 2,
+        "unreleasedWork": {
+          "baseTag": "v0.9.0",
+          "range": "v0.9.0..HEAD",
+          "command": "git log v0.9.0..HEAD --oneline",
+          "commits": [
+            {
+              "hash": "50169b6c82c2e7c8d38aa3720c928da9c2f26b90",
+              "shortHash": "50169b6",
+              "date": "2026-04-25T16:39:36+07:00",
+              "author": "Demo Author",
+              "subject": "Move changelog into docs"
+            },
+            {
+              "hash": "e09c1eb08e08cd5ee561ce3b441926a7a80e3dba",
+              "shortHash": "e09c1eb",
+              "date": "2026-04-24T18:00:00Z",
+              "author": "Demo Maintainer",
+              "subject": "Add changelog"
+            }
+          ],
+          "changedFiles": [
+            {
+              "path": "CHANGELOG.md",
+              "additions": 5,
+              "deletions": 0,
+              "churn": 5,
+              "touches": 1
+            },
+            {
+              "path": "CHANGELOG.md => docs/changelog.md",
+              "additions": 0,
+              "deletions": 0,
+              "churn": 0,
+              "touches": 1
+            }
+          ],
+          "authors": [
+            {
+              "name": "Demo Author",
+              "commits": 1
+            },
+            {
+              "name": "Demo Maintainer",
+              "commits": 1
+            }
+          ]
+        },
         "changelogFound": true,
         "changelog": {
           "path": "docs/changelog.md",
@@ -1741,7 +2305,7 @@
         "reasons": [
           "1d since latest tag",
           "2 commits since tag",
-          "1 files changed since tag",
+          "2 files changed since tag",
           "changelog found"
         ]
       }

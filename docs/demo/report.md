@@ -1,6 +1,6 @@
 # Project Watcher Report
 
-Generated: 2026-04-25T10:22:39.092Z
+Generated: 2026-04-25T10:45:43.606Z
 Config: /demo/tmp/demo-config.json
 
 ## Summary
@@ -64,11 +64,11 @@ Config: /demo/tmp/demo-config.json
 - Stale after: 90 days
 - Release due after: 20 commits since latest tag
 
-| Repo | Status | Latest tag | Days | Commits since tag | Files changed | Changelog | Dirty |
-| --- | --- | --- | ---: | ---: | ---: | --- | ---: |
-| atlas-app | watch | v1.4.0 | 1 | 2 | 1 | yes | 0 |
-| design-system | watch | v2.1.0 | 1 | 2 | 1 | yes | 0 |
-| ledger-api | watch | v0.9.0 | 1 | 2 | 1 | yes | 0 |
+| Repo | Status | Latest tag | Days | Commits since tag | Files changed | Recent commits | Changelog | Dirty |
+| --- | --- | --- | ---: | ---: | ---: | --- | --- | ---: |
+| atlas-app | watch | v1.4.0 | 1 | 2 | 2 | 03d1588 Move changelog into docs; 6ec8917 Add changelog | yes | 0 |
+| design-system | watch | v2.1.0 | 1 | 2 | 2 | 5b96a12 Move changelog into docs; 47ff504 Add changelog | yes | 0 |
+| ledger-api | watch | v0.9.0 | 1 | 2 | 2 | 50169b6 Move changelog into docs; e09c1eb Add changelog | yes | 0 |
 
 ## Contributors
 
@@ -136,6 +136,7 @@ No previous comparable snapshot
 - csv/ai-agents.csv
 - csv/releases.csv
 - csv/release-readiness.csv
+- csv/unreleased-work.csv
 - csv/contributors.csv
 
 ## Repository Drilldowns

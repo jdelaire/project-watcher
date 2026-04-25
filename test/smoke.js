@@ -70,6 +70,7 @@ const robots = await fsp.readFile(path.join(outputDir, 'robots.txt'), 'utf8');
 const repositoriesCsv = await fsp.readFile(path.join(outputDir, 'csv', 'repositories.csv'), 'utf8');
 const releasesCsv = await fsp.readFile(path.join(outputDir, 'csv', 'releases.csv'), 'utf8');
 const releaseReadinessCsv = await fsp.readFile(path.join(outputDir, 'csv', 'release-readiness.csv'), 'utf8');
+let unreleasedWorkCsv = await fsp.readFile(path.join(outputDir, 'csv', 'unreleased-work.csv'), 'utf8');
 const contributorsCsv = await fsp.readFile(path.join(outputDir, 'csv', 'contributors.csv'), 'utf8');
 let snapshots = await fsp.readdir(path.join(outputDir, 'snapshots'));
 
@@ -101,6 +102,8 @@ assert(report.repositories[0].changelog.path === 'docs/changelog.md', 'expected 
 assert(report.repositories[0].changelog.detailPath.endsWith('/docs/changelog.html'), 'expected docs changelog detail path');
 assert(report.repositories[0].releaseReadiness.status === 'watch', 'expected release readiness status');
 assert(report.repositories[0].releases.commitsSinceLatestTag === 0, 'expected no commits since tag');
+assert(report.repositories[0].releases.unreleasedWork.command === 'git log v0.1.0..HEAD --oneline', 'expected unreleased git command');
+assert(report.repositories[0].releases.unreleasedWork.commits.length === 0, 'expected no unreleased commits');
 assert(report.repositories[0].loc.tool, 'expected loc tool name');
 assert(report.repositories[0].loc.duplicatePolicy, 'expected duplicate policy');
 assert(report.repositories[0].loc.fileScope === 'tracked', 'expected tracked file scope');
@@ -166,6 +169,7 @@ assert(repositoriesCsv.includes('name,path,remoteUrl'), 'expected repositories c
 assert(repositoriesCsv.includes('releaseStatus'), 'expected release status in repositories csv');
 assert(releasesCsv.includes('v0.1.0'), 'expected releases csv');
 assert(releaseReadinessCsv.includes('repo,path,status'), 'expected release readiness csv');
+assert(unreleasedWorkCsv.includes('repo,path,latestTag'), 'expected unreleased work csv');
 assert(contributorsCsv.includes('Smoke Test'), 'expected contributors csv');
 assert(snapshots.length === 1, 'expected one snapshot file');
 assert(report.delta.available === false, 'expected no delta for first scan');
@@ -176,7 +180,10 @@ run('git', ['commit', '-m', 'Add tracked change'], repoPath);
 runScan(configPath);
 
 report = JSON.parse(await fsp.readFile(path.join(outputDir, 'report.json'), 'utf8'));
+const secondHtml = await fsp.readFile(path.join(outputDir, 'report.html'), 'utf8');
+unreleasedWorkCsv = await fsp.readFile(path.join(outputDir, 'csv', 'unreleased-work.csv'), 'utf8');
 snapshots = await fsp.readdir(path.join(outputDir, 'snapshots'));
+const exampleReadiness = report.releaseReadiness.repositories.find((repo) => repo.name === 'example-repo');
 
 assert(report.history.snapshotCount === 2, 'expected two historical snapshots');
 assert(snapshots.length === 2, 'expected two snapshot files');
@@ -185,8 +192,15 @@ assert(report.delta.totals.codeLines.delta === 1, 'expected one code line delta'
 assert(report.delta.totals.commits.delta === 1, 'expected one commit delta');
 assert(report.weekly.totals.commits === 2, 'expected two weekly commits after second commit');
 assert(report.weekly.topRepositories[0].commits === 2, 'expected top weekly repo commits');
-assert(report.releaseReadiness.repositories.find((repo) => repo.name === 'example-repo').status === 'release due', 'expected release due after one commit since tag');
-assert(report.releaseReadiness.repositories.find((repo) => repo.name === 'example-repo').filesChangedSinceLatestTag === 1, 'expected one file changed since tag');
+assert(exampleReadiness.status === 'release due', 'expected release due after one commit since tag');
+assert(exampleReadiness.filesChangedSinceLatestTag === 1, 'expected one file changed since tag');
+assert(exampleReadiness.unreleasedWork.commits[0].subject === 'Add tracked change', 'expected unreleased commit subject');
+assert(exampleReadiness.unreleasedWork.changedFiles[0].path === 'index.js', 'expected top changed file');
+assert(exampleReadiness.unreleasedWork.authors[0].name === 'Smoke Test', 'expected unreleased author');
+assert(secondHtml.includes('Unreleased work'), 'expected unreleased work details in dashboard');
+assert(secondHtml.includes('Add tracked change'), 'expected unreleased commit in dashboard');
+assert(secondHtml.includes('git log v0.1.0..HEAD --oneline'), 'expected unreleased git command in dashboard');
+assert(unreleasedWorkCsv.includes('Add tracked change'), 'expected unreleased commit in csv');
 
 const unreleasedRepoPath = path.join(tempRoot, 'unreleased-repo');
 await fsp.mkdir(unreleasedRepoPath, { recursive: true });
@@ -216,6 +230,9 @@ assert(releaseHtml.includes('<span class="release-badge stale">never</span>'), '
 assert(releaseHtml.indexOf('example-repo</a></strong><span class="release-meta">v0.1.5') < releaseHtml.indexOf('unreleased-repo'), 'expected oldest or never releases last in release gaps');
 assert(report.releaseReadiness.repositories[0].name === 'unreleased-repo', 'expected release readiness sorted worst-first');
 assert(report.releaseReadiness.repositories[0].status === 'stale', 'expected unreleased repo to be stale');
+assert(report.releaseReadiness.repositories[0].unreleasedWork.command === 'git log --oneline', 'expected no-tag git command');
+assert(report.releaseReadiness.repositories[0].unreleasedWork.commits[0].subject === 'Initial commit', 'expected no-tag latest commit');
+assert(releaseHtml.includes('git log --oneline'), 'expected no-tag command in dashboard');
 
 const servePort = await getFreePort();
 const server = spawn(process.execPath, [
