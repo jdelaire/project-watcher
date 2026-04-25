@@ -1,6 +1,6 @@
 # Project Watcher Report
 
-Generated: 2026-04-25T09:28:30.838Z
+Generated: 2026-04-25T09:39:37.008Z
 Config: /demo/tmp/demo-config.json
 
 ## Summary
@@ -12,17 +12,17 @@ Config: /demo/tmp/demo-config.json
 - Files counted: 19
 - Physical files after excludes: 19
 - Physical bytes after excludes: 1.01 KB
-- Commits: 6
-- Commits last 7 days: 6
-- Commits last 30 days: 6
+- Commits: 9
+- Commits last 7 days: 9
+- Commits last 30 days: 9
 - Tags/releases: 7
 - SemVer tags: 7
 - Repos with docs: 3
-- Markdown docs: 6
+- Markdown docs: 9
 - Releases last 90 days: 7
 - Repos without tags: 0
-- Unique contributors: 1
-- Multi-repo contributors: 1
+- Unique contributors: 2
+- Multi-repo contributors: 2
 - AI agents detected: 4
 - Repos with AI agent files: 3
 - Most used AI agent: Claude Code
@@ -60,21 +60,22 @@ Config: /demo/tmp/demo-config.json
 | Contributor | Commits | Repos | Top repositories |
 | --- | ---: | ---: | --- |
 | Demo Maintainer | 6 | 3 | atlas-app (2), design-system (2), ledger-api (2) |
+| Demo Author | 3 | 3 | atlas-app (1), design-system (1), ledger-api (1) |
 
 ## Weekly Activity
 
-- Commits: 6
+- Commits: 9
 - Active repositories: 3
-- Files changed: 19
+- Files changed: 22
 - Additions: 57
 - Deletions: 0
 - Net lines: +57
 
 | Repo | Commits | Additions | Deletions | Net | Files changed |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| atlas-app | 2 | 21 | 0 | +21 | 7 |
-| design-system | 2 | 18 | 0 | +18 | 6 |
-| ledger-api | 2 | 18 | 0 | +18 | 6 |
+| atlas-app | 3 | 21 | 0 | +21 | 8 |
+| design-system | 3 | 18 | 0 | +18 | 7 |
+| ledger-api | 3 | 18 | 0 | +18 | 7 |
 
 ## Since Previous Scan
 
@@ -84,9 +85,9 @@ No previous comparable snapshot
 
 | Repo | Branch | LOC | Commits | 30d | Contributors | Tags | Docs | Latest tag | Last commit | Dirty |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |
-| atlas-app | main | 16 | 2 | 2 | 1 | 3 | 2 | v1.4.0 | 2026-04-24 6ec8917 |  |
-| design-system | main | 13 | 2 | 2 | 1 | 2 | 2 | v2.1.0 | 2026-04-24 47ff504 |  |
-| ledger-api | main | 12 | 2 | 2 | 1 | 2 | 2 | v0.9.0 | 2026-04-24 e09c1eb |  |
+| atlas-app | main | 16 | 3 | 3 | 2 | 3 | 3 | v1.4.0 | 2026-04-25 03d1588 |  |
+| design-system | main | 13 | 3 | 3 | 2 | 2 | 3 | v2.1.0 | 2026-04-25 5b96a12 |  |
+| ledger-api | main | 12 | 3 | 3 | 2 | 2 | 3 | v0.9.0 | 2026-04-25 50169b6 |  |
 
 ## Languages
 

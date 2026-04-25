@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T09:28:30.838Z",
+  "generatedAt": "2026-04-25T09:39:37.008Z",
   "configPath": "/demo/tmp/demo-config.json",
   "roots": [
     "/demo/workspace"
@@ -7,14 +7,14 @@
   "totals": {
     "repositories": 3,
     "dirtyRepositories": 0,
-    "commits": 6,
-    "commitsLast7Days": 6,
-    "commitsLast30Days": 6,
-    "commitsLast90Days": 6,
+    "commits": 9,
+    "commitsLast7Days": 9,
+    "commitsLast30Days": 9,
+    "commitsLast90Days": 9,
     "tags": 7,
     "semverTags": 7,
     "docsRepositories": 3,
-    "docsMarkdownFiles": 6,
+    "docsMarkdownFiles": 9,
     "files": 19,
     "physicalFiles": 19,
     "physicalBytes": 1031,
@@ -31,13 +31,13 @@
     "windowDays": 7,
     "trendWeeks": 8,
     "totals": {
-      "commits": 6,
+      "commits": 9,
       "additions": 57,
       "deletions": 0,
       "netLines": 57,
-      "filesChanged": 19,
+      "filesChanged": 22,
       "activeRepos": 3,
-      "activeAuthors": 3
+      "activeAuthors": 6
     },
     "weeks": [
       {
@@ -105,12 +105,12 @@
       },
       {
         "weekStart": "2026-04-20",
-        "commits": 6,
+        "commits": 9,
         "additions": 57,
         "deletions": 0,
         "netLines": 57,
-        "filesChanged": 19,
-        "activeAuthors": 3
+        "filesChanged": 22,
+        "activeAuthors": 6
       }
     ],
     "topRepositories": [
@@ -118,34 +118,34 @@
         "name": "atlas-app",
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
-        "commits": 2,
+        "commits": 3,
         "additions": 21,
         "deletions": 0,
         "netLines": 21,
-        "filesChanged": 7,
-        "activeAuthors": 1
+        "filesChanged": 8,
+        "activeAuthors": 2
       },
       {
         "name": "design-system",
         "path": "/demo/workspace/design-system",
         "detailPath": "repos/design-system.html",
-        "commits": 2,
+        "commits": 3,
         "additions": 18,
         "deletions": 0,
         "netLines": 18,
-        "filesChanged": 6,
-        "activeAuthors": 1
+        "filesChanged": 7,
+        "activeAuthors": 2
       },
       {
         "name": "ledger-api",
         "path": "/demo/workspace/ledger-api",
         "detailPath": "repos/ledger-api.html",
-        "commits": 2,
+        "commits": 3,
         "additions": 18,
         "deletions": 0,
         "netLines": 18,
-        "filesChanged": 6,
-        "activeAuthors": 1
+        "filesChanged": 7,
+        "activeAuthors": 2
       }
     ]
   },
@@ -165,13 +165,13 @@
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 59,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:29.856Z",
-          "detailPath": "repos/atlas-app/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:35.966Z",
+          "detailPath": "repos/atlas-app/docs/changelog.html",
+          "kind": "changelog"
         },
         "name": "v1.4.0",
         "date": "2026-04-24T10:00:00Z",
@@ -182,13 +182,13 @@
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 59,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:29.856Z",
-          "detailPath": "repos/atlas-app/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:35.966Z",
+          "detailPath": "repos/atlas-app/docs/changelog.html",
+          "kind": "changelog"
         },
         "name": "v1.3.0",
         "date": "2026-04-24T10:00:00Z",
@@ -199,13 +199,13 @@
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 59,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:29.856Z",
-          "detailPath": "repos/atlas-app/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:35.966Z",
+          "detailPath": "repos/atlas-app/docs/changelog.html",
+          "kind": "changelog"
         },
         "name": "v1.2.0",
         "date": "2026-04-24T10:00:00Z",
@@ -216,13 +216,13 @@
         "path": "/demo/workspace/design-system",
         "detailPath": "repos/design-system.html",
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 63,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:29.928Z",
-          "detailPath": "repos/design-system/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:36.036Z",
+          "detailPath": "repos/design-system/docs/changelog.html",
+          "kind": "changelog"
         },
         "name": "v2.1.0",
         "date": "2026-04-24T10:00:00Z",
@@ -233,13 +233,13 @@
         "path": "/demo/workspace/design-system",
         "detailPath": "repos/design-system.html",
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 63,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:29.928Z",
-          "detailPath": "repos/design-system/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:36.036Z",
+          "detailPath": "repos/design-system/docs/changelog.html",
+          "kind": "changelog"
         },
         "name": "v2.0.0",
         "date": "2026-04-24T10:00:00Z",
@@ -250,13 +250,13 @@
         "path": "/demo/workspace/ledger-api",
         "detailPath": "repos/ledger-api.html",
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 60,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:30.008Z",
-          "detailPath": "repos/ledger-api/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:36.109Z",
+          "detailPath": "repos/ledger-api/docs/changelog.html",
+          "kind": "changelog"
         },
         "name": "v0.9.0",
         "date": "2026-04-24T10:00:00Z",
@@ -267,13 +267,13 @@
         "path": "/demo/workspace/ledger-api",
         "detailPath": "repos/ledger-api.html",
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 60,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:30.008Z",
-          "detailPath": "repos/ledger-api/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:36.109Z",
+          "detailPath": "repos/ledger-api/docs/changelog.html",
+          "kind": "changelog"
         },
         "name": "v0.8.0",
         "date": "2026-04-24T10:00:00Z",
@@ -296,13 +296,13 @@
         },
         "daysSinceLatestTag": 0,
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 59,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:29.856Z",
-          "detailPath": "repos/atlas-app/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:35.966Z",
+          "detailPath": "repos/atlas-app/docs/changelog.html",
+          "kind": "changelog"
         }
       },
       {
@@ -320,13 +320,13 @@
         },
         "daysSinceLatestTag": 0,
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 63,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:29.928Z",
-          "detailPath": "repos/design-system/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:36.036Z",
+          "detailPath": "repos/design-system/docs/changelog.html",
+          "kind": "changelog"
         }
       },
       {
@@ -344,20 +344,20 @@
         },
         "daysSinceLatestTag": 0,
         "changelog": {
-          "kind": "changelog",
-          "path": "CHANGELOG.md",
+          "path": "docs/changelog.md",
           "title": "Changelog",
           "bytes": 60,
           "lines": 5,
-          "modifiedAt": "2026-04-25T09:28:30.008Z",
-          "detailPath": "repos/ledger-api/changelog.html"
+          "modifiedAt": "2026-04-25T09:39:36.109Z",
+          "detailPath": "repos/ledger-api/docs/changelog.html",
+          "kind": "changelog"
         }
       }
     ]
   },
   "contributors": {
     "totals": {
-      "uniqueContributors": 1,
+      "uniqueContributors": 2,
       "topContributor": {
         "name": "Demo Maintainer",
         "commits": 6,
@@ -383,7 +383,7 @@
           }
         ]
       },
-      "multiRepoContributors": 1
+      "multiRepoContributors": 2
     },
     "contributors": [
       {
@@ -408,6 +408,31 @@
             "path": "/demo/workspace/ledger-api",
             "detailPath": "repos/ledger-api.html",
             "commits": 2
+          }
+        ]
+      },
+      {
+        "name": "Demo Author",
+        "commits": 3,
+        "repoCount": 3,
+        "repositories": [
+          {
+            "name": "atlas-app",
+            "path": "/demo/workspace/atlas-app",
+            "detailPath": "repos/atlas-app.html",
+            "commits": 1
+          },
+          {
+            "name": "design-system",
+            "path": "/demo/workspace/design-system",
+            "detailPath": "repos/design-system.html",
+            "commits": 1
+          },
+          {
+            "name": "ledger-api",
+            "path": "/demo/workspace/ledger-api",
+            "detailPath": "repos/ledger-api.html",
+            "commits": 1
           }
         ]
       }
@@ -646,23 +671,31 @@
       "isDirty": false,
       "dirtyFileCount": 0,
       "commits": {
-        "total": 2,
-        "last7Days": 2,
-        "last30Days": 2,
-        "last90Days": 2
+        "total": 3,
+        "last7Days": 3,
+        "last30Days": 3,
+        "last90Days": 3
       },
       "contributors": {
-        "total": 1,
+        "total": 2,
         "top": [
           {
             "name": "Demo Maintainer",
             "commits": 2
+          },
+          {
+            "name": "Demo Author",
+            "commits": 1
           }
         ],
         "all": [
           {
             "name": "Demo Maintainer",
             "commits": 2
+          },
+          {
+            "name": "Demo Author",
+            "commits": 1
           }
         ]
       },
@@ -696,19 +729,19 @@
         ]
       },
       "lastCommit": {
-        "date": "2026-04-24T18:00:00Z",
-        "hash": "6ec8917",
-        "subject": "Add changelog"
+        "date": "2026-04-25T16:39:36+07:00",
+        "hash": "03d1588",
+        "subject": "Move changelog into docs"
       },
       "weekly": {
         "last7Days": {
           "weekStart": "2026-04-18",
-          "commits": 2,
+          "commits": 3,
           "additions": 21,
           "deletions": 0,
           "netLines": 21,
-          "filesChanged": 7,
-          "activeAuthors": 1
+          "filesChanged": 8,
+          "activeAuthors": 2
         },
         "weeks": [
           {
@@ -776,12 +809,12 @@
           },
           {
             "weekStart": "2026-04-20",
-            "commits": 2,
+            "commits": 3,
             "additions": 21,
             "deletions": 0,
             "netLines": 21,
-            "filesChanged": 7,
-            "activeAuthors": 1
+            "filesChanged": 8,
+            "activeAuthors": 2
           }
         ]
       },
@@ -824,7 +857,7 @@
       "docs": {
         "root": "docs",
         "exists": true,
-        "markdownFiles": 2,
+        "markdownFiles": 3,
         "files": [
           {
             "path": "docs/architecture/events.md",
@@ -833,6 +866,15 @@
             "lines": 5,
             "modifiedAt": "2026-04-25T09:07:14.910Z",
             "detailPath": "repos/atlas-app/docs/architecture/events.html"
+          },
+          {
+            "path": "docs/changelog.md",
+            "title": "Changelog",
+            "bytes": 59,
+            "lines": 5,
+            "modifiedAt": "2026-04-25T09:39:35.966Z",
+            "detailPath": "repos/atlas-app/docs/changelog.html",
+            "kind": "changelog"
           },
           {
             "path": "docs/README.md",
@@ -846,13 +888,13 @@
         "indexPath": "repos/atlas-app/docs/architecture/events.html"
       },
       "changelog": {
-        "kind": "changelog",
-        "path": "CHANGELOG.md",
+        "path": "docs/changelog.md",
         "title": "Changelog",
         "bytes": 59,
         "lines": 5,
-        "modifiedAt": "2026-04-25T09:28:29.856Z",
-        "detailPath": "repos/atlas-app/changelog.html"
+        "modifiedAt": "2026-04-25T09:39:35.966Z",
+        "detailPath": "repos/atlas-app/docs/changelog.html",
+        "kind": "changelog"
       },
       "loc": {
         "tool": "builtin",
@@ -926,23 +968,31 @@
       "isDirty": false,
       "dirtyFileCount": 0,
       "commits": {
-        "total": 2,
-        "last7Days": 2,
-        "last30Days": 2,
-        "last90Days": 2
+        "total": 3,
+        "last7Days": 3,
+        "last30Days": 3,
+        "last90Days": 3
       },
       "contributors": {
-        "total": 1,
+        "total": 2,
         "top": [
           {
             "name": "Demo Maintainer",
             "commits": 2
+          },
+          {
+            "name": "Demo Author",
+            "commits": 1
           }
         ],
         "all": [
           {
             "name": "Demo Maintainer",
             "commits": 2
+          },
+          {
+            "name": "Demo Author",
+            "commits": 1
           }
         ]
       },
@@ -972,19 +1022,19 @@
         ]
       },
       "lastCommit": {
-        "date": "2026-04-24T18:00:00Z",
-        "hash": "47ff504",
-        "subject": "Add changelog"
+        "date": "2026-04-25T16:39:36+07:00",
+        "hash": "5b96a12",
+        "subject": "Move changelog into docs"
       },
       "weekly": {
         "last7Days": {
           "weekStart": "2026-04-18",
-          "commits": 2,
+          "commits": 3,
           "additions": 18,
           "deletions": 0,
           "netLines": 18,
-          "filesChanged": 6,
-          "activeAuthors": 1
+          "filesChanged": 7,
+          "activeAuthors": 2
         },
         "weeks": [
           {
@@ -1052,12 +1102,12 @@
           },
           {
             "weekStart": "2026-04-20",
-            "commits": 2,
+            "commits": 3,
             "additions": 18,
             "deletions": 0,
             "netLines": 18,
-            "filesChanged": 6,
-            "activeAuthors": 1
+            "filesChanged": 7,
+            "activeAuthors": 2
           }
         ]
       },
@@ -1083,8 +1133,17 @@
       "docs": {
         "root": "docs",
         "exists": true,
-        "markdownFiles": 2,
+        "markdownFiles": 3,
         "files": [
+          {
+            "path": "docs/changelog.md",
+            "title": "Changelog",
+            "bytes": 63,
+            "lines": 5,
+            "modifiedAt": "2026-04-25T09:39:36.036Z",
+            "detailPath": "repos/design-system/docs/changelog.html",
+            "kind": "changelog"
+          },
           {
             "path": "docs/components/button.md",
             "title": "Button",
@@ -1102,16 +1161,16 @@
             "detailPath": "repos/design-system/docs/components/tokens.html"
           }
         ],
-        "indexPath": "repos/design-system/docs/components/button.html"
+        "indexPath": "repos/design-system/docs/changelog.html"
       },
       "changelog": {
-        "kind": "changelog",
-        "path": "CHANGELOG.md",
+        "path": "docs/changelog.md",
         "title": "Changelog",
         "bytes": 63,
         "lines": 5,
-        "modifiedAt": "2026-04-25T09:28:29.928Z",
-        "detailPath": "repos/design-system/changelog.html"
+        "modifiedAt": "2026-04-25T09:39:36.036Z",
+        "detailPath": "repos/design-system/docs/changelog.html",
+        "kind": "changelog"
       },
       "loc": {
         "tool": "builtin",
@@ -1204,23 +1263,31 @@
       "isDirty": false,
       "dirtyFileCount": 0,
       "commits": {
-        "total": 2,
-        "last7Days": 2,
-        "last30Days": 2,
-        "last90Days": 2
+        "total": 3,
+        "last7Days": 3,
+        "last30Days": 3,
+        "last90Days": 3
       },
       "contributors": {
-        "total": 1,
+        "total": 2,
         "top": [
           {
             "name": "Demo Maintainer",
             "commits": 2
+          },
+          {
+            "name": "Demo Author",
+            "commits": 1
           }
         ],
         "all": [
           {
             "name": "Demo Maintainer",
             "commits": 2
+          },
+          {
+            "name": "Demo Author",
+            "commits": 1
           }
         ]
       },
@@ -1250,19 +1317,19 @@
         ]
       },
       "lastCommit": {
-        "date": "2026-04-24T18:00:00Z",
-        "hash": "e09c1eb",
-        "subject": "Add changelog"
+        "date": "2026-04-25T16:39:36+07:00",
+        "hash": "50169b6",
+        "subject": "Move changelog into docs"
       },
       "weekly": {
         "last7Days": {
           "weekStart": "2026-04-18",
-          "commits": 2,
+          "commits": 3,
           "additions": 18,
           "deletions": 0,
           "netLines": 18,
-          "filesChanged": 6,
-          "activeAuthors": 1
+          "filesChanged": 7,
+          "activeAuthors": 2
         },
         "weeks": [
           {
@@ -1330,12 +1397,12 @@
           },
           {
             "weekStart": "2026-04-20",
-            "commits": 2,
+            "commits": 3,
             "additions": 18,
             "deletions": 0,
             "netLines": 18,
-            "filesChanged": 6,
-            "activeAuthors": 1
+            "filesChanged": 7,
+            "activeAuthors": 2
           }
         ]
       },
@@ -1361,7 +1428,7 @@
       "docs": {
         "root": "docs",
         "exists": true,
-        "markdownFiles": 2,
+        "markdownFiles": 3,
         "files": [
           {
             "path": "docs/API.md",
@@ -1370,6 +1437,15 @@
             "lines": 3,
             "modifiedAt": "2026-04-25T09:07:15.081Z",
             "detailPath": "repos/ledger-api/docs/api.html"
+          },
+          {
+            "path": "docs/changelog.md",
+            "title": "Changelog",
+            "bytes": 60,
+            "lines": 5,
+            "modifiedAt": "2026-04-25T09:39:36.109Z",
+            "detailPath": "repos/ledger-api/docs/changelog.html",
+            "kind": "changelog"
           },
           {
             "path": "docs/reference/webhooks.md",
@@ -1383,13 +1459,13 @@
         "indexPath": "repos/ledger-api/docs/api.html"
       },
       "changelog": {
-        "kind": "changelog",
-        "path": "CHANGELOG.md",
+        "path": "docs/changelog.md",
         "title": "Changelog",
         "bytes": 60,
         "lines": 5,
-        "modifiedAt": "2026-04-25T09:28:30.008Z",
-        "detailPath": "repos/ledger-api/changelog.html"
+        "modifiedAt": "2026-04-25T09:39:36.109Z",
+        "detailPath": "repos/ledger-api/docs/changelog.html",
+        "kind": "changelog"
       },
       "loc": {
         "tool": "builtin",
@@ -1458,11 +1534,11 @@
   ],
   "history": {
     "snapshotCount": 1,
-    "firstGeneratedAt": "2026-04-25T09:28:30.838Z",
-    "lastGeneratedAt": "2026-04-25T09:28:30.838Z",
+    "firstGeneratedAt": "2026-04-25T09:39:37.008Z",
+    "lastGeneratedAt": "2026-04-25T09:39:37.008Z",
     "snapshots": [
       {
-        "generatedAt": "2026-04-25T09:28:30.838Z",
+        "generatedAt": "2026-04-25T09:39:37.008Z",
         "repositories": 3,
         "dirtyRepositories": 0,
         "codeLines": 41,
@@ -1470,9 +1546,9 @@
         "files": 19,
         "physicalFiles": 19,
         "physicalBytes": 1031,
-        "commits": 6,
-        "commitsLast7Days": 6,
-        "commitsLast30Days": 6,
+        "commits": 9,
+        "commitsLast7Days": 9,
+        "commitsLast30Days": 9,
         "tags": 7,
         "semverTags": 7
       }

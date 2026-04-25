@@ -21,9 +21,9 @@ run('git', ['add', '.'], repoPath);
 run('git', ['commit', '-m', 'Initial commit'], repoPath);
 run('git', ['tag', 'v0.1.0'], repoPath);
 await fsp.writeFile(path.join(repoPath, 'untracked.js'), 'console.log("local junk");\n', 'utf8');
-await fsp.writeFile(path.join(repoPath, 'CHANGELOG.md'), '# Changelog\n\n## v0.1.0\n\nInitial release.\n', 'utf8');
 await fsp.mkdir(path.join(repoPath, 'docs', 'guides'), { recursive: true });
 await fsp.writeFile(path.join(repoPath, 'docs', 'README.md'), '# Docs\n\nOpen [Setup](guides/setup.md).\n', 'utf8');
+await fsp.writeFile(path.join(repoPath, 'docs', 'changelog.md'), '# Changelog\n\n## v0.1.0\n\nInitial release.\n', 'utf8');
 await fsp.writeFile(path.join(repoPath, 'docs', 'guides', 'setup.md'), '## Setup\n\nRun `project-watcher`.\n', 'utf8');
 
 await fsp.writeFile(
@@ -72,7 +72,7 @@ assert(report.totals.codeLines === 2, 'expected two code lines');
 assert(report.totals.physicalFiles === 3, 'expected three physical files');
 assert(report.totals.tags === 1, 'expected one tag');
 assert(report.totals.docsRepositories === 1, 'expected one repo with docs');
-assert(report.totals.docsMarkdownFiles === 2, 'expected two Markdown docs');
+assert(report.totals.docsMarkdownFiles === 3, 'expected three Markdown docs');
 assert(report.totals.commitsLast7Days === 1, 'expected one recent commit');
 assert(report.releases.totals.tagsLast365Days === 1, 'expected one tag in last year');
 assert(report.releases.latest[0].name === 'v0.1.0', 'expected latest release tag');
@@ -87,10 +87,10 @@ assert(report.aiAgents.totals.agentsDetected === 2, 'expected two detected ai ag
 assert(report.aiAgents.totals.reposWithAgents === 1, 'expected one repo with ai agent files');
 assert(report.aiAgents.agents.some((agent) => agent.id === 'claude'), 'expected Claude detection');
 assert(report.aiAgents.agents.some((agent) => agent.id === 'codex'), 'expected Codex detection');
-assert(report.repositories[0].docs.markdownFiles === 2, 'expected repo docs stats');
+assert(report.repositories[0].docs.markdownFiles === 3, 'expected repo docs stats');
 assert(setupDoc.detailPath.endsWith('.html'), 'expected docs detail page path');
-assert(report.repositories[0].changelog.path === 'CHANGELOG.md', 'expected top-level changelog detection');
-assert(report.repositories[0].changelog.detailPath.endsWith('/changelog.html'), 'expected changelog detail path');
+assert(report.repositories[0].changelog.path === 'docs/changelog.md', 'expected docs changelog detection');
+assert(report.repositories[0].changelog.detailPath.endsWith('/docs/changelog.html'), 'expected docs changelog detail path');
 assert(report.repositories[0].loc.tool, 'expected loc tool name');
 assert(report.repositories[0].loc.duplicatePolicy, 'expected duplicate policy');
 assert(report.repositories[0].loc.fileScope === 'tracked', 'expected tracked file scope');

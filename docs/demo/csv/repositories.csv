@@ -1,4 +1,4 @@
 name,path,remoteUrl,branch,codeLines,commentLines,physicalFiles,physicalBytes,commits,commitsLast7Days,commitsLast30Days,commitsLast90Days,contributors,tags,semverTags,tagsLast365Days,docsMarkdownFiles,latestTag,daysSinceLatestTag,dirtyFileCount,locTool,fileScope
-atlas-app,/demo/workspace/atlas-app,,main,16,0,7,358,2,2,2,2,1,3,3,3,2,v1.4.0,0,0,builtin,tracked
-design-system,/demo/workspace/design-system,,main,13,0,6,358,2,2,2,2,1,2,2,2,2,v2.1.0,0,0,builtin,tracked
-ledger-api,/demo/workspace/ledger-api,,main,12,0,6,315,2,2,2,2,1,2,2,2,2,v0.9.0,0,0,builtin,tracked
+atlas-app,/demo/workspace/atlas-app,,main,16,0,7,358,3,3,3,3,2,3,3,3,3,v1.4.0,0,0,builtin,tracked
+design-system,/demo/workspace/design-system,,main,13,0,6,358,3,3,3,3,2,2,2,2,3,v2.1.0,0,0,builtin,tracked
+ledger-api,/demo/workspace/ledger-api,,main,12,0,6,315,3,3,3,3,2,2,2,2,3,v0.9.0,0,0,builtin,tracked

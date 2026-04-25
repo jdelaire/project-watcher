@@ -1030,25 +1030,18 @@ async function collectRepositoryDocs(repoPath, config) {
 }
 
 async function collectRepositoryChangelog(repoPath, config) {
-  let entries;
-  try {
-    entries = await fsp.readdir(repoPath, { withFileTypes: true });
-  } catch {
+  const candidates = [];
+  await walkChangelogFiles(repoPath, repoPath, config, candidates);
+  candidates.sort(sortChangelogCandidates);
+
+  const changelog = candidates[0];
+  if (!changelog) {
     return null;
   }
 
-  const entry = entries
-    .filter((item) => item.isFile())
-    .find((item) => item.name.toLowerCase() === 'changelog.md' || item.name.toLowerCase() === 'changelog.markdown');
-
-  if (!entry) {
-    return null;
-  }
-
-  const fullPath = path.join(repoPath, entry.name);
   let stat;
   try {
-    stat = await fsp.stat(fullPath);
+    stat = await fsp.stat(path.join(repoPath, changelog.path));
   } catch {
     return null;
   }
@@ -1057,7 +1050,7 @@ async function collectRepositoryChangelog(repoPath, config) {
     return null;
   }
 
-  const content = await readLikelyText(fullPath);
+  const content = await readLikelyText(path.join(repoPath, changelog.path));
   if (content === null) {
     return null;
   }
@@ -1066,12 +1059,54 @@ async function collectRepositoryChangelog(repoPath, config) {
 
   return {
     kind: 'changelog',
-    path: normalizeReportPath(entry.name),
-    title: markdownTitle(content, entry.name),
+    path: changelog.path,
+    title: markdownTitle(content, changelog.path),
     bytes: stat.size,
     lines: lineStats.lines,
     modifiedAt: stat.mtime.toISOString()
   };
+}
+
+function sortChangelogCandidates(a, b) {
+  const aPath = a.path.toLowerCase();
+  const bPath = b.path.toLowerCase();
+  const aDocs = aPath === 'docs/changelog.md' || aPath === 'docs/changelog.markdown';
+  const bDocs = bPath === 'docs/changelog.md' || bPath === 'docs/changelog.markdown';
+
+  if (aDocs !== bDocs) {
+    return aDocs ? -1 : 1;
+  }
+
+  return a.path.split('/').length - b.path.split('/').length || a.path.localeCompare(b.path);
+}
+
+async function walkChangelogFiles(directory, repoPath, config, candidates) {
+  let entries;
+  try {
+    entries = await fsp.readdir(directory, { withFileTypes: true });
+  } catch {
+    return;
+  }
+
+  for (const entry of entries) {
+    const fullPath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      if (!config.excludeDirs.has(entry.name)) {
+        await walkChangelogFiles(fullPath, repoPath, config, candidates);
+      }
+      continue;
+    }
+
+    if (!entry.isFile() || config.excludeFiles.has(entry.name)) {
+      continue;
+    }
+
+    const name = entry.name.toLowerCase();
+    if (name === 'changelog.md' || name === 'changelog.markdown') {
+      candidates.push({ path: normalizeReportPath(path.relative(repoPath, fullPath)) });
+    }
+  }
 }
 
 async function walkDocsMarkdownFiles(directory, repoPath, config, files) {
@@ -2442,7 +2477,8 @@ async function writeRepositoryPages(outputDir, report) {
       writes.push(writeRepositoryDocPage(outputDir, report, repo, doc));
     }
 
-    if (repo.changelog?.detailPath) {
+    const docDetailPaths = new Set((repo.docs?.files || []).map((doc) => doc.detailPath));
+    if (repo.changelog?.detailPath && !docDetailPaths.has(repo.changelog.detailPath)) {
       writes.push(writeRepositoryDocPage(outputDir, report, repo, repo.changelog));
     }
   }
@@ -4767,6 +4803,16 @@ function assignRepositoryDocPaths(repositories) {
 function assignRepositoryChangelogPaths(repositories) {
   for (const repo of repositories) {
     if (!repo.changelog || !repo.detailPath) {
+      continue;
+    }
+
+    const matchingDoc = (repo.docs?.files || []).find((doc) => doc.path === repo.changelog.path);
+    if (matchingDoc?.detailPath) {
+      Object.assign(matchingDoc, repo.changelog, {
+        detailPath: matchingDoc.detailPath,
+        kind: 'changelog'
+      });
+      repo.changelog = matchingDoc;
       continue;
     }
 
