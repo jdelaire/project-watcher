@@ -1,8 +1,8 @@
 repo,path,tag,date,semver
-atlas-app,/demo/workspace/atlas-app,v1.2.0,2026-04-24T10:00:00Z,true
-atlas-app,/demo/workspace/atlas-app,v1.3.0,2026-04-24T10:00:00Z,true
 atlas-app,/demo/workspace/atlas-app,v1.4.0,2026-04-24T10:00:00Z,true
-design-system,/demo/workspace/design-system,v2.0.0,2026-04-24T10:00:00Z,true
+atlas-app,/demo/workspace/atlas-app,v1.3.0,2026-04-24T10:00:00Z,true
+atlas-app,/demo/workspace/atlas-app,v1.2.0,2026-04-24T10:00:00Z,true
 design-system,/demo/workspace/design-system,v2.1.0,2026-04-24T10:00:00Z,true
-ledger-api,/demo/workspace/ledger-api,v0.8.0,2026-04-24T10:00:00Z,true
+design-system,/demo/workspace/design-system,v2.0.0,2026-04-24T10:00:00Z,true
 ledger-api,/demo/workspace/ledger-api,v0.9.0,2026-04-24T10:00:00Z,true
+ledger-api,/demo/workspace/ledger-api,v0.8.0,2026-04-24T10:00:00Z,true

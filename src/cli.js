@@ -864,7 +864,7 @@ function getTags(repoPath) {
       name,
       date: dateParts.join('\t') || null
     };
-  });
+  }).sort(sortTagRows);
 }
 
 function getContributors(repoPath) {
@@ -3237,6 +3237,7 @@ function renderHtml(report) {
   const topWeeklyRepos = report.weekly?.topRepositories?.slice(0, 8) || [];
   const topAiAgents = report.aiAgents?.agents?.slice(0, 6) || [];
   const releases = report.releases?.latest || [];
+  const releaseGaps = releaseGapRows(report.repositories).slice(0, 8);
   const topContributors = report.contributors?.contributors?.slice(0, 8) || [];
   const dirtyRepos = report.repositories.filter((repo) => repo.isDirty);
   const staleRepos = report.repositories
@@ -3590,6 +3591,56 @@ function renderHtml(report) {
       margin-top: 10px;
     }
 
+    .release-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(82px, auto);
+      gap: 14px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .release-project {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.45rem, 2.6vw, 2.25rem);
+      font-weight: 400;
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .release-meta {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .release-badge {
+      justify-self: end;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .release-badge.stale {
+      color: var(--danger);
+    }
+
+    .release-badge.warm {
+      color: var(--accent);
+    }
+
+    .release-badge.fresh {
+      color: var(--ok);
+    }
+
     .link-list {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3925,11 +3976,11 @@ function renderHtml(report) {
 
       <section>
         <div class="section-title">
-          <h2>Contributors</h2>
-          <p class="note">${formatNumber(report.contributors?.totals?.uniqueContributors || 0)} unique authors</p>
+          <h2>Release gaps</h2>
+          <p class="note">oldest or missing latest tag</p>
         </div>
         <div class="repo-list">
-          ${topContributors.map(contributorHtml).join('') || '<p class="empty">No contributors found.</p>'}
+          ${releaseGaps.map(releaseGapHtml).join('') || '<p class="empty">No repositories found.</p>'}
         </div>
       </section>
     </div>
@@ -3963,6 +4014,35 @@ function renderHtml(report) {
           <p class="note">${formatNumber(report.weekly.totals.filesChanged)} files touched in 7d</p>
         </div>
         <div class="trend">${weeklyChurnSvg}</div>
+      </section>
+    </div>
+
+    <div class="grid">
+      <section>
+        <div class="section-title">
+          <h2>Contributors</h2>
+          <p class="note">${formatNumber(report.contributors?.totals?.uniqueContributors || 0)} unique authors</p>
+        </div>
+        <div class="repo-list">
+          ${topContributors.map(contributorHtml).join('') || '<p class="empty">No contributors found.</p>'}
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">
+          <h2>Release coverage</h2>
+          <p class="note">local tag footprint</p>
+        </div>
+        <div class="health">
+          <div class="health-block">
+            <span class="health-number">${formatNumber(report.releases?.totals?.reposWithTags || 0)}</span>
+            <p class="note">repositories with tags</p>
+          </div>
+          <div class="health-block danger">
+            <span class="health-number">${formatNumber(report.releases?.totals?.reposWithoutTags || 0)}</span>
+            <p class="note">repositories without releases</p>
+          </div>
+        </div>
       </section>
     </div>
 
@@ -4261,11 +4341,61 @@ function releaseActivityHtml(releases) {
 
 function releaseHtml(release) {
   const pieces = [
+    release.name,
     release.date ? formatDateTime(release.date) : 'unknown date',
     release.semver ? 'SemVer' : 'tag'
   ];
 
-  return `<div class="repo-line"><div><strong>${escapeHtml(release.name)}</strong><span>${repoLinkHtml({ name: release.repo, detailPath: release.detailPath })} · ${escapeHtml(pieces.join(' · '))}</span></div><span>${release.semver ? 'release' : 'tag'}</span></div>`;
+  return `<div class="release-row"><div><strong class="release-project">${repoLinkHtml({ name: release.repo, detailPath: release.detailPath })}</strong><span class="release-meta">${escapeHtml(pieces.join(' · '))}</span></div><span class="release-badge">${release.semver ? 'release' : 'tag'}</span></div>`;
+}
+
+function releaseGapRows(repositories) {
+  return repositories
+    .map((repo) => {
+      const latestTag = repo.releases?.latestTag || null;
+      const days = latestTag?.date ? daysSince(latestTag.date) : null;
+      return {
+        name: repo.name,
+        detailPath: repo.detailPath,
+        tags: repo.releases?.tags || 0,
+        latestTag,
+        days
+      };
+    })
+    .sort((a, b) => releaseGapRank(b) - releaseGapRank(a) || b.tags - a.tags || a.name.localeCompare(b.name));
+}
+
+function releaseGapRank(row) {
+  if (!row.latestTag) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  if (row.days === null) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+
+  return row.days;
+}
+
+function releaseGapHtml(row) {
+  const project = repoLinkHtml({ name: row.name, detailPath: row.detailPath });
+  if (!row.latestTag) {
+    return `<div class="release-row"><div><strong class="release-project">${project}</strong><span class="release-meta">No local tags found</span></div><span class="release-badge stale">never</span></div>`;
+  }
+
+  const label = row.days === null ? 'unknown' : `${formatNumber(row.days)}d`;
+  const badgeClass = row.days === null || row.days >= 180
+    ? 'stale'
+    : row.days >= 60
+      ? 'warm'
+      : 'fresh';
+  const meta = [
+    row.latestTag.name,
+    row.latestTag.date ? formatDateTime(row.latestTag.date) : 'unknown date',
+    `${formatNumber(row.tags)} total tags`
+  ];
+
+  return `<div class="release-row"><div><strong class="release-project">${project}</strong><span class="release-meta">${escapeHtml(meta.join(' · '))}</span></div><span class="release-badge ${badgeClass}">${escapeHtml(label)}</span></div>`;
 }
 
 function contributorHtml(contributor) {
@@ -4463,7 +4593,41 @@ function sortReleaseRows(a, b) {
   const bTime = Date.parse(b.date || '');
   const aRank = Number.isFinite(aTime) ? aTime : 0;
   const bRank = Number.isFinite(bTime) ? bTime : 0;
-  return bRank - aRank || a.repo.localeCompare(b.repo) || a.name.localeCompare(b.name);
+  return bRank - aRank || a.repo.localeCompare(b.repo) || compareTagNamesDesc(a.name, b.name);
+}
+
+function sortTagRows(a, b) {
+  const aTime = Date.parse(a.date || '');
+  const bTime = Date.parse(b.date || '');
+  const aRank = Number.isFinite(aTime) ? aTime : 0;
+  const bRank = Number.isFinite(bTime) ? bTime : 0;
+  return bRank - aRank || compareTagNamesDesc(a.name, b.name);
+}
+
+function compareTagNamesDesc(a, b) {
+  const aSemver = semverParts(a);
+  const bSemver = semverParts(b);
+
+  if (aSemver && bSemver) {
+    for (let index = 0; index < aSemver.length; index += 1) {
+      if (aSemver[index] !== bSemver[index]) {
+        return bSemver[index] - aSemver[index];
+      }
+    }
+  } else if (aSemver || bSemver) {
+    return aSemver ? -1 : 1;
+  }
+
+  return String(b).localeCompare(String(a), undefined, { numeric: true, sensitivity: 'base' });
+}
+
+function semverParts(value) {
+  const match = String(value).match(/^v?(\d+)\.(\d+)\.(\d+)/);
+  if (!match) {
+    return null;
+  }
+
+  return match.slice(1).map((part) => Number.parseInt(part, 10));
 }
 
 function assignRepositoryDetailPaths(repositories) {

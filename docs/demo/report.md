@@ -1,6 +1,6 @@
 # Project Watcher Report
 
-Generated: 2026-04-25T09:10:34.413Z
+Generated: 2026-04-25T09:17:36.848Z
 Config: /demo/tmp/demo-config.json
 
 ## Summary
@@ -47,13 +47,13 @@ Config: /demo/tmp/demo-config.json
 
 | Repo | Tag | Date | SemVer |
 | --- | --- | --- | --- |
-| atlas-app | v1.2.0 | 2026-04-24T10:00:00Z | yes |
-| atlas-app | v1.3.0 | 2026-04-24T10:00:00Z | yes |
 | atlas-app | v1.4.0 | 2026-04-24T10:00:00Z | yes |
-| design-system | v2.0.0 | 2026-04-24T10:00:00Z | yes |
+| atlas-app | v1.3.0 | 2026-04-24T10:00:00Z | yes |
+| atlas-app | v1.2.0 | 2026-04-24T10:00:00Z | yes |
 | design-system | v2.1.0 | 2026-04-24T10:00:00Z | yes |
-| ledger-api | v0.8.0 | 2026-04-24T10:00:00Z | yes |
+| design-system | v2.0.0 | 2026-04-24T10:00:00Z | yes |
 | ledger-api | v0.9.0 | 2026-04-24T10:00:00Z | yes |
+| ledger-api | v0.8.0 | 2026-04-24T10:00:00Z | yes |
 
 ## Contributors
 
@@ -84,9 +84,9 @@ No previous comparable snapshot
 
 | Repo | Branch | LOC | Commits | 30d | Contributors | Tags | Docs | Latest tag | Last commit | Dirty |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |
-| atlas-app | main | 13 | 1 | 1 | 1 | 3 | 2 | v1.2.0 | 2026-04-24 da86664 |  |
-| design-system | main | 10 | 1 | 1 | 1 | 2 | 2 | v2.0.0 | 2026-04-24 0802b9c |  |
-| ledger-api | main | 9 | 1 | 1 | 1 | 2 | 2 | v0.8.0 | 2026-04-24 3f9b083 |  |
+| atlas-app | main | 13 | 1 | 1 | 1 | 3 | 2 | v1.4.0 | 2026-04-24 da86664 |  |
+| design-system | main | 10 | 1 | 1 | 1 | 2 | 2 | v2.1.0 | 2026-04-24 0802b9c |  |
+| ledger-api | main | 9 | 1 | 1 | 1 | 2 | 2 | v0.9.0 | 2026-04-24 3f9b083 |  |
 
 ## Languages
 

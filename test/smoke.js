@@ -97,6 +97,8 @@ assert(html.includes('rel="icon"'), 'expected favicon link');
 assert(html.includes('rel="manifest"'), 'expected manifest link');
 assert(html.includes('Dirty repos'), 'expected useful masthead stats');
 assert(html.includes('Release activity'), 'expected release section');
+assert(html.includes('Release gaps'), 'expected release gap overview');
+assert(html.includes('class="release-project"'), 'expected prominent release project names');
 assert(!html.includes('<details class="release-overflow">'), 'expected no collapsed releases when only five or fewer releases exist');
 assert(html.includes('CSV exports'), 'expected csv export section');
 assert(html.includes('<th class="numeric">Docs</th>'), 'expected docs table column');
@@ -137,6 +139,15 @@ assert(report.delta.totals.commits.delta === 1, 'expected one commit delta');
 assert(report.weekly.totals.commits === 2, 'expected two weekly commits after second commit');
 assert(report.weekly.topRepositories[0].commits === 2, 'expected top weekly repo commits');
 
+const unreleasedRepoPath = path.join(tempRoot, 'unreleased-repo');
+await fsp.mkdir(unreleasedRepoPath, { recursive: true });
+run('git', ['init'], unreleasedRepoPath);
+run('git', ['config', 'user.email', 'smoke@example.com'], unreleasedRepoPath);
+run('git', ['config', 'user.name', 'Smoke Test'], unreleasedRepoPath);
+await fsp.writeFile(path.join(unreleasedRepoPath, 'README.md'), '# Unreleased\n', 'utf8');
+run('git', ['add', '.'], unreleasedRepoPath);
+run('git', ['commit', '-m', 'Initial commit'], unreleasedRepoPath);
+
 for (let index = 1; index <= 5; index += 1) {
   run('git', ['tag', `v0.1.${index}`], repoPath);
 }
@@ -148,8 +159,11 @@ snapshots = await fsp.readdir(path.join(outputDir, 'snapshots'));
 
 assert(snapshots.length === 2, 'expected snapshot retention to keep two snapshots');
 assert(report.releases.latest.length === 6, 'expected six release tags');
+assert(report.releases.latest[0].name === 'v0.1.5', 'expected semver tie sort to show newest tag name first');
 assert(releaseHtml.includes('<details class="release-overflow">'), 'expected collapsed release overflow');
 assert(releaseHtml.includes('Show 1 older releases'), 'expected one collapsed release');
+assert(releaseHtml.includes('unreleased-repo'), 'expected unreleased repo in release gaps');
+assert(releaseHtml.includes('<span class="release-badge stale">never</span>'), 'expected never release badge');
 
 const servePort = await getFreePort();
 const server = spawn(process.execPath, [

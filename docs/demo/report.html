@@ -330,6 +330,56 @@
       margin-top: 10px;
     }
 
+    .release-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(82px, auto);
+      gap: 14px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .release-project {
+      display: block;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.45rem, 2.6vw, 2.25rem);
+      font-weight: 400;
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .release-meta {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .release-badge {
+      justify-self: end;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .release-badge.stale {
+      color: var(--danger);
+    }
+
+    .release-badge.warm {
+      color: var(--accent);
+    }
+
+    .release-badge.fresh {
+      color: var(--ok);
+    }
+
     .link-list {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -661,21 +711,21 @@
           <p class="note">7 tags in 365d</p>
         </div>
         <div class="repo-list">
-    <div class="repo-line"><div><strong>v1.2.0</strong><span><a href="./repos/atlas-app.html">atlas-app</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v1.3.0</strong><span><a href="./repos/atlas-app.html">atlas-app</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v1.4.0</strong><span><a href="./repos/atlas-app.html">atlas-app</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v2.0.0</strong><span><a href="./repos/design-system.html">design-system</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v2.1.0</strong><span><a href="./repos/design-system.html">design-system</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div>
+    <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a></strong><span class="release-meta">v1.4.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a></strong><span class="release-meta">v1.3.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a></strong><span class="release-meta">v1.2.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a></strong><span class="release-meta">v2.1.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a></strong><span class="release-meta">v2.0.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div>
     <details class="release-overflow">
       <summary>Show 2 older releases</summary>
-      <div class="repo-list"><div class="repo-line"><div><strong>v0.8.0</strong><span><a href="./repos/ledger-api.html">ledger-api</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v0.9.0</strong><span><a href="./repos/ledger-api.html">ledger-api</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div></div>
+      <div class="repo-list"><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a></strong><span class="release-meta">v0.9.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a></strong><span class="release-meta">v0.8.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div></div>
     </details>
   </div>
       </section>
 
       <section>
         <div class="section-title">
-          <h2>Contributors</h2>
-          <p class="note">1 unique authors</p>
+          <h2>Release gaps</h2>
+          <p class="note">oldest or missing latest tag</p>
         </div>
         <div class="repo-list">
-          <div class="repo-line"><div><strong>Demo Maintainer</strong><span>atlas-app 1 · design-system 1 · ledger-api 1</span></div><span>3</span></div>
+          <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a></strong><span class="release-meta">v1.4.0 · 4/24/2026, 5:00:00 PM · 3 total tags</span></div><span class="release-badge fresh">0d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a></strong><span class="release-meta">v2.1.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">0d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a></strong><span class="release-meta">v0.9.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">0d</span></div>
         </div>
       </section>
     </div>
@@ -735,6 +785,35 @@
     <text x="20" y="22" fill="#766b5d" font-size="14">0</text>
     <text x="340" y="22" fill="#1f1a14" font-size="14" text-anchor="end">42</text>
   </svg></div>
+      </section>
+    </div>
+
+    <div class="grid">
+      <section>
+        <div class="section-title">
+          <h2>Contributors</h2>
+          <p class="note">1 unique authors</p>
+        </div>
+        <div class="repo-list">
+          <div class="repo-line"><div><strong>Demo Maintainer</strong><span>atlas-app 1 · design-system 1 · ledger-api 1</span></div><span>3</span></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">
+          <h2>Release coverage</h2>
+          <p class="note">local tag footprint</p>
+        </div>
+        <div class="health">
+          <div class="health-block">
+            <span class="health-number">3</span>
+            <p class="note">repositories with tags</p>
+          </div>
+          <div class="health-block danger">
+            <span class="health-number">0</span>
+            <p class="note">repositories without releases</p>
+          </div>
+        </div>
       </section>
     </div>
 

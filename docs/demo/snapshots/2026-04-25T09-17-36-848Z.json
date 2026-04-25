@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T09:10:34.413Z",
+  "generatedAt": "2026-04-25T09:17:36.848Z",
   "configPath": "/demo/tmp/demo-config.json",
   "roots": [
     "/demo/workspace"
@@ -164,7 +164,7 @@
         "repo": "atlas-app",
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
-        "name": "v1.2.0",
+        "name": "v1.4.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
       },
@@ -180,15 +180,7 @@
         "repo": "atlas-app",
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
-        "name": "v1.4.0",
-        "date": "2026-04-24T10:00:00Z",
-        "semver": true
-      },
-      {
-        "repo": "design-system",
-        "path": "/demo/workspace/design-system",
-        "detailPath": "repos/design-system.html",
-        "name": "v2.0.0",
+        "name": "v1.2.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
       },
@@ -201,10 +193,10 @@
         "semver": true
       },
       {
-        "repo": "ledger-api",
-        "path": "/demo/workspace/ledger-api",
-        "detailPath": "repos/ledger-api.html",
-        "name": "v0.8.0",
+        "repo": "design-system",
+        "path": "/demo/workspace/design-system",
+        "detailPath": "repos/design-system.html",
+        "name": "v2.0.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
       },
@@ -213,6 +205,14 @@
         "path": "/demo/workspace/ledger-api",
         "detailPath": "repos/ledger-api.html",
         "name": "v0.9.0",
+        "date": "2026-04-24T10:00:00Z",
+        "semver": true
+      },
+      {
+        "repo": "ledger-api",
+        "path": "/demo/workspace/ledger-api",
+        "detailPath": "repos/ledger-api.html",
+        "name": "v0.8.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
       }
@@ -228,7 +228,7 @@
         "tagsLast90Days": 3,
         "tagsLast365Days": 3,
         "latestTag": {
-          "name": "v1.2.0",
+          "name": "v1.4.0",
           "date": "2026-04-24T10:00:00Z"
         },
         "daysSinceLatestTag": 0
@@ -243,7 +243,7 @@
         "tagsLast90Days": 2,
         "tagsLast365Days": 2,
         "latestTag": {
-          "name": "v2.0.0",
+          "name": "v2.1.0",
           "date": "2026-04-24T10:00:00Z"
         },
         "daysSinceLatestTag": 0
@@ -258,7 +258,7 @@
         "tagsLast90Days": 2,
         "tagsLast365Days": 2,
         "latestTag": {
-          "name": "v0.8.0",
+          "name": "v0.9.0",
           "date": "2026-04-24T10:00:00Z"
         },
         "daysSinceLatestTag": 0
@@ -586,13 +586,13 @@
         "tagsLast90Days": 3,
         "tagsLast365Days": 3,
         "latestTag": {
-          "name": "v1.2.0",
+          "name": "v1.4.0",
           "date": "2026-04-24T10:00:00Z"
         },
         "daysSinceLatestTag": 0,
         "recentTags": [
           {
-            "name": "v1.2.0",
+            "name": "v1.4.0",
             "date": "2026-04-24T10:00:00Z"
           },
           {
@@ -600,7 +600,7 @@
             "date": "2026-04-24T10:00:00Z"
           },
           {
-            "name": "v1.4.0",
+            "name": "v1.2.0",
             "date": "2026-04-24T10:00:00Z"
           }
         ]
@@ -857,17 +857,17 @@
         "tagsLast90Days": 2,
         "tagsLast365Days": 2,
         "latestTag": {
-          "name": "v2.0.0",
+          "name": "v2.1.0",
           "date": "2026-04-24T10:00:00Z"
         },
         "daysSinceLatestTag": 0,
         "recentTags": [
           {
-            "name": "v2.0.0",
+            "name": "v2.1.0",
             "date": "2026-04-24T10:00:00Z"
           },
           {
-            "name": "v2.1.0",
+            "name": "v2.0.0",
             "date": "2026-04-24T10:00:00Z"
           }
         ]
@@ -1126,17 +1126,17 @@
         "tagsLast90Days": 2,
         "tagsLast365Days": 2,
         "latestTag": {
-          "name": "v0.8.0",
+          "name": "v0.9.0",
           "date": "2026-04-24T10:00:00Z"
         },
         "daysSinceLatestTag": 0,
         "recentTags": [
           {
-            "name": "v0.8.0",
+            "name": "v0.9.0",
             "date": "2026-04-24T10:00:00Z"
           },
           {
-            "name": "v0.9.0",
+            "name": "v0.8.0",
             "date": "2026-04-24T10:00:00Z"
           }
         ]
