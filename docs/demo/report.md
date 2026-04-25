@@ -1,25 +1,27 @@
 # Project Watcher Report
 
-Generated: 2026-04-25T07:53:41.527Z
+Generated: 2026-04-25T09:10:34.413Z
 Config: /demo/tmp/demo-config.json
 
 ## Summary
 
 - Repositories: 3
 - Dirty repositories: 0
-- Lines of code: 27
+- Lines of code: 32
 - Comment lines: 0
-- Files counted: 13
-- Physical files after excludes: 13
-- Physical bytes after excludes: 1013 B
-- Commits: 6
-- Commits last 7 days: 6
-- Commits last 30 days: 6
+- Files counted: 16
+- Physical files after excludes: 16
+- Physical bytes after excludes: 849 B
+- Commits: 3
+- Commits last 7 days: 3
+- Commits last 30 days: 3
 - Tags/releases: 7
 - SemVer tags: 7
+- Repos with docs: 3
+- Markdown docs: 6
 - Releases last 90 days: 7
 - Repos without tags: 0
-- Unique contributors: 2
+- Unique contributors: 1
 - Multi-repo contributors: 1
 - AI agents detected: 4
 - Repos with AI agent files: 3
@@ -57,23 +59,22 @@ Config: /demo/tmp/demo-config.json
 
 | Contributor | Commits | Repos | Top repositories |
 | --- | ---: | ---: | --- |
-| Demo Maintainer | 4 | 2 | atlas-app (2), design-system (2) |
-| Data Bot | 2 | 1 | ledger-api (2) |
+| Demo Maintainer | 3 | 3 | atlas-app (1), design-system (1), ledger-api (1) |
 
 ## Weekly Activity
 
-- Commits: 6
+- Commits: 3
 - Active repositories: 3
-- Files changed: 13
-- Additions: 36
+- Files changed: 16
+- Additions: 42
 - Deletions: 0
-- Net lines: +36
+- Net lines: +42
 
 | Repo | Commits | Additions | Deletions | Net | Files changed |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| atlas-app | 2 | 12 | 0 | +12 | 5 |
-| design-system | 2 | 12 | 0 | +12 | 4 |
-| ledger-api | 2 | 12 | 0 | +12 | 4 |
+| atlas-app | 1 | 16 | 0 | +16 | 6 |
+| design-system | 1 | 13 | 0 | +13 | 5 |
+| ledger-api | 1 | 13 | 0 | +13 | 5 |
 
 ## Since Previous Scan
 
@@ -81,27 +82,30 @@ No previous comparable snapshot
 
 ## Repositories
 
-| Repo | Branch | LOC | Commits | 30d | Contributors | Tags | Latest tag | Last commit | Dirty |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |
-| atlas-app | main | 9 | 2 | 2 | 1 | 3 | v1.2.0 | 2026-04-24 7e47231 |  |
-| design-system | main | 9 | 2 | 2 | 1 | 2 | v2.0.0 | 2026-04-24 8f65966 |  |
-| ledger-api | main | 9 | 2 | 2 | 1 | 2 | v0.8.0 | 2026-04-24 45d01c0 |  |
+| Repo | Branch | LOC | Commits | 30d | Contributors | Tags | Docs | Latest tag | Last commit | Dirty |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |
+| atlas-app | main | 13 | 1 | 1 | 1 | 3 | 2 | v1.2.0 | 2026-04-24 da86664 |  |
+| design-system | main | 10 | 1 | 1 | 1 | 2 | 2 | v2.0.0 | 2026-04-24 0802b9c |  |
+| ledger-api | main | 9 | 1 | 1 | 1 | 2 | 2 | v0.8.0 | 2026-04-24 3f9b083 |  |
 
 ## Languages
 
 | Language | LOC | Comments | Files |
 | --- | ---: | ---: | ---: |
-| JavaScript | 15 | 0 | 3 |
-| CSS | 6 | 0 | 3 |
-| Markdown | 6 | 0 | 7 |
+| Markdown | 23 | 0 | 12 |
+| TypeScript | 6 | 0 | 2 |
+| Go | 2 | 0 | 1 |
+| Other | 1 | 0 | 1 |
 
 ## File Types
 
 | Type | Files | Size | Text lines | Binary | Oversized |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| .md | 7 | 155 B | 9 | 0 | 0 |
-| .js | 3 | 612 B | 21 | 0 | 0 |
-| .css | 3 | 246 B | 6 | 0 | 0 |
+| .md | 12 | 621 B | 32 | 0 | 0 |
+| .tsx | 1 | 92 B | 3 | 0 | 0 |
+| .ts | 1 | 77 B | 3 | 0 | 0 |
+| [no extension] | 1 | 30 B | 1 | 0 | 0 |
+| .go | 1 | 29 B | 3 | 0 | 0 |
 
 ## Roots
 

@@ -150,6 +150,8 @@ const BINARY_EXTENSIONS = new Set([
 const SEMVER_TAG = /^v?\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
 const HOURS_TO_MS = 60 * 60 * 1000;
 const DEFAULT_SERVE_SCAN_INTERVAL_HOURS = 12;
+const DOCS_DIR = 'docs';
+const MARKDOWN_EXTENSIONS = new Set(['.md', '.markdown']);
 
 const AI_AGENT_DEFINITIONS = [
   {
@@ -303,6 +305,7 @@ async function writeScanReport(configPath) {
 
   repositories.sort(sortRepositoriesByActivity);
   assignRepositoryDetailPaths(repositories);
+  assignRepositoryDocPaths(repositories);
 
   const baseReport = buildReport({
     generatedAt: new Date().toISOString(),
@@ -781,6 +784,7 @@ async function analyzeRepository(repoPath, config) {
   const contributors = getContributors(repoPath);
   const weekly = getWeeklyActivity(repoPath);
   const aiAgents = detectAiAgents(repoPath);
+  const docs = await collectRepositoryDocs(repoPath, config);
   const loc = await countRepositoryLines(repoPath, config);
   const fileTypes = await collectFileTypeStats(repoPath, config);
 
@@ -818,6 +822,7 @@ async function analyzeRepository(repoPath, config) {
     lastCommit,
     weekly,
     aiAgents,
+    docs,
     loc,
     fileTypes
   };
@@ -983,6 +988,111 @@ function detectAiAgents(repoPath) {
   }
 
   return agents.sort((a, b) => b.signalCount - a.signalCount || a.name.localeCompare(b.name));
+}
+
+async function collectRepositoryDocs(repoPath, config) {
+  const docsPath = path.join(repoPath, DOCS_DIR);
+  let stat;
+
+  try {
+    stat = await fsp.stat(docsPath);
+  } catch {
+    return {
+      root: DOCS_DIR,
+      exists: false,
+      markdownFiles: 0,
+      files: []
+    };
+  }
+
+  if (!stat.isDirectory()) {
+    return {
+      root: DOCS_DIR,
+      exists: false,
+      markdownFiles: 0,
+      files: []
+    };
+  }
+
+  const files = [];
+  await walkDocsMarkdownFiles(docsPath, repoPath, config, files);
+  files.sort((a, b) => a.path.localeCompare(b.path));
+
+  return {
+    root: DOCS_DIR,
+    exists: true,
+    markdownFiles: files.length,
+    files
+  };
+}
+
+async function walkDocsMarkdownFiles(directory, repoPath, config, files) {
+  let entries;
+  try {
+    entries = await fsp.readdir(directory, { withFileTypes: true });
+  } catch {
+    return;
+  }
+
+  entries.sort((a, b) => a.name.localeCompare(b.name));
+
+  for (const entry of entries) {
+    const fullPath = path.join(directory, entry.name);
+
+    if (entry.isDirectory()) {
+      if (!config.excludeDirs.has(entry.name)) {
+        await walkDocsMarkdownFiles(fullPath, repoPath, config, files);
+      }
+      continue;
+    }
+
+    if (!entry.isFile() || config.excludeFiles.has(entry.name)) {
+      continue;
+    }
+
+    const extension = path.extname(entry.name).toLowerCase();
+    if (!MARKDOWN_EXTENSIONS.has(extension)) {
+      continue;
+    }
+
+    let stat;
+    try {
+      stat = await fsp.stat(fullPath);
+    } catch {
+      continue;
+    }
+
+    if (stat.size > config.maxFileBytes) {
+      continue;
+    }
+
+    const content = await readLikelyText(fullPath);
+    if (content === null) {
+      continue;
+    }
+
+    const relativePath = normalizeReportPath(path.relative(repoPath, fullPath));
+    const lineStats = countLines(content);
+
+    files.push({
+      path: relativePath,
+      title: markdownTitle(content, relativePath),
+      bytes: stat.size,
+      lines: lineStats.lines,
+      modifiedAt: stat.mtime.toISOString()
+    });
+  }
+}
+
+function markdownTitle(content, relativePath) {
+  const heading = content.split(/\r?\n/).find((line) => /^#\s+/.test(line.trim()));
+  if (heading) {
+    return heading.replace(/^#\s+/, '').trim();
+  }
+
+  return path.basename(relativePath, path.extname(relativePath))
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
 function newActivityBucket(weekStart) {
@@ -1557,6 +1667,8 @@ function buildReport({ generatedAt, configPath, roots, repositories }) {
     commitsLast90Days: sum(repositories, (repo) => repo.commits.last90Days),
     tags: sum(repositories, (repo) => repo.releases.tags),
     semverTags: sum(repositories, (repo) => repo.releases.semverTags),
+    docsRepositories: repositories.filter((repo) => (repo.docs?.markdownFiles || 0) > 0).length,
+    docsMarkdownFiles: sum(repositories, (repo) => repo.docs?.markdownFiles || 0),
     files: sum(repositories, (repo) => repo.loc.files),
     physicalFiles: sum(repositories, (repo) => repo.fileTypes.files),
     physicalBytes: sum(repositories, (repo) => repo.fileTypes.bytes),
@@ -1880,6 +1992,8 @@ function renderMarkdown(report) {
   lines.push(`- Commits last 30 days: ${formatNumber(report.totals.commitsLast30Days)}`);
   lines.push(`- Tags/releases: ${formatNumber(report.totals.tags)}`);
   lines.push(`- SemVer tags: ${formatNumber(report.totals.semverTags)}`);
+  lines.push(`- Repos with docs: ${formatNumber(report.totals.docsRepositories || 0)}`);
+  lines.push(`- Markdown docs: ${formatNumber(report.totals.docsMarkdownFiles || 0)}`);
   lines.push(`- Releases last 90 days: ${formatNumber(report.releases.totals.tagsLast90Days)}`);
   lines.push(`- Repos without tags: ${formatNumber(report.releases.totals.reposWithoutTags)}`);
   lines.push(`- Unique contributors: ${formatNumber(report.contributors.totals.uniqueContributors)}`);
@@ -1988,8 +2102,8 @@ function renderMarkdown(report) {
 
   lines.push('## Repositories');
   lines.push('');
-  lines.push('| Repo | Branch | LOC | Commits | 30d | Contributors | Tags | Latest tag | Last commit | Dirty |');
-  lines.push('| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |');
+  lines.push('| Repo | Branch | LOC | Commits | 30d | Contributors | Tags | Docs | Latest tag | Last commit | Dirty |');
+  lines.push('| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |');
 
   for (const repo of report.repositories) {
     const lastCommit = repo.lastCommit ? `${repo.lastCommit.date.slice(0, 10)} ${repo.lastCommit.hash}` : '';
@@ -2001,6 +2115,7 @@ function renderMarkdown(report) {
       formatNumber(repo.commits.last30Days),
       formatNumber(repo.contributors.total),
       formatNumber(repo.releases.tags),
+      formatNumber(repo.docs?.markdownFiles || 0),
       markdownCell(repo.releases.latestTag?.name || ''),
       markdownCell(lastCommit),
       repo.isDirty ? `${repo.dirtyFileCount}` : ''
@@ -2094,6 +2209,7 @@ function csvRepositories(report) {
       'tags',
       'semverTags',
       'tagsLast365Days',
+      'docsMarkdownFiles',
       'latestTag',
       'daysSinceLatestTag',
       'dirtyFileCount',
@@ -2117,6 +2233,7 @@ function csvRepositories(report) {
       repo.releases.tags,
       repo.releases.semverTags,
       repo.releases.tagsLast365Days || 0,
+      repo.docs?.markdownFiles || 0,
       repo.releases.latestTag?.name || '',
       repo.releases.daysSinceLatestTag ?? '',
       repo.dirtyFileCount,
@@ -2266,9 +2383,32 @@ async function writeRepositoryPages(outputDir, report) {
   await fsp.rm(reposDir, { recursive: true, force: true });
   await fsp.mkdir(reposDir, { recursive: true });
 
-  await Promise.all(report.repositories.map((repo) => (
+  const writes = report.repositories.map((repo) => (
     fsp.writeFile(path.join(outputDir, repo.detailPath), renderRepositoryHtml(report, repo), 'utf8')
-  )));
+  ));
+
+  for (const repo of report.repositories) {
+    for (const doc of repo.docs?.files || []) {
+      writes.push(writeRepositoryDocPage(outputDir, report, repo, doc));
+    }
+  }
+
+  await Promise.all(writes);
+}
+
+async function writeRepositoryDocPage(outputDir, report, repo, doc) {
+  const outputPath = path.join(outputDir, doc.detailPath);
+  await fsp.mkdir(path.dirname(outputPath), { recursive: true });
+
+  let markdown = '';
+  let readError = null;
+  try {
+    markdown = await fsp.readFile(path.join(repo.path, doc.path), 'utf8');
+  } catch (error) {
+    readError = error;
+  }
+
+  await fsp.writeFile(outputPath, renderRepositoryDocHtml(report, repo, doc, markdown, readError), 'utf8');
 }
 
 function renderRepositoryHtml(report, repo) {
@@ -2377,6 +2517,16 @@ function renderRepositoryHtml(report, repo) {
       </section>
     </div>
 
+    <div class="grid" id="docs">
+      <section class="span-all">
+        <div class="section-title">
+          <h2>Docs</h2>
+          <p class="note">${formatNumber(repo.docs?.markdownFiles || 0)} Markdown files under /docs</p>
+        </div>
+        ${repositoryDocsHtml(repo)}
+      </section>
+    </div>
+
     <div class="grid">
       <section>
         <div class="section-title">
@@ -2409,6 +2559,294 @@ function renderRepositoryHtml(report, repo) {
 `;
 }
 
+function renderRepositoryDocHtml(report, repo, doc, markdown, readError) {
+  const title = `${doc.title} - ${repo.name} docs`;
+  const repoHref = relativeReportPath(doc.detailPath, repo.detailPath);
+  const reportHref = relativeReportPath(doc.detailPath, 'report.html');
+  const docContent = readError
+    ? `<p class="empty">Could not read ${escapeHtml(doc.path)}: ${escapeHtml(readError.message)}</p>`
+    : renderMarkdownDocument(markdown, {
+      sourcePath: doc.path,
+      outputPath: doc.detailPath,
+      docPathBySource: repositoryDocMap(repo)
+    });
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(`${doc.path} from ${repo.name}.`)}">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#1f1a14">
+  <link rel="icon" href="${escapeHtml(relativeReportPath(doc.detailPath, 'assets/favicon.svg'))}" type="image/svg+xml">
+  <style>${repositoryPageCss()}</style>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow"><a href="${escapeHtml(reportHref)}">Project Watcher</a> / <a href="${escapeHtml(repoHref)}">${escapeHtml(repo.name)}</a> / Docs</p>
+        <h1>${escapeHtml(doc.title)}</h1>
+        <p class="path">${escapeHtml(doc.path)}</p>
+      </div>
+      <div class="masthead-stats">
+        ${mastheadStatHtml('Lines', doc.lines || 0, 'Markdown source')}
+        ${mastheadStatHtml('Size', doc.bytes || 0, 'bytes')}
+        ${mastheadStatHtml('Docs', repo.docs?.markdownFiles || 0, 'files in /docs')}
+        ${mastheadStatHtml('Updated', doc.modifiedAt ? daysSince(doc.modifiedAt) : 0, 'days since modified')}
+      </div>
+    </header>
+
+    <div class="doc-layout">
+      <aside class="doc-nav">
+        <div class="section-title">
+          <h2>Docs tree</h2>
+          <p class="note">${formatNumber(repo.docs?.markdownFiles || 0)} files</p>
+        </div>
+        ${docListHtml(repo, doc.detailPath, doc.detailPath)}
+      </aside>
+      <article class="markdown-body">
+        ${docContent}
+      </article>
+    </div>
+  </main>
+</body>
+</html>
+`;
+}
+
+function repositoryDocsHtml(repo) {
+  if (!repo.docs?.exists) {
+    return '<p class="empty">No top-level docs folder detected.</p>';
+  }
+
+  if ((repo.docs.files || []).length === 0) {
+    return '<p class="empty">Docs folder found, but no Markdown files were readable under /docs.</p>';
+  }
+
+  return docListHtml(repo, repo.detailPath);
+}
+
+function docListHtml(repo, fromPath, activePath = '') {
+  return `<div class="doc-list">
+    ${(repo.docs?.files || []).map((doc) => docFileHtml(doc, fromPath, activePath)).join('')}
+  </div>`;
+}
+
+function docFileHtml(doc, fromPath, activePath) {
+  const activeClass = doc.detailPath === activePath ? ' active' : '';
+  const depth = Math.max(0, doc.path.split('/').length - 2);
+  return `<a class="doc-link${activeClass}" style="--depth: ${depth}" href="${escapeHtml(relativeReportPath(fromPath, doc.detailPath))}">
+    <strong>${escapeHtml(doc.title)}</strong>
+    <span>${escapeHtml(doc.path)} · ${formatNumber(doc.lines || 0)} lines · ${formatBytes(doc.bytes || 0)}</span>
+  </a>`;
+}
+
+function repositoryDocMap(repo) {
+  return new Map((repo.docs?.files || []).map((doc) => [doc.path, doc]));
+}
+
+function renderMarkdownDocument(markdown, context) {
+  const lines = markdown.replace(/\r\n/g, '\n').split('\n');
+  const html = [];
+  let paragraph = [];
+  let listType = null;
+  let inFence = false;
+  let fenceLanguage = '';
+  let fenceLines = [];
+
+  const closeParagraph = () => {
+    if (paragraph.length === 0) {
+      return;
+    }
+
+    html.push(`<p>${renderInlineMarkdown(paragraph.join(' '), context)}</p>`);
+    paragraph = [];
+  };
+
+  const closeList = () => {
+    if (!listType) {
+      return;
+    }
+
+    html.push(`</${listType}>`);
+    listType = null;
+  };
+
+  const closeBlocks = () => {
+    closeParagraph();
+    closeList();
+  };
+
+  for (const line of lines) {
+    if (inFence) {
+      if (/^```/.test(line.trim())) {
+        html.push(`<pre><code${fenceLanguage ? ` class="language-${escapeHtml(fenceLanguage)}"` : ''}>${escapeHtml(fenceLines.join('\n'))}</code></pre>`);
+        inFence = false;
+        fenceLanguage = '';
+        fenceLines = [];
+      } else {
+        fenceLines.push(line);
+      }
+      continue;
+    }
+
+    const trimmed = line.trim();
+
+    if (/^```/.test(trimmed)) {
+      closeBlocks();
+      inFence = true;
+      fenceLanguage = trimmed.slice(3).trim().split(/\s+/)[0] || '';
+      continue;
+    }
+
+    if (trimmed.length === 0) {
+      closeBlocks();
+      continue;
+    }
+
+    const heading = trimmed.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      closeBlocks();
+      const level = heading[1].length;
+      html.push(`<h${level}>${renderInlineMarkdown(heading[2], context)}</h${level}>`);
+      continue;
+    }
+
+    if (/^(-{3,}|\*{3,}|_{3,})$/.test(trimmed)) {
+      closeBlocks();
+      html.push('<hr>');
+      continue;
+    }
+
+    const unordered = trimmed.match(/^[-*+]\s+(.+)$/);
+    if (unordered) {
+      closeParagraph();
+      if (listType !== 'ul') {
+        closeList();
+        listType = 'ul';
+        html.push('<ul>');
+      }
+      html.push(`<li>${renderInlineMarkdown(unordered[1], context)}</li>`);
+      continue;
+    }
+
+    const ordered = trimmed.match(/^\d+\.\s+(.+)$/);
+    if (ordered) {
+      closeParagraph();
+      if (listType !== 'ol') {
+        closeList();
+        listType = 'ol';
+        html.push('<ol>');
+      }
+      html.push(`<li>${renderInlineMarkdown(ordered[1], context)}</li>`);
+      continue;
+    }
+
+    const quote = trimmed.match(/^>\s?(.+)$/);
+    if (quote) {
+      closeBlocks();
+      html.push(`<blockquote><p>${renderInlineMarkdown(quote[1], context)}</p></blockquote>`);
+      continue;
+    }
+
+    if (/^\|.+\|$/.test(trimmed)) {
+      closeBlocks();
+      html.push(`<pre><code>${escapeHtml(line)}</code></pre>`);
+      continue;
+    }
+
+    closeList();
+    paragraph.push(trimmed);
+  }
+
+  if (inFence) {
+    html.push(`<pre><code${fenceLanguage ? ` class="language-${escapeHtml(fenceLanguage)}"` : ''}>${escapeHtml(fenceLines.join('\n'))}</code></pre>`);
+  }
+
+  closeBlocks();
+
+  return html.join('\n') || '<p class="empty">This Markdown file is empty.</p>';
+}
+
+function renderInlineMarkdown(text, context) {
+  const codeBlocks = [];
+  const links = [];
+  let working = String(text).replace(/`([^`]+)`/g, (_match, code) => {
+    const marker = `PWC0DEMARK${codeBlocks.length}END`;
+    codeBlocks.push(`<code>${escapeHtml(code)}</code>`);
+    return marker;
+  });
+
+  working = working.replace(/\[([^\]]+)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, (_match, label, href) => {
+    const marker = `PWL1NKMARK${links.length}END`;
+    const safeHref = resolveMarkdownHref(href, context);
+    links.push(`<a href="${escapeHtml(safeHref)}">${escapeHtml(label)}</a>`);
+    return marker;
+  });
+
+  working = escapeHtml(working)
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/__([^_]+)__/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/_([^_]+)_/g, '<em>$1</em>');
+
+  for (let index = 0; index < links.length; index += 1) {
+    working = working.replace(`PWL1NKMARK${index}END`, links[index]);
+  }
+
+  for (let index = 0; index < codeBlocks.length; index += 1) {
+    working = working.replace(`PWC0DEMARK${index}END`, codeBlocks[index]);
+  }
+
+  return working;
+}
+
+function resolveMarkdownHref(href, context) {
+  const trimmed = href.trim();
+
+  if (!trimmed || trimmed.startsWith('//')) {
+    return '#';
+  }
+
+  if (trimmed.startsWith('#')) {
+    return trimmed;
+  }
+
+  const scheme = trimmed.match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
+  if (scheme) {
+    return ['http', 'https', 'mailto'].includes(scheme) ? trimmed : '#';
+  }
+
+  const hashIndex = trimmed.indexOf('#');
+  const hash = hashIndex >= 0 ? trimmed.slice(hashIndex) : '';
+  const withoutHash = hashIndex >= 0 ? trimmed.slice(0, hashIndex) : trimmed;
+  const queryIndex = withoutHash.indexOf('?');
+  const query = queryIndex >= 0 ? withoutHash.slice(queryIndex) : '';
+  const linkPath = queryIndex >= 0 ? withoutHash.slice(0, queryIndex) : withoutHash;
+  const extension = path.posix.extname(linkPath).toLowerCase();
+
+  if (MARKDOWN_EXTENSIONS.has(extension) && context?.sourcePath && context?.outputPath && context?.docPathBySource) {
+    const sourceDir = path.posix.dirname(context.sourcePath);
+    const targetSourcePath = normalizeDocLinkPath(path.posix.join(sourceDir, linkPath));
+    const targetDoc = context.docPathBySource.get(targetSourcePath);
+
+    if (targetDoc?.detailPath) {
+      return `${relativeReportPath(context.outputPath, targetDoc.detailPath)}${query}${hash}`;
+    }
+  }
+
+  return trimmed;
+}
+
+function normalizeDocLinkPath(value) {
+  const normalized = path.posix.normalize(normalizeReportPath(value)).replace(/^(\.\.\/)+/, '');
+  return normalized.startsWith(`${DOCS_DIR}/`) ? normalized : `${DOCS_DIR}/${normalized}`;
+}
+
 function repositoryPageCss() {
   return `
     :root { --paper: #f6f0e5; --paper-strong: #fffaf0; --ink: #1f1a14; --muted: #766b5d; --line: rgba(31,26,20,.14); --accent: #d97706; --accent-blue: #2563eb; --danger: #b42318; --shadow: rgba(43,31,18,.12); }
@@ -2426,12 +2864,33 @@ function repositoryPageCss() {
     .masthead-stat strong { display: block; margin-top: 10px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(1.8rem, 4vw, 3.4rem); font-weight: 400; letter-spacing: -.05em; line-height: .95; }
     .masthead-stat small { display: block; margin-top: 8px; color: var(--muted); font-size: .8rem; line-height: 1.25; overflow-wrap: anywhere; }
     .grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 34px; margin-top: 34px; }
+    .span-all { grid-column: 1 / -1; }
     .section-title { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; margin-bottom: 18px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
     h2 { margin: 0; font-size: .86rem; letter-spacing: .14em; text-transform: uppercase; }
     .note, .empty { margin: 0; color: var(--muted); font-size: .9rem; }
     .trend { min-height: 220px; background: linear-gradient(180deg, rgba(255,250,240,.72), rgba(255,250,240,.28)); border: 1px solid var(--line); box-shadow: 0 20px 60px var(--shadow); padding: 18px; overflow: hidden; }
     .trend svg { width: 100%; height: auto; display: block; }
     .bars, .repo-list { display: grid; gap: 13px; }
+    .doc-list { display: grid; gap: 9px; }
+    .doc-link { display: block; border: 1px solid var(--line); background: rgba(255,250,240,.58); padding: 13px 14px 13px calc(14px + (var(--depth, 0) * 18px)); text-decoration: none; transition: background 160ms ease, transform 160ms ease; }
+    .doc-link:hover, .doc-link.active { background: rgba(217,119,6,.10); transform: translateX(3px); }
+    .doc-link strong { display: block; }
+    .doc-link span { display: block; margin-top: 4px; color: var(--muted); font-size: .82rem; overflow-wrap: anywhere; }
+    .doc-layout { display: grid; grid-template-columns: minmax(220px, .34fr) minmax(0, 1fr); gap: 34px; margin-top: 34px; align-items: start; }
+    .doc-nav { position: sticky; top: 18px; }
+    .markdown-body { min-width: 0; border: 1px solid var(--line); background: rgba(255,250,240,.70); box-shadow: 0 20px 60px var(--shadow); padding: clamp(20px, 4vw, 44px); font-size: 1.02rem; line-height: 1.65; }
+    .markdown-body > *:first-child { margin-top: 0; }
+    .markdown-body > *:last-child { margin-bottom: 0; }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 { margin: 1.55em 0 .55em; font-family: Georgia, "Times New Roman", serif; letter-spacing: -.04em; line-height: 1.05; text-transform: none; }
+    .markdown-body h1 { font-size: clamp(2.2rem, 5vw, 4.2rem); }
+    .markdown-body h2 { font-size: clamp(1.7rem, 3vw, 2.7rem); }
+    .markdown-body h3 { font-size: 1.45rem; }
+    .markdown-body p, .markdown-body ul, .markdown-body ol, .markdown-body blockquote, .markdown-body pre { margin: 0 0 1.05em; }
+    .markdown-body code { border: 1px solid var(--line); background: rgba(31,26,20,.06); padding: .1em .32em; font-family: "SFMono-Regular", Consolas, monospace; font-size: .92em; }
+    .markdown-body pre { overflow-x: auto; border: 1px solid var(--line); background: rgba(31,26,20,.88); color: #fffaf0; padding: 16px; }
+    .markdown-body pre code { border: 0; background: transparent; color: inherit; padding: 0; }
+    .markdown-body blockquote { border-left: 4px solid var(--accent); margin-left: 0; padding-left: 16px; color: var(--muted); }
+    .markdown-body hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
     .bar-row, .repo-line { display: grid; grid-template-columns: minmax(110px, .7fr) minmax(140px, 1.3fr) 82px; gap: 12px; align-items: center; font-size: .95rem; }
     .repo-line { grid-template-columns: minmax(0, 1fr) 110px; border-bottom: 1px solid var(--line); padding: 11px 0; }
     .repo-line strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -2442,7 +2901,7 @@ function repositoryPageCss() {
     .facts div { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 14px; background: rgba(255,250,240,.66); padding: 12px; }
     dt { color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .10em; text-transform: uppercase; }
     dd { margin: 0; overflow-wrap: anywhere; }
-    @media (max-width: 820px) { .shell { width: min(100% - 22px, 1180px); padding-top: 22px; } .masthead, .grid { grid-template-columns: 1fr; } .bar-row { grid-template-columns: 1fr; gap: 6px; } .masthead-stats { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 820px) { .shell { width: min(100% - 22px, 1180px); padding-top: 22px; } .masthead, .grid, .doc-layout { grid-template-columns: 1fr; } .doc-nav { position: static; } .bar-row { grid-template-columns: 1fr; gap: 6px; } .masthead-stats { grid-template-columns: 1fr 1fr; } }
   `;
 }
 
@@ -3624,6 +4083,7 @@ function renderHtml(report) {
               <th class="numeric">Commits</th>
               <th class="numeric">30d</th>
               <th class="numeric">Tags</th>
+              <th class="numeric">Docs</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -3841,12 +4301,22 @@ function repoLinkHtml(repo) {
   return `<a href="./${escapeHtml(repo.detailPath)}">${escapeHtml(repo.name)}</a>`;
 }
 
+function relativeReportPath(fromPath, toPath) {
+  const relative = path.posix.relative(path.posix.dirname(fromPath), toPath);
+  return relative.startsWith('.') ? relative : `./${relative}`;
+}
+
 function repoTableRowHtml(repo) {
   const languages = repo.loc.byLanguage.slice(0, 4).map((language) => language.language).join(' ');
-  const search = [repo.name, repo.path, repo.branch, languages].join(' ').toLowerCase();
+  const docs = repo.docs?.files || [];
+  const search = [repo.name, repo.path, repo.branch, languages, docs.map((doc) => `${doc.path} ${doc.title}`).join(' ')].join(' ').toLowerCase();
   const status = repo.isDirty
     ? `<span class="pill dirty">${formatNumber(repo.dirtyFileCount)} dirty</span>`
     : '<span class="pill">clean</span>';
+  const docsCount = repo.docs?.markdownFiles || 0;
+  const docsCell = docsCount > 0 && repo.detailPath
+    ? `<a href="./${escapeHtml(repo.detailPath)}#docs">${formatNumber(docsCount)}</a>`
+    : formatNumber(docsCount);
 
   return `<tr data-search="${escapeHtml(search)}" data-dirty="${repo.isDirty ? 'true' : 'false'}">
     <td><strong>${repoLinkHtml(repo)}</strong><div class="path">${escapeHtml(repo.path)}</div></td>
@@ -3855,6 +4325,7 @@ function repoTableRowHtml(repo) {
     <td class="numeric">${formatNumber(repo.commits.total)}</td>
     <td class="numeric">${formatNumber(repo.commits.last30Days)}</td>
     <td class="numeric">${formatNumber(repo.releases.tags)}</td>
+    <td class="numeric">${docsCell}</td>
     <td>${status}</td>
   </tr>`;
 }
@@ -4015,6 +4486,36 @@ function assignRepositoryDetailPaths(repositories) {
   }
 }
 
+function assignRepositoryDocPaths(repositories) {
+  for (const repo of repositories) {
+    const files = repo.docs?.files || [];
+    if (files.length === 0 || !repo.detailPath) {
+      continue;
+    }
+
+    const repoSlug = path.posix.basename(repo.detailPath, '.html');
+    const used = new Set();
+
+    for (const file of files) {
+      const withoutRoot = file.path.replace(/^docs\//, '').replace(/\.[^.]+$/, '');
+      const segments = withoutRoot
+        .split('/')
+        .map((segment) => slugify(segment) || 'doc');
+      const basePath = segments.join('/') || 'doc';
+      let detailPath = `repos/${repoSlug}/docs/${basePath}.html`;
+
+      if (used.has(detailPath)) {
+        detailPath = `repos/${repoSlug}/docs/${basePath}-${shortHash(file.path)}.html`;
+      }
+
+      used.add(detailPath);
+      file.detailPath = detailPath;
+    }
+
+    repo.docs.indexPath = files[0]?.detailPath || null;
+  }
+}
+
 function sortRepositoriesByActivity(a, b) {
   return (b.commits.last7Days || 0) - (a.commits.last7Days || 0)
     || (b.commits.last30Days || 0) - (a.commits.last30Days || 0)
@@ -4132,6 +4633,10 @@ function resolveStaticPath(root, pathname) {
   }
 
   return filePath;
+}
+
+function normalizeReportPath(value) {
+  return String(value).replace(/\\/g, '/');
 }
 
 function contentType(filePath) {

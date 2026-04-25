@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>design-system - Project Watcher</title>
-  <meta name="description" content="Local Git drilldown for design-system.">
+  <title>Button - design-system docs</title>
+  <meta name="description" content="docs/components/button.md from design-system.">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#1f1a14">
-  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../../../assets/favicon.svg" type="image/svg+xml">
   <style>
     :root { --paper: #f6f0e5; --paper-strong: #fffaf0; --ink: #1f1a14; --muted: #766b5d; --line: rgba(31,26,20,.14); --accent: #d97706; --accent-blue: #2563eb; --danger: #b42318; --shadow: rgba(43,31,18,.12); }
     * { box-sizing: border-box; }
@@ -69,143 +69,38 @@
   <main class="shell">
     <header class="masthead">
       <div>
-        <p class="eyebrow"><a href="../report.html">Project Watcher</a> / Repository</p>
-        <h1>design-system</h1>
-        <p class="path">/demo/workspace/design-system</p>
+        <p class="eyebrow"><a href="../../../../report.html">Project Watcher</a> / <a href="../../../design-system.html">design-system</a> / Docs</p>
+        <h1>Button</h1>
+        <p class="path">docs/components/button.md</p>
       </div>
       <div class="masthead-stats">
-        <div class="masthead-stat"><span>LOC</span><strong>10</strong><small>builtin / tracked</small></div>
-        <div class="masthead-stat"><span>Commits</span><strong>1</strong><small>1 in 30d</small></div>
-        <div class="masthead-stat"><span>Tags</span><strong>2</strong><small>v2.0.0</small></div>
-        <div class="masthead-stat"><span>Dirty files</span><strong>0</strong><small>clean working tree</small></div>
+        <div class="masthead-stat"><span>Lines</span><strong>3</strong><small>Markdown source</small></div>
+        <div class="masthead-stat"><span>Size</span><strong>61</strong><small>bytes</small></div>
+        <div class="masthead-stat"><span>Docs</span><strong>2</strong><small>files in /docs</small></div>
+        <div class="masthead-stat"><span>Updated</span><strong>0</strong><small>days since modified</small></div>
       </div>
     </header>
 
-    <div class="grid">
-      <section>
+    <div class="doc-layout">
+      <aside class="doc-nav">
         <div class="section-title">
-          <h2>Weekly commits</h2>
-          <p class="note">1 commits in 7d</p>
-        </div>
-        <div class="trend"><svg viewBox="0 0 720 180" role="img" aria-label="commits trend">
-    <defs>
-      <linearGradient id="area-commits" x1="0" x2="0" y1="0" y2="1">
-        <stop offset="0%" stop-color="#2563eb" stop-opacity="0.26"></stop>
-        <stop offset="100%" stop-color="#2563eb" stop-opacity="0"></stop>
-      </linearGradient>
-    </defs>
-    <line x1="20" y1="160" x2="700" y2="160" stroke="rgba(31,26,20,0.20)"></line>
-    <polygon points="20,160 20.00,160.00 117.14,160.00 214.29,160.00 311.43,160.00 408.57,160.00 505.71,160.00 602.86,160.00 700.00,20.00 700,160" fill="url(#area-commits)"></polygon>
-    <polyline points="20.00,160.00 117.14,160.00 214.29,160.00 311.43,160.00 408.57,160.00 505.71,160.00 602.86,160.00 700.00,20.00" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
-    <circle cx="700.00" cy="20.00" r="6" fill="#2563eb"></circle>
-    <text x="20" y="22" fill="#766b5d" font-size="14">0</text>
-    <text x="700" y="22" fill="#1f1a14" font-size="14" text-anchor="end">1</text>
-  </svg></div>
-      </section>
-
-      <section>
-        <div class="section-title">
-          <h2>Repository state</h2>
-          <p class="note">local Git metadata</p>
-        </div>
-        <dl class="facts">
-          <div><dt>Branch</dt><dd>main</dd></div>
-          <div><dt>Remote</dt><dd>none</dd></div>
-          <div><dt>Last commit</dt><dd>2026-04-24 0802b9c</dd></div>
-          <div><dt>Last subject</dt><dd>Initial design system</dd></div>
-          <div><dt>Contributors</dt><dd>1</dd></div>
-          <div><dt>Local branches</dt><dd>1</dd></div>
-        </dl>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section>
-        <div class="section-title">
-          <h2>Languages</h2>
-          <p class="note">classified code lines</p>
-        </div>
-        <div class="bars">
-          <div class="bar-row"><strong>Markdown</strong><span class="bar-track"><span class="bar-fill" style="--value: 100"></span></span><span>6</span></div><div class="bar-row"><strong>TypeScript</strong><span class="bar-track"><span class="bar-fill" style="--value: 50"></span></span><span>3</span></div><div class="bar-row"><strong>Other</strong><span class="bar-track"><span class="bar-fill" style="--value: 17"></span></span><span>1</span></div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-title">
-          <h2>File types</h2>
-          <p class="note">295 B after excludes</p>
-        </div>
-        <div class="bars">
-          <div class="bar-row"><strong>.md</strong><span class="bar-track"><span class="bar-fill" style="--value: 100"></span></span><span title=".md · 173 B">3</span></div><div class="bar-row"><strong>.tsx</strong><span class="bar-track"><span class="bar-fill" style="--value: 33"></span></span><span title=".tsx · 92 B">1</span></div><div class="bar-row"><strong>[no extension]</strong><span class="bar-track"><span class="bar-fill" style="--value: 33"></span></span><span title="[no extension] · 30 B">1</span></div>
-        </div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section>
-        <div class="section-title">
-          <h2>Releases</h2>
-          <p class="note">local tags</p>
-        </div>
-        <div class="repo-list">
-          <div class="repo-line"><div><strong>v2.0.0</strong><span>4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v2.1.0</strong><span>4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-title">
-          <h2>Contributors</h2>
-          <p class="note">top commit authors</p>
-        </div>
-        <div class="repo-list">
-          <div class="repo-line"><div><strong>Demo Maintainer</strong><span>commit author</span></div><span>1</span></div>
-        </div>
-      </section>
-    </div>
-
-    <div class="grid" id="docs">
-      <section class="span-all">
-        <div class="section-title">
-          <h2>Docs</h2>
-          <p class="note">2 Markdown files under /docs</p>
+          <h2>Docs tree</h2>
+          <p class="note">2 files</p>
         </div>
         <div class="doc-list">
-    <a class="doc-link" style="--depth: 1" href="./design-system/docs/components/button.html">
+    <a class="doc-link active" style="--depth: 1" href="./button.html">
     <strong>Button</strong>
     <span>docs/components/button.md · 3 lines · 61 B</span>
-  </a><a class="doc-link" style="--depth: 1" href="./design-system/docs/components/tokens.html">
+  </a><a class="doc-link" style="--depth: 1" href="./tokens.html">
     <strong>Tokens</strong>
     <span>docs/components/tokens.md · 3 lines · 66 B</span>
   </a>
   </div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section>
-        <div class="section-title">
-          <h2>AI agents</h2>
-          <p class="note">repo footprint, not telemetry</p>
-        </div>
-        <div class="repo-list">
-          <div class="repo-line"><div><strong>Cursor</strong><span>.cursor/ (1)</span></div><span>1</span></div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-title">
-          <h2>Scan details</h2>
-          <p class="note">4/25/2026, 4:10:34 PM</p>
-        </div>
-        <dl class="facts">
-          <div><dt>Duplicate policy</dt><dd>counted</dd></div>
-          <div><dt>Files counted by LOC</dt><dd>5</dd></div>
-          <div><dt>Physical files</dt><dd>5</dd></div>
-          <div><dt>Text lines</dt><dd>13</dd></div>
-          <div><dt>Binary files</dt><dd>0</dd></div>
-          <div><dt>Oversized files</dt><dd>0</dd></div>
-        </dl>
-      </section>
+      </aside>
+      <article class="markdown-body">
+        <h1>Button</h1>
+<p>Use buttons for primary actions and confirmations.</p>
+      </article>
     </div>
   </main>
 </body>

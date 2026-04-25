@@ -6,6 +6,8 @@ Local reporting for Git repositories on your machine.
 
 The tool reads a config file containing project directories, discovers Git repositories, collects Git and line-count metrics, then writes JSON, Markdown, HTML, and historical snapshots.
 
+Repository drilldowns also detect a top-level `docs/` folder and render every readable Markdown file under that tree as browsable HTML.
+
 ![Project Watcher dashboard](https://raw.githubusercontent.com/jdelaire/project-watcher/main/docs/assets/dashboard.png)
 
 ## Quick Start
@@ -33,6 +35,7 @@ reports/assets/manifest.webmanifest
 reports/robots.txt
 reports/csv/*.csv
 reports/repos/*.html
+reports/repos/**/docs/**/*.html
 reports/snapshots/*.json
 ```
 
@@ -153,7 +156,9 @@ Every scan writes spreadsheet-friendly exports under `reports/csv/`:
 
 ## Repository Drilldowns
 
-Every scan writes one detail page per repository under `reports/repos/`. These pages break down weekly activity, releases, contributors, file types, languages, AI agent files, and scan details for a single repo.
+Every scan writes one detail page per repository under `reports/repos/`. These pages break down weekly activity, releases, contributors, file types, languages, AI agent files, docs, and scan details for a single repo.
+
+If a repository has a top-level `docs/` folder, Project Watcher recursively indexes readable `.md` and `.markdown` files and renders each one as a static HTML page under `reports/repos/<repo>/docs/`.
 
 ## Demo
 
