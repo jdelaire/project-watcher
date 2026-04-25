@@ -164,6 +164,7 @@ assert(releaseHtml.includes('<details class="release-overflow">'), 'expected col
 assert(releaseHtml.includes('Show 1 older releases'), 'expected one collapsed release');
 assert(releaseHtml.includes('unreleased-repo'), 'expected unreleased repo in release gaps');
 assert(releaseHtml.includes('<span class="release-badge stale">never</span>'), 'expected never release badge');
+assert(releaseHtml.indexOf('example-repo</a></strong><span class="release-meta">v0.1.5') < releaseHtml.indexOf('unreleased-repo'), 'expected oldest or never releases last in release gaps');
 
 const servePort = await getFreePort();
 const server = spawn(process.execPath, [

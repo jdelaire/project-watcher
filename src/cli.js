@@ -3237,7 +3237,7 @@ function renderHtml(report) {
   const topWeeklyRepos = report.weekly?.topRepositories?.slice(0, 8) || [];
   const topAiAgents = report.aiAgents?.agents?.slice(0, 6) || [];
   const releases = report.releases?.latest || [];
-  const releaseGaps = releaseGapRows(report.repositories).slice(0, 8);
+  const releaseGaps = releaseGapRows(report.repositories).slice(-8);
   const topContributors = report.contributors?.contributors?.slice(0, 8) || [];
   const dirtyRepos = report.repositories.filter((repo) => repo.isDirty);
   const staleRepos = report.repositories
@@ -3977,7 +3977,7 @@ function renderHtml(report) {
       <section>
         <div class="section-title">
           <h2>Release gaps</h2>
-          <p class="note">oldest or missing latest tag</p>
+          <p class="note">oldest or missing latest tag last</p>
         </div>
         <div class="repo-list">
           ${releaseGaps.map(releaseGapHtml).join('') || '<p class="empty">No repositories found.</p>'}
@@ -4362,7 +4362,7 @@ function releaseGapRows(repositories) {
         days
       };
     })
-    .sort((a, b) => releaseGapRank(b) - releaseGapRank(a) || b.tags - a.tags || a.name.localeCompare(b.name));
+    .sort((a, b) => releaseGapRank(a) - releaseGapRank(b) || a.name.localeCompare(b.name));
 }
 
 function releaseGapRank(row) {
