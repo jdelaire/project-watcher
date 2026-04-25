@@ -1,20 +1,20 @@
 # Project Watcher Report
 
-Generated: 2026-04-25T09:20:57.164Z
+Generated: 2026-04-25T09:28:30.838Z
 Config: /demo/tmp/demo-config.json
 
 ## Summary
 
 - Repositories: 3
 - Dirty repositories: 0
-- Lines of code: 32
+- Lines of code: 41
 - Comment lines: 0
-- Files counted: 16
-- Physical files after excludes: 16
-- Physical bytes after excludes: 849 B
-- Commits: 3
-- Commits last 7 days: 3
-- Commits last 30 days: 3
+- Files counted: 19
+- Physical files after excludes: 19
+- Physical bytes after excludes: 1.01 KB
+- Commits: 6
+- Commits last 7 days: 6
+- Commits last 30 days: 6
 - Tags/releases: 7
 - SemVer tags: 7
 - Repos with docs: 3
@@ -59,22 +59,22 @@ Config: /demo/tmp/demo-config.json
 
 | Contributor | Commits | Repos | Top repositories |
 | --- | ---: | ---: | --- |
-| Demo Maintainer | 3 | 3 | atlas-app (1), design-system (1), ledger-api (1) |
+| Demo Maintainer | 6 | 3 | atlas-app (2), design-system (2), ledger-api (2) |
 
 ## Weekly Activity
 
-- Commits: 3
+- Commits: 6
 - Active repositories: 3
-- Files changed: 16
-- Additions: 42
+- Files changed: 19
+- Additions: 57
 - Deletions: 0
-- Net lines: +42
+- Net lines: +57
 
 | Repo | Commits | Additions | Deletions | Net | Files changed |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| atlas-app | 1 | 16 | 0 | +16 | 6 |
-| design-system | 1 | 13 | 0 | +13 | 5 |
-| ledger-api | 1 | 13 | 0 | +13 | 5 |
+| atlas-app | 2 | 21 | 0 | +21 | 7 |
+| design-system | 2 | 18 | 0 | +18 | 6 |
+| ledger-api | 2 | 18 | 0 | +18 | 6 |
 
 ## Since Previous Scan
 
@@ -84,15 +84,15 @@ No previous comparable snapshot
 
 | Repo | Branch | LOC | Commits | 30d | Contributors | Tags | Docs | Latest tag | Last commit | Dirty |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |
-| atlas-app | main | 13 | 1 | 1 | 1 | 3 | 2 | v1.4.0 | 2026-04-24 da86664 |  |
-| design-system | main | 10 | 1 | 1 | 1 | 2 | 2 | v2.1.0 | 2026-04-24 0802b9c |  |
-| ledger-api | main | 9 | 1 | 1 | 1 | 2 | 2 | v0.9.0 | 2026-04-24 3f9b083 |  |
+| atlas-app | main | 16 | 2 | 2 | 1 | 3 | 2 | v1.4.0 | 2026-04-24 6ec8917 |  |
+| design-system | main | 13 | 2 | 2 | 1 | 2 | 2 | v2.1.0 | 2026-04-24 47ff504 |  |
+| ledger-api | main | 12 | 2 | 2 | 1 | 2 | 2 | v0.9.0 | 2026-04-24 e09c1eb |  |
 
 ## Languages
 
 | Language | LOC | Comments | Files |
 | --- | ---: | ---: | ---: |
-| Markdown | 23 | 0 | 12 |
+| Markdown | 32 | 0 | 15 |
 | TypeScript | 6 | 0 | 2 |
 | Go | 2 | 0 | 1 |
 | Other | 1 | 0 | 1 |
@@ -101,7 +101,7 @@ No previous comparable snapshot
 
 | Type | Files | Size | Text lines | Binary | Oversized |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| .md | 12 | 621 B | 32 | 0 | 0 |
+| .md | 15 | 803 B | 47 | 0 | 0 |
 | .tsx | 1 | 92 B | 3 | 0 | 0 |
 | .ts | 1 | 77 B | 3 | 0 | 0 |
 | [no extension] | 1 | 30 B | 1 | 0 | 0 |

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T09:20:57.164Z",
+  "generatedAt": "2026-04-25T09:28:30.838Z",
   "configPath": "/demo/tmp/demo-config.json",
   "roots": [
     "/demo/workspace"
@@ -7,35 +7,35 @@
   "totals": {
     "repositories": 3,
     "dirtyRepositories": 0,
-    "commits": 3,
-    "commitsLast7Days": 3,
-    "commitsLast30Days": 3,
-    "commitsLast90Days": 3,
+    "commits": 6,
+    "commitsLast7Days": 6,
+    "commitsLast30Days": 6,
+    "commitsLast90Days": 6,
     "tags": 7,
     "semverTags": 7,
     "docsRepositories": 3,
     "docsMarkdownFiles": 6,
-    "files": 16,
-    "physicalFiles": 16,
-    "physicalBytes": 849,
-    "textFiles": 16,
+    "files": 19,
+    "physicalFiles": 19,
+    "physicalBytes": 1031,
+    "textFiles": 19,
     "binaryFiles": 0,
     "oversizedFiles": 0,
-    "textLines": 42,
-    "lines": 42,
-    "blankLines": 10,
+    "textLines": 57,
+    "lines": 57,
+    "blankLines": 16,
     "commentLines": 0,
-    "codeLines": 32
+    "codeLines": 41
   },
   "weekly": {
     "windowDays": 7,
     "trendWeeks": 8,
     "totals": {
-      "commits": 3,
-      "additions": 42,
+      "commits": 6,
+      "additions": 57,
       "deletions": 0,
-      "netLines": 42,
-      "filesChanged": 16,
+      "netLines": 57,
+      "filesChanged": 19,
       "activeRepos": 3,
       "activeAuthors": 3
     },
@@ -105,11 +105,11 @@
       },
       {
         "weekStart": "2026-04-20",
-        "commits": 3,
-        "additions": 42,
+        "commits": 6,
+        "additions": 57,
         "deletions": 0,
-        "netLines": 42,
-        "filesChanged": 16,
+        "netLines": 57,
+        "filesChanged": 19,
         "activeAuthors": 3
       }
     ],
@@ -118,33 +118,33 @@
         "name": "atlas-app",
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
-        "commits": 1,
-        "additions": 16,
+        "commits": 2,
+        "additions": 21,
         "deletions": 0,
-        "netLines": 16,
-        "filesChanged": 6,
+        "netLines": 21,
+        "filesChanged": 7,
         "activeAuthors": 1
       },
       {
         "name": "design-system",
         "path": "/demo/workspace/design-system",
         "detailPath": "repos/design-system.html",
-        "commits": 1,
-        "additions": 13,
+        "commits": 2,
+        "additions": 18,
         "deletions": 0,
-        "netLines": 13,
-        "filesChanged": 5,
+        "netLines": 18,
+        "filesChanged": 6,
         "activeAuthors": 1
       },
       {
         "name": "ledger-api",
         "path": "/demo/workspace/ledger-api",
         "detailPath": "repos/ledger-api.html",
-        "commits": 1,
-        "additions": 13,
+        "commits": 2,
+        "additions": 18,
         "deletions": 0,
-        "netLines": 13,
-        "filesChanged": 5,
+        "netLines": 18,
+        "filesChanged": 6,
         "activeAuthors": 1
       }
     ]
@@ -164,6 +164,15 @@
         "repo": "atlas-app",
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 59,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:29.856Z",
+          "detailPath": "repos/atlas-app/changelog.html"
+        },
         "name": "v1.4.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
@@ -172,6 +181,15 @@
         "repo": "atlas-app",
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 59,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:29.856Z",
+          "detailPath": "repos/atlas-app/changelog.html"
+        },
         "name": "v1.3.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
@@ -180,6 +198,15 @@
         "repo": "atlas-app",
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 59,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:29.856Z",
+          "detailPath": "repos/atlas-app/changelog.html"
+        },
         "name": "v1.2.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
@@ -188,6 +215,15 @@
         "repo": "design-system",
         "path": "/demo/workspace/design-system",
         "detailPath": "repos/design-system.html",
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 63,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:29.928Z",
+          "detailPath": "repos/design-system/changelog.html"
+        },
         "name": "v2.1.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
@@ -196,6 +232,15 @@
         "repo": "design-system",
         "path": "/demo/workspace/design-system",
         "detailPath": "repos/design-system.html",
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 63,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:29.928Z",
+          "detailPath": "repos/design-system/changelog.html"
+        },
         "name": "v2.0.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
@@ -204,6 +249,15 @@
         "repo": "ledger-api",
         "path": "/demo/workspace/ledger-api",
         "detailPath": "repos/ledger-api.html",
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 60,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:30.008Z",
+          "detailPath": "repos/ledger-api/changelog.html"
+        },
         "name": "v0.9.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
@@ -212,6 +266,15 @@
         "repo": "ledger-api",
         "path": "/demo/workspace/ledger-api",
         "detailPath": "repos/ledger-api.html",
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 60,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:30.008Z",
+          "detailPath": "repos/ledger-api/changelog.html"
+        },
         "name": "v0.8.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
@@ -231,7 +294,16 @@
           "name": "v1.4.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0
+        "daysSinceLatestTag": 0,
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 59,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:29.856Z",
+          "detailPath": "repos/atlas-app/changelog.html"
+        }
       },
       {
         "name": "design-system",
@@ -246,7 +318,16 @@
           "name": "v2.1.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0
+        "daysSinceLatestTag": 0,
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 63,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:29.928Z",
+          "detailPath": "repos/design-system/changelog.html"
+        }
       },
       {
         "name": "ledger-api",
@@ -261,7 +342,16 @@
           "name": "v0.9.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0
+        "daysSinceLatestTag": 0,
+        "changelog": {
+          "kind": "changelog",
+          "path": "CHANGELOG.md",
+          "title": "Changelog",
+          "bytes": 60,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:28:30.008Z",
+          "detailPath": "repos/ledger-api/changelog.html"
+        }
       }
     ]
   },
@@ -270,26 +360,26 @@
       "uniqueContributors": 1,
       "topContributor": {
         "name": "Demo Maintainer",
-        "commits": 3,
+        "commits": 6,
         "repoCount": 3,
         "repositories": [
           {
             "name": "atlas-app",
             "path": "/demo/workspace/atlas-app",
             "detailPath": "repos/atlas-app.html",
-            "commits": 1
+            "commits": 2
           },
           {
             "name": "design-system",
             "path": "/demo/workspace/design-system",
             "detailPath": "repos/design-system.html",
-            "commits": 1
+            "commits": 2
           },
           {
             "name": "ledger-api",
             "path": "/demo/workspace/ledger-api",
             "detailPath": "repos/ledger-api.html",
-            "commits": 1
+            "commits": 2
           }
         ]
       },
@@ -298,26 +388,26 @@
     "contributors": [
       {
         "name": "Demo Maintainer",
-        "commits": 3,
+        "commits": 6,
         "repoCount": 3,
         "repositories": [
           {
             "name": "atlas-app",
             "path": "/demo/workspace/atlas-app",
             "detailPath": "repos/atlas-app.html",
-            "commits": 1
+            "commits": 2
           },
           {
             "name": "design-system",
             "path": "/demo/workspace/design-system",
             "detailPath": "repos/design-system.html",
-            "commits": 1
+            "commits": 2
           },
           {
             "name": "ledger-api",
             "path": "/demo/workspace/ledger-api",
             "detailPath": "repos/ledger-api.html",
-            "commits": 1
+            "commits": 2
           }
         ]
       }
@@ -460,12 +550,12 @@
   "languages": [
     {
       "language": "Markdown",
-      "files": 12,
-      "lines": 32,
-      "blankLines": 9,
+      "files": 15,
+      "lines": 47,
+      "blankLines": 15,
       "commentLines": 0,
-      "codeLines": 23,
-      "bytes": 621
+      "codeLines": 32,
+      "bytes": 803
     },
     {
       "language": "TypeScript",
@@ -498,13 +588,13 @@
   "fileTypes": [
     {
       "type": ".md",
-      "files": 12,
-      "bytes": 621,
-      "textFiles": 12,
+      "files": 15,
+      "bytes": 803,
+      "textFiles": 15,
       "binaryFiles": 0,
       "oversizedFiles": 0,
-      "textLines": 32,
-      "nonEmptyTextLines": 23
+      "textLines": 47,
+      "nonEmptyTextLines": 32
     },
     {
       "type": ".tsx",
@@ -556,23 +646,23 @@
       "isDirty": false,
       "dirtyFileCount": 0,
       "commits": {
-        "total": 1,
-        "last7Days": 1,
-        "last30Days": 1,
-        "last90Days": 1
+        "total": 2,
+        "last7Days": 2,
+        "last30Days": 2,
+        "last90Days": 2
       },
       "contributors": {
         "total": 1,
         "top": [
           {
             "name": "Demo Maintainer",
-            "commits": 1
+            "commits": 2
           }
         ],
         "all": [
           {
             "name": "Demo Maintainer",
-            "commits": 1
+            "commits": 2
           }
         ]
       },
@@ -606,17 +696,293 @@
         ]
       },
       "lastCommit": {
-        "date": "2026-04-24T10:00:00Z",
-        "hash": "da86664",
-        "subject": "Initial atlas app"
+        "date": "2026-04-24T18:00:00Z",
+        "hash": "6ec8917",
+        "subject": "Add changelog"
       },
       "weekly": {
         "last7Days": {
           "weekStart": "2026-04-18",
-          "commits": 1,
-          "additions": 16,
+          "commits": 2,
+          "additions": 21,
           "deletions": 0,
-          "netLines": 16,
+          "netLines": 21,
+          "filesChanged": 7,
+          "activeAuthors": 1
+        },
+        "weeks": [
+          {
+            "weekStart": "2026-03-02",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-09",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-16",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-23",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-30",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-06",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-13",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-20",
+            "commits": 2,
+            "additions": 21,
+            "deletions": 0,
+            "netLines": 21,
+            "filesChanged": 7,
+            "activeAuthors": 1
+          }
+        ]
+      },
+      "aiAgents": [
+        {
+          "id": "claude",
+          "name": "Claude Code",
+          "iconUrl": "./assets/agents/claude.svg",
+          "homepage": "https://claude.ai/code",
+          "fallback": "C",
+          "signalCount": 1,
+          "signals": [
+            {
+              "label": "CLAUDE.md",
+              "files": [
+                "CLAUDE.md"
+              ],
+              "count": 1
+            }
+          ]
+        },
+        {
+          "id": "codex",
+          "name": "Codex",
+          "iconUrl": "https://openai.com/favicon.ico",
+          "homepage": "https://openai.com/codex",
+          "fallback": "O",
+          "signalCount": 1,
+          "signals": [
+            {
+              "label": "AGENTS.md",
+              "files": [
+                "AGENTS.md"
+              ],
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "docs": {
+        "root": "docs",
+        "exists": true,
+        "markdownFiles": 2,
+        "files": [
+          {
+            "path": "docs/architecture/events.md",
+            "title": "Event Flow",
+            "bytes": 85,
+            "lines": 5,
+            "modifiedAt": "2026-04-25T09:07:14.910Z",
+            "detailPath": "repos/atlas-app/docs/architecture/events.html"
+          },
+          {
+            "path": "docs/README.md",
+            "title": "Atlas Docs",
+            "bytes": 67,
+            "lines": 3,
+            "modifiedAt": "2026-04-25T09:07:14.905Z",
+            "detailPath": "repos/atlas-app/docs/readme.html"
+          }
+        ],
+        "indexPath": "repos/atlas-app/docs/architecture/events.html"
+      },
+      "changelog": {
+        "kind": "changelog",
+        "path": "CHANGELOG.md",
+        "title": "Changelog",
+        "bytes": 59,
+        "lines": 5,
+        "modifiedAt": "2026-04-25T09:28:29.856Z",
+        "detailPath": "repos/atlas-app/changelog.html"
+      },
+      "loc": {
+        "tool": "builtin",
+        "duplicatePolicy": "counted",
+        "fileScope": "tracked",
+        "files": 7,
+        "lines": 21,
+        "blankLines": 5,
+        "commentLines": 0,
+        "codeLines": 16,
+        "bytes": 358,
+        "byLanguage": [
+          {
+            "language": "Markdown",
+            "files": 6,
+            "lines": 18,
+            "blankLines": 5,
+            "commentLines": 0,
+            "codeLines": 13,
+            "bytes": 281
+          },
+          {
+            "language": "TypeScript",
+            "files": 1,
+            "lines": 3,
+            "blankLines": 0,
+            "commentLines": 0,
+            "codeLines": 3,
+            "bytes": 77
+          }
+        ]
+      },
+      "fileTypes": {
+        "files": 7,
+        "bytes": 358,
+        "textFiles": 7,
+        "binaryFiles": 0,
+        "oversizedFiles": 0,
+        "textLines": 21,
+        "nonEmptyTextLines": 16,
+        "byType": [
+          {
+            "type": ".md",
+            "files": 6,
+            "bytes": 281,
+            "textFiles": 6,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 18,
+            "nonEmptyTextLines": 13
+          },
+          {
+            "type": ".ts",
+            "files": 1,
+            "bytes": 77,
+            "textFiles": 1,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 3,
+            "nonEmptyTextLines": 3
+          }
+        ]
+      },
+      "detailPath": "repos/atlas-app.html"
+    },
+    {
+      "name": "design-system",
+      "path": "/demo/workspace/design-system",
+      "remoteUrl": null,
+      "branch": "main",
+      "isDirty": false,
+      "dirtyFileCount": 0,
+      "commits": {
+        "total": 2,
+        "last7Days": 2,
+        "last30Days": 2,
+        "last90Days": 2
+      },
+      "contributors": {
+        "total": 1,
+        "top": [
+          {
+            "name": "Demo Maintainer",
+            "commits": 2
+          }
+        ],
+        "all": [
+          {
+            "name": "Demo Maintainer",
+            "commits": 2
+          }
+        ]
+      },
+      "branches": {
+        "local": 1
+      },
+      "releases": {
+        "tags": 2,
+        "semverTags": 2,
+        "tagsLast30Days": 2,
+        "tagsLast90Days": 2,
+        "tagsLast365Days": 2,
+        "latestTag": {
+          "name": "v2.1.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 0,
+        "recentTags": [
+          {
+            "name": "v2.1.0",
+            "date": "2026-04-24T10:00:00Z"
+          },
+          {
+            "name": "v2.0.0",
+            "date": "2026-04-24T10:00:00Z"
+          }
+        ]
+      },
+      "lastCommit": {
+        "date": "2026-04-24T18:00:00Z",
+        "hash": "47ff504",
+        "subject": "Add changelog"
+      },
+      "weekly": {
+        "last7Days": {
+          "weekStart": "2026-04-18",
+          "commits": 2,
+          "additions": 18,
+          "deletions": 0,
+          "netLines": 18,
           "filesChanged": 6,
           "activeAuthors": 1
         },
@@ -686,278 +1052,11 @@
           },
           {
             "weekStart": "2026-04-20",
-            "commits": 1,
-            "additions": 16,
+            "commits": 2,
+            "additions": 18,
             "deletions": 0,
-            "netLines": 16,
+            "netLines": 18,
             "filesChanged": 6,
-            "activeAuthors": 1
-          }
-        ]
-      },
-      "aiAgents": [
-        {
-          "id": "claude",
-          "name": "Claude Code",
-          "iconUrl": "./assets/agents/claude.svg",
-          "homepage": "https://claude.ai/code",
-          "fallback": "C",
-          "signalCount": 1,
-          "signals": [
-            {
-              "label": "CLAUDE.md",
-              "files": [
-                "CLAUDE.md"
-              ],
-              "count": 1
-            }
-          ]
-        },
-        {
-          "id": "codex",
-          "name": "Codex",
-          "iconUrl": "https://openai.com/favicon.ico",
-          "homepage": "https://openai.com/codex",
-          "fallback": "O",
-          "signalCount": 1,
-          "signals": [
-            {
-              "label": "AGENTS.md",
-              "files": [
-                "AGENTS.md"
-              ],
-              "count": 1
-            }
-          ]
-        }
-      ],
-      "docs": {
-        "root": "docs",
-        "exists": true,
-        "markdownFiles": 2,
-        "files": [
-          {
-            "path": "docs/architecture/events.md",
-            "title": "Event Flow",
-            "bytes": 85,
-            "lines": 5,
-            "modifiedAt": "2026-04-25T09:07:14.910Z",
-            "detailPath": "repos/atlas-app/docs/architecture/events.html"
-          },
-          {
-            "path": "docs/README.md",
-            "title": "Atlas Docs",
-            "bytes": 67,
-            "lines": 3,
-            "modifiedAt": "2026-04-25T09:07:14.905Z",
-            "detailPath": "repos/atlas-app/docs/readme.html"
-          }
-        ],
-        "indexPath": "repos/atlas-app/docs/architecture/events.html"
-      },
-      "loc": {
-        "tool": "builtin",
-        "duplicatePolicy": "counted",
-        "fileScope": "tracked",
-        "files": 6,
-        "lines": 16,
-        "blankLines": 3,
-        "commentLines": 0,
-        "codeLines": 13,
-        "bytes": 299,
-        "byLanguage": [
-          {
-            "language": "Markdown",
-            "files": 5,
-            "lines": 13,
-            "blankLines": 3,
-            "commentLines": 0,
-            "codeLines": 10,
-            "bytes": 222
-          },
-          {
-            "language": "TypeScript",
-            "files": 1,
-            "lines": 3,
-            "blankLines": 0,
-            "commentLines": 0,
-            "codeLines": 3,
-            "bytes": 77
-          }
-        ]
-      },
-      "fileTypes": {
-        "files": 6,
-        "bytes": 299,
-        "textFiles": 6,
-        "binaryFiles": 0,
-        "oversizedFiles": 0,
-        "textLines": 16,
-        "nonEmptyTextLines": 13,
-        "byType": [
-          {
-            "type": ".md",
-            "files": 5,
-            "bytes": 222,
-            "textFiles": 5,
-            "binaryFiles": 0,
-            "oversizedFiles": 0,
-            "textLines": 13,
-            "nonEmptyTextLines": 10
-          },
-          {
-            "type": ".ts",
-            "files": 1,
-            "bytes": 77,
-            "textFiles": 1,
-            "binaryFiles": 0,
-            "oversizedFiles": 0,
-            "textLines": 3,
-            "nonEmptyTextLines": 3
-          }
-        ]
-      },
-      "detailPath": "repos/atlas-app.html"
-    },
-    {
-      "name": "design-system",
-      "path": "/demo/workspace/design-system",
-      "remoteUrl": null,
-      "branch": "main",
-      "isDirty": false,
-      "dirtyFileCount": 0,
-      "commits": {
-        "total": 1,
-        "last7Days": 1,
-        "last30Days": 1,
-        "last90Days": 1
-      },
-      "contributors": {
-        "total": 1,
-        "top": [
-          {
-            "name": "Demo Maintainer",
-            "commits": 1
-          }
-        ],
-        "all": [
-          {
-            "name": "Demo Maintainer",
-            "commits": 1
-          }
-        ]
-      },
-      "branches": {
-        "local": 1
-      },
-      "releases": {
-        "tags": 2,
-        "semverTags": 2,
-        "tagsLast30Days": 2,
-        "tagsLast90Days": 2,
-        "tagsLast365Days": 2,
-        "latestTag": {
-          "name": "v2.1.0",
-          "date": "2026-04-24T10:00:00Z"
-        },
-        "daysSinceLatestTag": 0,
-        "recentTags": [
-          {
-            "name": "v2.1.0",
-            "date": "2026-04-24T10:00:00Z"
-          },
-          {
-            "name": "v2.0.0",
-            "date": "2026-04-24T10:00:00Z"
-          }
-        ]
-      },
-      "lastCommit": {
-        "date": "2026-04-24T10:00:00Z",
-        "hash": "0802b9c",
-        "subject": "Initial design system"
-      },
-      "weekly": {
-        "last7Days": {
-          "weekStart": "2026-04-18",
-          "commits": 1,
-          "additions": 13,
-          "deletions": 0,
-          "netLines": 13,
-          "filesChanged": 5,
-          "activeAuthors": 1
-        },
-        "weeks": [
-          {
-            "weekStart": "2026-03-02",
-            "commits": 0,
-            "additions": 0,
-            "deletions": 0,
-            "netLines": 0,
-            "filesChanged": 0,
-            "activeAuthors": 0
-          },
-          {
-            "weekStart": "2026-03-09",
-            "commits": 0,
-            "additions": 0,
-            "deletions": 0,
-            "netLines": 0,
-            "filesChanged": 0,
-            "activeAuthors": 0
-          },
-          {
-            "weekStart": "2026-03-16",
-            "commits": 0,
-            "additions": 0,
-            "deletions": 0,
-            "netLines": 0,
-            "filesChanged": 0,
-            "activeAuthors": 0
-          },
-          {
-            "weekStart": "2026-03-23",
-            "commits": 0,
-            "additions": 0,
-            "deletions": 0,
-            "netLines": 0,
-            "filesChanged": 0,
-            "activeAuthors": 0
-          },
-          {
-            "weekStart": "2026-03-30",
-            "commits": 0,
-            "additions": 0,
-            "deletions": 0,
-            "netLines": 0,
-            "filesChanged": 0,
-            "activeAuthors": 0
-          },
-          {
-            "weekStart": "2026-04-06",
-            "commits": 0,
-            "additions": 0,
-            "deletions": 0,
-            "netLines": 0,
-            "filesChanged": 0,
-            "activeAuthors": 0
-          },
-          {
-            "weekStart": "2026-04-13",
-            "commits": 0,
-            "additions": 0,
-            "deletions": 0,
-            "netLines": 0,
-            "filesChanged": 0,
-            "activeAuthors": 0
-          },
-          {
-            "weekStart": "2026-04-20",
-            "commits": 1,
-            "additions": 13,
-            "deletions": 0,
-            "netLines": 13,
-            "filesChanged": 5,
             "activeAuthors": 1
           }
         ]
@@ -1005,25 +1104,34 @@
         ],
         "indexPath": "repos/design-system/docs/components/button.html"
       },
+      "changelog": {
+        "kind": "changelog",
+        "path": "CHANGELOG.md",
+        "title": "Changelog",
+        "bytes": 63,
+        "lines": 5,
+        "modifiedAt": "2026-04-25T09:28:29.928Z",
+        "detailPath": "repos/design-system/changelog.html"
+      },
       "loc": {
         "tool": "builtin",
         "duplicatePolicy": "counted",
         "fileScope": "tracked",
-        "files": 5,
-        "lines": 13,
-        "blankLines": 3,
+        "files": 6,
+        "lines": 18,
+        "blankLines": 5,
         "commentLines": 0,
-        "codeLines": 10,
-        "bytes": 295,
+        "codeLines": 13,
+        "bytes": 358,
         "byLanguage": [
           {
             "language": "Markdown",
-            "files": 3,
-            "lines": 9,
-            "blankLines": 3,
+            "files": 4,
+            "lines": 14,
+            "blankLines": 5,
             "commentLines": 0,
-            "codeLines": 6,
-            "bytes": 173
+            "codeLines": 9,
+            "bytes": 236
           },
           {
             "language": "TypeScript",
@@ -1046,23 +1154,23 @@
         ]
       },
       "fileTypes": {
-        "files": 5,
-        "bytes": 295,
-        "textFiles": 5,
+        "files": 6,
+        "bytes": 358,
+        "textFiles": 6,
         "binaryFiles": 0,
         "oversizedFiles": 0,
-        "textLines": 13,
-        "nonEmptyTextLines": 10,
+        "textLines": 18,
+        "nonEmptyTextLines": 13,
         "byType": [
           {
             "type": ".md",
-            "files": 3,
-            "bytes": 173,
-            "textFiles": 3,
+            "files": 4,
+            "bytes": 236,
+            "textFiles": 4,
             "binaryFiles": 0,
             "oversizedFiles": 0,
-            "textLines": 9,
-            "nonEmptyTextLines": 6
+            "textLines": 14,
+            "nonEmptyTextLines": 9
           },
           {
             "type": ".tsx",
@@ -1096,23 +1204,23 @@
       "isDirty": false,
       "dirtyFileCount": 0,
       "commits": {
-        "total": 1,
-        "last7Days": 1,
-        "last30Days": 1,
-        "last90Days": 1
+        "total": 2,
+        "last7Days": 2,
+        "last30Days": 2,
+        "last90Days": 2
       },
       "contributors": {
         "total": 1,
         "top": [
           {
             "name": "Demo Maintainer",
-            "commits": 1
+            "commits": 2
           }
         ],
         "all": [
           {
             "name": "Demo Maintainer",
-            "commits": 1
+            "commits": 2
           }
         ]
       },
@@ -1142,18 +1250,18 @@
         ]
       },
       "lastCommit": {
-        "date": "2026-04-24T10:00:00Z",
-        "hash": "3f9b083",
-        "subject": "Initial ledger api"
+        "date": "2026-04-24T18:00:00Z",
+        "hash": "e09c1eb",
+        "subject": "Add changelog"
       },
       "weekly": {
         "last7Days": {
           "weekStart": "2026-04-18",
-          "commits": 1,
-          "additions": 13,
+          "commits": 2,
+          "additions": 18,
           "deletions": 0,
-          "netLines": 13,
-          "filesChanged": 5,
+          "netLines": 18,
+          "filesChanged": 6,
           "activeAuthors": 1
         },
         "weeks": [
@@ -1222,11 +1330,11 @@
           },
           {
             "weekStart": "2026-04-20",
-            "commits": 1,
-            "additions": 13,
+            "commits": 2,
+            "additions": 18,
             "deletions": 0,
-            "netLines": 13,
-            "filesChanged": 5,
+            "netLines": 18,
+            "filesChanged": 6,
             "activeAuthors": 1
           }
         ]
@@ -1274,25 +1382,34 @@
         ],
         "indexPath": "repos/ledger-api/docs/api.html"
       },
+      "changelog": {
+        "kind": "changelog",
+        "path": "CHANGELOG.md",
+        "title": "Changelog",
+        "bytes": 60,
+        "lines": 5,
+        "modifiedAt": "2026-04-25T09:28:30.008Z",
+        "detailPath": "repos/ledger-api/changelog.html"
+      },
       "loc": {
         "tool": "builtin",
         "duplicatePolicy": "counted",
         "fileScope": "tracked",
-        "files": 5,
-        "lines": 13,
-        "blankLines": 4,
+        "files": 6,
+        "lines": 18,
+        "blankLines": 6,
         "commentLines": 0,
-        "codeLines": 9,
-        "bytes": 255,
+        "codeLines": 12,
+        "bytes": 315,
         "byLanguage": [
           {
             "language": "Markdown",
-            "files": 4,
-            "lines": 10,
-            "blankLines": 3,
+            "files": 5,
+            "lines": 15,
+            "blankLines": 5,
             "commentLines": 0,
-            "codeLines": 7,
-            "bytes": 226
+            "codeLines": 10,
+            "bytes": 286
           },
           {
             "language": "Go",
@@ -1306,23 +1423,23 @@
         ]
       },
       "fileTypes": {
-        "files": 5,
-        "bytes": 255,
-        "textFiles": 5,
+        "files": 6,
+        "bytes": 315,
+        "textFiles": 6,
         "binaryFiles": 0,
         "oversizedFiles": 0,
-        "textLines": 13,
-        "nonEmptyTextLines": 9,
+        "textLines": 18,
+        "nonEmptyTextLines": 12,
         "byType": [
           {
             "type": ".md",
-            "files": 4,
-            "bytes": 226,
-            "textFiles": 4,
+            "files": 5,
+            "bytes": 286,
+            "textFiles": 5,
             "binaryFiles": 0,
             "oversizedFiles": 0,
-            "textLines": 10,
-            "nonEmptyTextLines": 7
+            "textLines": 15,
+            "nonEmptyTextLines": 10
           },
           {
             "type": ".go",

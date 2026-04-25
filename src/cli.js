@@ -306,6 +306,7 @@ async function writeScanReport(configPath) {
   repositories.sort(sortRepositoriesByActivity);
   assignRepositoryDetailPaths(repositories);
   assignRepositoryDocPaths(repositories);
+  assignRepositoryChangelogPaths(repositories);
 
   const baseReport = buildReport({
     generatedAt: new Date().toISOString(),
@@ -785,6 +786,7 @@ async function analyzeRepository(repoPath, config) {
   const weekly = getWeeklyActivity(repoPath);
   const aiAgents = detectAiAgents(repoPath);
   const docs = await collectRepositoryDocs(repoPath, config);
+  const changelog = await collectRepositoryChangelog(repoPath, config);
   const loc = await countRepositoryLines(repoPath, config);
   const fileTypes = await collectFileTypeStats(repoPath, config);
 
@@ -823,6 +825,7 @@ async function analyzeRepository(repoPath, config) {
     weekly,
     aiAgents,
     docs,
+    changelog,
     loc,
     fileTypes
   };
@@ -1023,6 +1026,51 @@ async function collectRepositoryDocs(repoPath, config) {
     exists: true,
     markdownFiles: files.length,
     files
+  };
+}
+
+async function collectRepositoryChangelog(repoPath, config) {
+  let entries;
+  try {
+    entries = await fsp.readdir(repoPath, { withFileTypes: true });
+  } catch {
+    return null;
+  }
+
+  const entry = entries
+    .filter((item) => item.isFile())
+    .find((item) => item.name.toLowerCase() === 'changelog.md' || item.name.toLowerCase() === 'changelog.markdown');
+
+  if (!entry) {
+    return null;
+  }
+
+  const fullPath = path.join(repoPath, entry.name);
+  let stat;
+  try {
+    stat = await fsp.stat(fullPath);
+  } catch {
+    return null;
+  }
+
+  if (stat.size > config.maxFileBytes) {
+    return null;
+  }
+
+  const content = await readLikelyText(fullPath);
+  if (content === null) {
+    return null;
+  }
+
+  const lineStats = countLines(content);
+
+  return {
+    kind: 'changelog',
+    path: normalizeReportPath(entry.name),
+    title: markdownTitle(content, entry.name),
+    bytes: stat.size,
+    lines: lineStats.lines,
+    modifiedAt: stat.mtime.toISOString()
   };
 }
 
@@ -1810,7 +1858,8 @@ function aggregateReleases(repositories) {
       tagsLast90Days: releases.tagsLast90Days || 0,
       tagsLast365Days: releases.tagsLast365Days || 0,
       latestTag: releases.latestTag || null,
-      daysSinceLatestTag: releases.daysSinceLatestTag ?? null
+      daysSinceLatestTag: releases.daysSinceLatestTag ?? null,
+      changelog: repo.changelog || null
     });
 
     for (const tag of releases.recentTags || []) {
@@ -1818,6 +1867,7 @@ function aggregateReleases(repositories) {
         repo: repo.name,
         path: repo.path,
         detailPath: repo.detailPath,
+        changelog: repo.changelog || null,
         name: tag.name,
         date: tag.date,
         semver: SEMVER_TAG.test(tag.name)
@@ -2391,6 +2441,10 @@ async function writeRepositoryPages(outputDir, report) {
     for (const doc of repo.docs?.files || []) {
       writes.push(writeRepositoryDocPage(outputDir, report, repo, doc));
     }
+
+    if (repo.changelog?.detailPath) {
+      writes.push(writeRepositoryDocPage(outputDir, report, repo, repo.changelog));
+    }
   }
 
   await Promise.all(writes);
@@ -2560,7 +2614,8 @@ function renderRepositoryHtml(report, repo) {
 }
 
 function renderRepositoryDocHtml(report, repo, doc, markdown, readError) {
-  const title = `${doc.title} - ${repo.name} docs`;
+  const sectionName = doc.kind === 'changelog' ? 'Changelog' : 'Docs';
+  const title = `${doc.title} - ${repo.name} ${sectionName.toLowerCase()}`;
   const repoHref = relativeReportPath(doc.detailPath, repo.detailPath);
   const reportHref = relativeReportPath(doc.detailPath, 'report.html');
   const docContent = readError
@@ -2588,7 +2643,7 @@ function renderRepositoryDocHtml(report, repo, doc, markdown, readError) {
   <main class="shell">
     <header class="masthead">
       <div>
-        <p class="eyebrow"><a href="${escapeHtml(reportHref)}">Project Watcher</a> / <a href="${escapeHtml(repoHref)}">${escapeHtml(repo.name)}</a> / Docs</p>
+        <p class="eyebrow"><a href="${escapeHtml(reportHref)}">Project Watcher</a> / <a href="${escapeHtml(repoHref)}">${escapeHtml(repo.name)}</a> / ${escapeHtml(sectionName)}</p>
         <h1>${escapeHtml(doc.title)}</h1>
         <p class="path">${escapeHtml(doc.path)}</p>
       </div>
@@ -2603,10 +2658,10 @@ function renderRepositoryDocHtml(report, repo, doc, markdown, readError) {
     <div class="doc-layout">
       <aside class="doc-nav">
         <div class="section-title">
-          <h2>Docs tree</h2>
-          <p class="note">${formatNumber(repo.docs?.markdownFiles || 0)} files</p>
+          <h2>${escapeHtml(sectionName)}</h2>
+          <p class="note">${doc.kind === 'changelog' ? 'release notes' : `${formatNumber(repo.docs?.markdownFiles || 0)} files`}</p>
         </div>
-        ${docListHtml(repo, doc.detailPath, doc.detailPath)}
+        ${doc.kind === 'changelog' ? changelogNavHtml(repo, doc.detailPath) : docListHtml(repo, doc.detailPath, doc.detailPath)}
       </aside>
       <article class="markdown-body">
         ${docContent}
@@ -2633,6 +2688,19 @@ function repositoryDocsHtml(repo) {
 function docListHtml(repo, fromPath, activePath = '') {
   return `<div class="doc-list">
     ${(repo.docs?.files || []).map((doc) => docFileHtml(doc, fromPath, activePath)).join('')}
+  </div>`;
+}
+
+function changelogNavHtml(repo, fromPath) {
+  return `<div class="doc-list">
+    <a class="doc-link active" style="--depth: 0" href="${escapeHtml(relativeReportPath(fromPath, repo.changelog.detailPath))}">
+      <strong>changelog.md</strong>
+      <span>${escapeHtml(repo.changelog.path)} · ${formatNumber(repo.changelog.lines || 0)} lines · ${formatBytes(repo.changelog.bytes || 0)}</span>
+    </a>
+    <a class="doc-link" style="--depth: 0" href="${escapeHtml(relativeReportPath(fromPath, repo.detailPath))}">
+      <strong>${escapeHtml(repo.name)}</strong>
+      <span>repository overview</span>
+    </a>
   </div>`;
 }
 
@@ -3602,14 +3670,20 @@ function renderHtml(report) {
 
     .release-project {
       display: block;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.45rem, 2.6vw, 2.25rem);
-      font-weight: 400;
-      letter-spacing: -0.055em;
-      line-height: 0.98;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.2;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .release-changelog {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
     }
 
     .release-meta {
@@ -4346,7 +4420,7 @@ function releaseHtml(release) {
     release.semver ? 'SemVer' : 'tag'
   ];
 
-  return `<div class="release-row"><div><strong class="release-project">${repoLinkHtml({ name: release.repo, detailPath: release.detailPath })}</strong><span class="release-meta">${escapeHtml(pieces.join(' · '))}</span></div><span class="release-badge">${release.semver ? 'release' : 'tag'}</span></div>`;
+  return `<div class="release-row"><div><strong class="release-project">${releaseProjectHtml({ name: release.repo, detailPath: release.detailPath, changelog: release.changelog })}</strong><span class="release-meta">${escapeHtml(pieces.join(' · '))}</span></div><span class="release-badge">${release.semver ? 'release' : 'tag'}</span></div>`;
 }
 
 function releaseGapRows(repositories) {
@@ -4357,6 +4431,7 @@ function releaseGapRows(repositories) {
       return {
         name: repo.name,
         detailPath: repo.detailPath,
+        changelog: repo.changelog || null,
         tags: repo.releases?.tags || 0,
         latestTag,
         days
@@ -4378,7 +4453,7 @@ function releaseGapRank(row) {
 }
 
 function releaseGapHtml(row) {
-  const project = repoLinkHtml({ name: row.name, detailPath: row.detailPath });
+  const project = releaseProjectHtml(row);
   if (!row.latestTag) {
     return `<div class="release-row"><div><strong class="release-project">${project}</strong><span class="release-meta">No local tags found</span></div><span class="release-badge stale">never</span></div>`;
   }
@@ -4396,6 +4471,15 @@ function releaseGapHtml(row) {
   ];
 
   return `<div class="release-row"><div><strong class="release-project">${project}</strong><span class="release-meta">${escapeHtml(meta.join(' · '))}</span></div><span class="release-badge ${badgeClass}">${escapeHtml(label)}</span></div>`;
+}
+
+function releaseProjectHtml(repo) {
+  const project = repoLinkHtml(repo);
+  if (!repo.changelog?.detailPath) {
+    return project;
+  }
+
+  return `${project} <a class="release-changelog" href="./${escapeHtml(repo.changelog.detailPath)}">(changelog.md)</a>`;
 }
 
 function contributorHtml(contributor) {
@@ -4677,6 +4761,17 @@ function assignRepositoryDocPaths(repositories) {
     }
 
     repo.docs.indexPath = files[0]?.detailPath || null;
+  }
+}
+
+function assignRepositoryChangelogPaths(repositories) {
+  for (const repo of repositories) {
+    if (!repo.changelog || !repo.detailPath) {
+      continue;
+    }
+
+    const repoSlug = path.posix.basename(repo.detailPath, '.html');
+    repo.changelog.detailPath = `repos/${repoSlug}/changelog.html`;
   }
 }
 

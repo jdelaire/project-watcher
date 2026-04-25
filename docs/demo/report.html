@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Project Watcher Report</title>
-  <meta name="description" content="Local Git health report for 3 repositories, 32 code lines, and 16 tracked files.">
+  <meta name="description" content="Local Git health report for 3 repositories, 41 code lines, and 19 tracked files.">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#1f1a14">
   <meta name="application-name" content="Project Watcher">
   <meta name="apple-mobile-web-app-title" content="Project Watcher">
   <meta property="og:title" content="Project Watcher Report">
-  <meta property="og:description" content="Local Git health report for 3 repositories, 32 code lines, and 16 tracked files.">
+  <meta property="og:description" content="Local Git health report for 3 repositories, 41 code lines, and 19 tracked files.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Project Watcher">
   <meta property="og:image:alt" content="Project Watcher local repository health dashboard">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Project Watcher Report">
-  <meta name="twitter:description" content="Local Git health report for 3 repositories, 32 code lines, and 16 tracked files.">
+  <meta name="twitter:description" content="Local Git health report for 3 repositories, 41 code lines, and 19 tracked files.">
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="./assets/manifest.webmanifest">
   <style>
@@ -341,14 +341,20 @@
 
     .release-project {
       display: block;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.45rem, 2.6vw, 2.25rem);
-      font-weight: 400;
-      letter-spacing: -0.055em;
-      line-height: 0.98;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.2;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .release-changelog {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 2px;
     }
 
     .release-meta {
@@ -690,8 +696,8 @@
         <h1>Local repo health.</h1>
       </div>
       <div class="masthead-stats">
-        <div class="masthead-stat"><span>7d commits</span><strong>3</strong><small>committed in tracked repos</small></div>
-        <div class="masthead-stat"><span>7d churn</span><strong>42</strong><small>added + deleted lines</small></div>
+        <div class="masthead-stat"><span>7d commits</span><strong>6</strong><small>committed in tracked repos</small></div>
+        <div class="masthead-stat"><span>7d churn</span><strong>57</strong><small>added + deleted lines</small></div>
         <div class="masthead-stat"><span>Active repos</span><strong>3</strong><small>with commits this week</small></div>
         <div class="masthead-stat"><span>Dirty repos</span><strong>0</strong><small>uncommitted local changes</small></div>
       </div>
@@ -699,9 +705,9 @@
 
     <div class="metrics">
       <div class="metric"><span>Repositories</span><strong>3</strong></div>
-      <div class="metric"><span>Code lines</span><strong>32</strong></div>
-      <div class="metric"><span>Files</span><strong>16</strong></div>
-      <div class="metric"><span>Commits</span><strong>3</strong></div>
+      <div class="metric"><span>Code lines</span><strong>41</strong></div>
+      <div class="metric"><span>Files</span><strong>19</strong></div>
+      <div class="metric"><span>Commits</span><strong>6</strong></div>
     </div>
 
     <div class="grid">
@@ -711,10 +717,10 @@
           <p class="note">7 tags in 365d</p>
         </div>
         <div class="repo-list">
-    <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a></strong><span class="release-meta">v1.4.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a></strong><span class="release-meta">v1.3.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a></strong><span class="release-meta">v1.2.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a></strong><span class="release-meta">v2.1.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a></strong><span class="release-meta">v2.0.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div>
+    <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.4.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.3.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.2.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a> <a class="release-changelog" href="./repos/design-system/changelog.html">(changelog.md)</a></strong><span class="release-meta">v2.1.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a> <a class="release-changelog" href="./repos/design-system/changelog.html">(changelog.md)</a></strong><span class="release-meta">v2.0.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div>
     <details class="release-overflow">
       <summary>Show 2 older releases</summary>
-      <div class="repo-list"><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a></strong><span class="release-meta">v0.9.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a></strong><span class="release-meta">v0.8.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div></div>
+      <div class="repo-list"><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a> <a class="release-changelog" href="./repos/ledger-api/changelog.html">(changelog.md)</a></strong><span class="release-meta">v0.9.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a> <a class="release-changelog" href="./repos/ledger-api/changelog.html">(changelog.md)</a></strong><span class="release-meta">v0.8.0 · 4/24/2026, 5:00:00 PM · SemVer</span></div><span class="release-badge">release</span></div></div>
     </details>
   </div>
       </section>
@@ -725,7 +731,7 @@
           <p class="note">oldest or missing latest tag last</p>
         </div>
         <div class="repo-list">
-          <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a></strong><span class="release-meta">v1.4.0 · 4/24/2026, 5:00:00 PM · 3 total tags</span></div><span class="release-badge fresh">0d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a></strong><span class="release-meta">v2.1.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">0d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a></strong><span class="release-meta">v0.9.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">0d</span></div>
+          <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.4.0 · 4/24/2026, 5:00:00 PM · 3 total tags</span></div><span class="release-badge fresh">0d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a> <a class="release-changelog" href="./repos/design-system/changelog.html">(changelog.md)</a></strong><span class="release-meta">v2.1.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">0d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a> <a class="release-changelog" href="./repos/ledger-api/changelog.html">(changelog.md)</a></strong><span class="release-meta">v0.9.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">0d</span></div>
         </div>
       </section>
     </div>
@@ -762,14 +768,14 @@
     <polyline points="20.00,160.00 117.14,160.00 214.29,160.00 311.43,160.00 408.57,160.00 505.71,160.00 602.86,160.00 700.00,20.00" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
     <circle cx="700.00" cy="20.00" r="6" fill="#2563eb"></circle>
     <text x="20" y="22" fill="#766b5d" font-size="14">0</text>
-    <text x="700" y="22" fill="#1f1a14" font-size="14" text-anchor="end">3</text>
+    <text x="700" y="22" fill="#1f1a14" font-size="14" text-anchor="end">6</text>
   </svg></div>
       </section>
 
       <section>
         <div class="section-title">
           <h2>Weekly churn</h2>
-          <p class="note">16 files touched in 7d</p>
+          <p class="note">19 files touched in 7d</p>
         </div>
         <div class="trend"><svg viewBox="0 0 360 120" role="img" aria-label="churn trend">
     <defs>
@@ -783,7 +789,7 @@
     <polyline points="20.00,100.00 65.71,100.00 111.43,100.00 157.14,100.00 202.86,100.00 248.57,100.00 294.29,100.00 340.00,20.00" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
     <circle cx="340.00" cy="20.00" r="6" fill="#d97706"></circle>
     <text x="20" y="22" fill="#766b5d" font-size="14">0</text>
-    <text x="340" y="22" fill="#1f1a14" font-size="14" text-anchor="end">42</text>
+    <text x="340" y="22" fill="#1f1a14" font-size="14" text-anchor="end">57</text>
   </svg></div>
       </section>
     </div>
@@ -795,7 +801,7 @@
           <p class="note">1 unique authors</p>
         </div>
         <div class="repo-list">
-          <div class="repo-line"><div><strong>Demo Maintainer</strong><span>atlas-app 1 · design-system 1 · ledger-api 1</span></div><span>3</span></div>
+          <div class="repo-line"><div><strong>Demo Maintainer</strong><span>atlas-app 2 · design-system 2 · ledger-api 2</span></div><span>6</span></div>
         </div>
       </section>
 
@@ -824,7 +830,7 @@
           <p class="note">commits and line churn, last 7 days</p>
         </div>
         <div class="repo-list">
-          <div class="repo-line"><div><strong><a href="./repos/atlas-app.html">atlas-app</a></strong><span>1 commits · 16 churn · 6 files</span></div><span>+16 net</span></div><div class="repo-line"><div><strong><a href="./repos/design-system.html">design-system</a></strong><span>1 commits · 13 churn · 5 files</span></div><span>+13 net</span></div><div class="repo-line"><div><strong><a href="./repos/ledger-api.html">ledger-api</a></strong><span>1 commits · 13 churn · 5 files</span></div><span>+13 net</span></div>
+          <div class="repo-line"><div><strong><a href="./repos/atlas-app.html">atlas-app</a></strong><span>2 commits · 21 churn · 7 files</span></div><span>+21 net</span></div><div class="repo-line"><div><strong><a href="./repos/design-system.html">design-system</a></strong><span>2 commits · 18 churn · 6 files</span></div><span>+18 net</span></div><div class="repo-line"><div><strong><a href="./repos/ledger-api.html">ledger-api</a></strong><span>2 commits · 18 churn · 6 files</span></div><span>+18 net</span></div>
         </div>
       </section>
 
@@ -835,7 +841,7 @@
         </div>
         <div class="health">
           <div class="health-block">
-            <span class="health-number">42</span>
+            <span class="health-number">57</span>
             <p class="note">lines added</p>
           </div>
           <div class="health-block danger">
@@ -863,8 +869,8 @@
     <polygon points="20,160 360.00,160.00 700,160" fill="url(#area-codeLines)"></polygon>
     <polyline points="360.00,160.00" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
     <circle cx="360.00" cy="160.00" r="6" fill="#d97706"></circle>
-    <text x="20" y="22" fill="#766b5d" font-size="14">32</text>
-    <text x="700" y="22" fill="#1f1a14" font-size="14" text-anchor="end">32</text>
+    <text x="20" y="22" fill="#766b5d" font-size="14">41</text>
+    <text x="700" y="22" fill="#1f1a14" font-size="14" text-anchor="end">41</text>
   </svg></div>
       </section>
 
@@ -884,8 +890,8 @@
     <polygon points="20,100 180.00,100.00 340,100" fill="url(#area-commitsLast30Days)"></polygon>
     <polyline points="180.00,100.00" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
     <circle cx="180.00" cy="100.00" r="6" fill="#2563eb"></circle>
-    <text x="20" y="22" fill="#766b5d" font-size="14">3</text>
-    <text x="340" y="22" fill="#1f1a14" font-size="14" text-anchor="end">3</text>
+    <text x="20" y="22" fill="#766b5d" font-size="14">6</text>
+    <text x="340" y="22" fill="#1f1a14" font-size="14" text-anchor="end">6</text>
   </svg></div>
       </section>
     </div>
@@ -897,17 +903,17 @@
           <p class="note">by classified code lines</p>
         </div>
         <div class="bars">
-          <div class="bar-row"><strong>Markdown</strong><span class="bar-track"><span class="bar-fill" style="--value: 100"></span></span><span>23</span></div><div class="bar-row"><strong>TypeScript</strong><span class="bar-track"><span class="bar-fill" style="--value: 26"></span></span><span>6</span></div><div class="bar-row"><strong>Go</strong><span class="bar-track"><span class="bar-fill" style="--value: 9"></span></span><span>2</span></div><div class="bar-row"><strong>Other</strong><span class="bar-track"><span class="bar-fill" style="--value: 4"></span></span><span>1</span></div>
+          <div class="bar-row"><strong>Markdown</strong><span class="bar-track"><span class="bar-fill" style="--value: 100"></span></span><span>32</span></div><div class="bar-row"><strong>TypeScript</strong><span class="bar-track"><span class="bar-fill" style="--value: 19"></span></span><span>6</span></div><div class="bar-row"><strong>Go</strong><span class="bar-track"><span class="bar-fill" style="--value: 6"></span></span><span>2</span></div><div class="bar-row"><strong>Other</strong><span class="bar-track"><span class="bar-fill" style="--value: 3"></span></span><span>1</span></div>
         </div>
       </section>
 
       <section>
         <div class="section-title">
           <h2>File types</h2>
-          <p class="note">849 B after excludes</p>
+          <p class="note">1.01 KB after excludes</p>
         </div>
         <div class="bars">
-          <div class="bar-row"><strong>.md</strong><span class="bar-track"><span class="bar-fill" style="--value: 100"></span></span><span title=".md · 621 B">12</span></div><div class="bar-row"><strong>.tsx</strong><span class="bar-track"><span class="bar-fill" style="--value: 8"></span></span><span title=".tsx · 92 B">1</span></div><div class="bar-row"><strong>.ts</strong><span class="bar-track"><span class="bar-fill" style="--value: 8"></span></span><span title=".ts · 77 B">1</span></div><div class="bar-row"><strong>[no extension]</strong><span class="bar-track"><span class="bar-fill" style="--value: 8"></span></span><span title="[no extension] · 30 B">1</span></div><div class="bar-row"><strong>.go</strong><span class="bar-track"><span class="bar-fill" style="--value: 8"></span></span><span title=".go · 29 B">1</span></div>
+          <div class="bar-row"><strong>.md</strong><span class="bar-track"><span class="bar-fill" style="--value: 100"></span></span><span title=".md · 803 B">15</span></div><div class="bar-row"><strong>.tsx</strong><span class="bar-track"><span class="bar-fill" style="--value: 7"></span></span><span title=".tsx · 92 B">1</span></div><div class="bar-row"><strong>.ts</strong><span class="bar-track"><span class="bar-fill" style="--value: 7"></span></span><span title=".ts · 77 B">1</span></div><div class="bar-row"><strong>[no extension]</strong><span class="bar-track"><span class="bar-fill" style="--value: 7"></span></span><span title="[no extension] · 30 B">1</span></div><div class="bar-row"><strong>.go</strong><span class="bar-track"><span class="bar-fill" style="--value: 7"></span></span><span title=".go · 29 B">1</span></div>
         </div>
       </section>
     </div>
@@ -919,7 +925,7 @@
           <p class="note">weekly commits, 30d commits, then LOC</p>
         </div>
         <div class="repo-list">
-          <div class="repo-line"><div><strong><a href="./repos/atlas-app.html">atlas-app</a></strong><span>main · builtin</span><span class="bar-track" style="display:block;margin-top:8px;"><span class="bar-fill" style="--value: 100"></span></span></div><span>13</span></div><div class="repo-line"><div><strong><a href="./repos/design-system.html">design-system</a></strong><span>main · builtin</span><span class="bar-track" style="display:block;margin-top:8px;"><span class="bar-fill" style="--value: 77"></span></span></div><span>10</span></div><div class="repo-line"><div><strong><a href="./repos/ledger-api.html">ledger-api</a></strong><span>main · builtin</span><span class="bar-track" style="display:block;margin-top:8px;"><span class="bar-fill" style="--value: 69"></span></span></div><span>9</span></div>
+          <div class="repo-line"><div><strong><a href="./repos/atlas-app.html">atlas-app</a></strong><span>main · builtin</span><span class="bar-track" style="display:block;margin-top:8px;"><span class="bar-fill" style="--value: 100"></span></span></div><span>16</span></div><div class="repo-line"><div><strong><a href="./repos/design-system.html">design-system</a></strong><span>main · builtin</span><span class="bar-track" style="display:block;margin-top:8px;"><span class="bar-fill" style="--value: 81"></span></span></div><span>13</span></div><div class="repo-line"><div><strong><a href="./repos/ledger-api.html">ledger-api</a></strong><span>main · builtin</span><span class="bar-track" style="display:block;margin-top:8px;"><span class="bar-fill" style="--value: 75"></span></span></div><span>12</span></div>
         </div>
       </section>
 
@@ -968,27 +974,27 @@
             <tr data-search="atlas-app /demo/workspace/atlas-app main markdown typescript docs/architecture/events.md event flow docs/readme.md atlas docs" data-dirty="false">
     <td><strong><a href="./repos/atlas-app.html">atlas-app</a></strong><div class="path">/demo/workspace/atlas-app</div></td>
     <td>main</td>
-    <td class="numeric">13</td>
-    <td class="numeric">1</td>
-    <td class="numeric">1</td>
+    <td class="numeric">16</td>
+    <td class="numeric">2</td>
+    <td class="numeric">2</td>
     <td class="numeric">3</td>
     <td class="numeric"><a href="./repos/atlas-app.html#docs">2</a></td>
     <td><span class="pill">clean</span></td>
   </tr><tr data-search="design-system /demo/workspace/design-system main markdown typescript other docs/components/button.md button docs/components/tokens.md tokens" data-dirty="false">
     <td><strong><a href="./repos/design-system.html">design-system</a></strong><div class="path">/demo/workspace/design-system</div></td>
     <td>main</td>
-    <td class="numeric">10</td>
-    <td class="numeric">1</td>
-    <td class="numeric">1</td>
+    <td class="numeric">13</td>
+    <td class="numeric">2</td>
+    <td class="numeric">2</td>
     <td class="numeric">2</td>
     <td class="numeric"><a href="./repos/design-system.html#docs">2</a></td>
     <td><span class="pill">clean</span></td>
   </tr><tr data-search="ledger-api /demo/workspace/ledger-api main markdown go docs/api.md api reference docs/reference/webhooks.md webhooks" data-dirty="false">
     <td><strong><a href="./repos/ledger-api.html">ledger-api</a></strong><div class="path">/demo/workspace/ledger-api</div></td>
     <td>main</td>
-    <td class="numeric">9</td>
-    <td class="numeric">1</td>
-    <td class="numeric">1</td>
+    <td class="numeric">12</td>
+    <td class="numeric">2</td>
+    <td class="numeric">2</td>
     <td class="numeric">2</td>
     <td class="numeric"><a href="./repos/ledger-api.html#docs">2</a></td>
     <td><span class="pill">clean</span></td>
