@@ -3656,6 +3656,10 @@ function renderHtml(report) {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       color: var(--ink);
@@ -3849,6 +3853,10 @@ function renderHtml(report) {
       min-width: 0;
     }
 
+    [id] {
+      scroll-margin-top: 18px;
+    }
+
     .section-title {
       display: flex;
       justify-content: space-between;
@@ -3870,6 +3878,37 @@ function renderHtml(report) {
       margin: 0;
       color: var(--muted);
       font-size: 0.9rem;
+    }
+
+    .quick-nav {
+      margin-top: 28px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .quick-link {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.55);
+      color: var(--ink);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 9px 11px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .quick-link:hover {
+      background: rgba(217, 119, 6, 0.11);
+      border-color: rgba(217, 119, 6, 0.42);
+      transform: translateY(-1px);
     }
 
     .trend {
@@ -4338,8 +4377,18 @@ function renderHtml(report) {
       ${metricHtml('Commits', report.totals.commits)}
     </div>
 
+    <section class="quick-nav" aria-labelledby="quick-links-title">
+      <div class="section-title">
+        <h2 id="quick-links-title">Quick links</h2>
+        <p class="note">jump to dashboard sections</p>
+      </div>
+      <nav class="quick-links" aria-label="Dashboard sections">
+        ${dashboardQuickLinksHtml()}
+      </nav>
+    </section>
+
     <div class="grid">
-      <section>
+      <section id="release-activity">
         <div class="section-title">
           <h2>Release activity</h2>
           <p class="note">${formatNumber(report.releases?.totals?.tagsLast365Days || 0)} tags in 365d</p>
@@ -4347,7 +4396,7 @@ function renderHtml(report) {
         ${releaseActivityHtml(releases)}
       </section>
 
-      <section>
+      <section id="release-gaps">
         <div class="section-title">
           <h2>Release gaps</h2>
           <p class="note">oldest or missing latest tag last</p>
@@ -4358,7 +4407,7 @@ function renderHtml(report) {
       </section>
     </div>
 
-    <section class="readiness-strip">
+    <section id="release-readiness" class="readiness-strip">
       <div class="section-title">
         <h2>Release readiness</h2>
         <p class="note">${formatNumber(report.releaseReadiness?.totals?.needsAttention || 0)} need attention · stale after ${formatNumber(report.releaseReadiness?.thresholds?.staleAfterDays || 0)}d</p>
@@ -4368,7 +4417,7 @@ function renderHtml(report) {
       </div>
     </section>
 
-    <section class="delta-strip">
+    <section id="since-previous-scan" class="delta-strip">
       <div class="section-title">
         <h2>Since previous scan</h2>
         <p class="note">${report.delta?.available ? `Compared with ${escapeHtml(formatDateTime(report.delta.previousGeneratedAt))}` : escapeHtml(report.delta?.reason || 'No previous comparable snapshot')}</p>
@@ -4383,7 +4432,7 @@ function renderHtml(report) {
     </section>
 
     <div class="grid">
-      <section>
+      <section id="weekly-commits">
         <div class="section-title">
           <h2>Weekly commits</h2>
           <p class="note">last ${formatNumber(report.weekly.trendWeeks)} weeks</p>
@@ -4391,7 +4440,7 @@ function renderHtml(report) {
         <div class="trend">${weeklyCommitsSvg}</div>
       </section>
 
-      <section>
+      <section id="weekly-churn">
         <div class="section-title">
           <h2>Weekly churn</h2>
           <p class="note">${formatNumber(report.weekly.totals.filesChanged)} files touched in 7d</p>
@@ -4401,7 +4450,7 @@ function renderHtml(report) {
     </div>
 
     <div class="grid">
-      <section>
+      <section id="contributors">
         <div class="section-title">
           <h2>Contributors</h2>
           <p class="note">${formatNumber(report.contributors?.totals?.uniqueContributors || 0)} unique authors</p>
@@ -4411,7 +4460,7 @@ function renderHtml(report) {
         </div>
       </section>
 
-      <section>
+      <section id="release-coverage">
         <div class="section-title">
           <h2>Release coverage</h2>
           <p class="note">local tag footprint</p>
@@ -4430,7 +4479,7 @@ function renderHtml(report) {
     </div>
 
     <div class="grid">
-      <section>
+      <section id="active-this-week">
         <div class="section-title">
           <h2>Active this week</h2>
           <p class="note">commits and line churn, last 7 days</p>
@@ -4440,7 +4489,7 @@ function renderHtml(report) {
         </div>
       </section>
 
-      <section>
+      <section id="weekly-totals">
         <div class="section-title">
           <h2>Weekly totals</h2>
           <p class="note">committed changes only</p>
@@ -4459,7 +4508,7 @@ function renderHtml(report) {
     </div>
 
     <div class="grid">
-      <section>
+      <section id="loc-trend">
         <div class="section-title">
           <h2>LOC trend</h2>
           <p class="note">${formatNumber(report.history?.snapshotCount || 1)} snapshots</p>
@@ -4467,7 +4516,7 @@ function renderHtml(report) {
         <div class="trend">${historySvg}</div>
       </section>
 
-      <section>
+      <section id="thirty-day-commits">
         <div class="section-title">
           <h2>30-day commits</h2>
           <p class="note">current scan window</p>
@@ -4477,7 +4526,7 @@ function renderHtml(report) {
     </div>
 
     <div class="grid">
-      <section>
+      <section id="languages">
         <div class="section-title">
           <h2>Languages</h2>
           <p class="note">by classified code lines</p>
@@ -4487,7 +4536,7 @@ function renderHtml(report) {
         </div>
       </section>
 
-      <section>
+      <section id="file-types">
         <div class="section-title">
           <h2>File types</h2>
           <p class="note">${formatBytes(report.totals.physicalBytes || 0)} after excludes</p>
@@ -4499,7 +4548,7 @@ function renderHtml(report) {
     </div>
 
     <div class="grid">
-      <section>
+      <section id="most-active-repositories">
         <div class="section-title">
           <h2>Most active repositories</h2>
           <p class="note">weekly commits, 30d commits, then LOC</p>
@@ -4509,7 +4558,7 @@ function renderHtml(report) {
         </div>
       </section>
 
-      <section>
+      <section id="attention">
         <div class="section-title">
           <h2>Attention</h2>
           <p class="note">local state only</p>
@@ -4528,7 +4577,7 @@ function renderHtml(report) {
     </div>
 
     <div class="grid">
-      <section>
+      <section id="repository-table">
         <div class="section-title">
           <h2>Repository table</h2>
           <p class="note">filter by name, path, branch, or language</p>
@@ -4556,13 +4605,13 @@ function renderHtml(report) {
         </table>
       </section>
 
-      <section>
+      <section id="roots">
         <div class="section-title">
           <h2>Roots</h2>
           <p class="note">configured scan targets</p>
         </div>
         ${report.roots.map((root) => `<p class="path">${escapeHtml(root)}</p>`).join('')}
-        <div class="section-title" style="margin-top: 32px;">
+        <div id="csv-exports" class="section-title" style="margin-top: 32px;">
           <h2>CSV exports</h2>
           <p class="note">spreadsheet-ready files</p>
         </div>
@@ -4573,7 +4622,7 @@ function renderHtml(report) {
     </div>
 
     <div class="grid">
-      <section>
+      <section id="ai-agents">
         <div class="section-title">
           <h2>AI agents</h2>
           <p class="note">tracked instruction/config files</p>
@@ -4583,7 +4632,7 @@ function renderHtml(report) {
         </div>
       </section>
 
-      <section>
+      <section id="agent-coverage">
         <div class="section-title">
           <h2>Agent coverage</h2>
           <p class="note">repo footprint, not telemetry</p>
@@ -4632,6 +4681,36 @@ function metricHtml(label, value) {
 function mastheadStatHtml(label, value, detail, options = {}) {
   const formatted = options.signed ? formatSignedNumber(value) : formatNumber(value);
   return `<div class="masthead-stat"><span>${escapeHtml(label)}</span><strong>${formatted}</strong><small>${escapeHtml(detail)}</small></div>`;
+}
+
+function dashboardQuickLinksHtml() {
+  const links = [
+    ['Release activity', 'release-activity'],
+    ['Release gaps', 'release-gaps'],
+    ['Release readiness', 'release-readiness'],
+    ['Since previous scan', 'since-previous-scan'],
+    ['Weekly commits', 'weekly-commits'],
+    ['Weekly churn', 'weekly-churn'],
+    ['Contributors', 'contributors'],
+    ['Release coverage', 'release-coverage'],
+    ['Active this week', 'active-this-week'],
+    ['Weekly totals', 'weekly-totals'],
+    ['LOC trend', 'loc-trend'],
+    ['30-day commits', 'thirty-day-commits'],
+    ['Languages', 'languages'],
+    ['File types', 'file-types'],
+    ['Most active repositories', 'most-active-repositories'],
+    ['Attention', 'attention'],
+    ['Repository table', 'repository-table'],
+    ['Roots', 'roots'],
+    ['CSV exports', 'csv-exports'],
+    ['AI agents', 'ai-agents'],
+    ['Agent coverage', 'agent-coverage']
+  ];
+
+  return links
+    .map(([label, id]) => `<a class="quick-link" href="#${escapeHtml(id)}">${escapeHtml(label)}</a>`)
+    .join('');
 }
 
 function deltaMetricHtml(label, delta) {

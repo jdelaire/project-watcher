@@ -110,6 +110,33 @@ assert(html.includes('name="description"'), 'expected description meta');
 assert(html.includes('rel="icon"'), 'expected favicon link');
 assert(html.includes('rel="manifest"'), 'expected manifest link');
 assert(html.includes('Dirty repos'), 'expected useful masthead stats');
+assert(html.includes('Quick links'), 'expected quick links section');
+for (const sectionId of [
+  'release-activity',
+  'release-gaps',
+  'release-readiness',
+  'since-previous-scan',
+  'weekly-commits',
+  'weekly-churn',
+  'contributors',
+  'release-coverage',
+  'active-this-week',
+  'weekly-totals',
+  'loc-trend',
+  'thirty-day-commits',
+  'languages',
+  'file-types',
+  'most-active-repositories',
+  'attention',
+  'repository-table',
+  'roots',
+  'csv-exports',
+  'ai-agents',
+  'agent-coverage'
+]) {
+  assert(html.includes(`href="#${sectionId}"`), `expected quick link for ${sectionId}`);
+  assert(html.includes(`id="${sectionId}"`), `expected section anchor for ${sectionId}`);
+}
 assert(html.includes('Release activity'), 'expected release section');
 assert(html.includes('Release gaps'), 'expected release gap overview');
 assert(html.includes('Release readiness'), 'expected release readiness overview');

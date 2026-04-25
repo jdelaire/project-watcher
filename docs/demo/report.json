@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T10:07:09.104Z",
+  "generatedAt": "2026-04-25T10:22:39.092Z",
   "configPath": "/demo/tmp/demo-config.json",
   "roots": [
     "/demo/workspace"
@@ -1749,11 +1749,11 @@
   ],
   "history": {
     "snapshotCount": 1,
-    "firstGeneratedAt": "2026-04-25T10:07:09.104Z",
-    "lastGeneratedAt": "2026-04-25T10:07:09.104Z",
+    "firstGeneratedAt": "2026-04-25T10:22:39.092Z",
+    "lastGeneratedAt": "2026-04-25T10:22:39.092Z",
     "snapshots": [
       {
-        "generatedAt": "2026-04-25T10:07:09.104Z",
+        "generatedAt": "2026-04-25T10:22:39.092Z",
         "repositories": 3,
         "dirtyRepositories": 0,
         "codeLines": 41,
