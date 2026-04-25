@@ -296,6 +296,40 @@
       gap: 10px;
     }
 
+    .release-overflow {
+      border-bottom: 1px solid var(--line);
+      padding: 2px 0 10px;
+    }
+
+    .release-overflow summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.10em;
+      list-style: none;
+      text-transform: uppercase;
+    }
+
+    .release-overflow summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .release-overflow summary::after {
+      content: "+";
+      float: right;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .release-overflow[open] summary::after {
+      content: "-";
+    }
+
+    .release-overflow .repo-list {
+      margin-top: 10px;
+    }
+
     .link-list {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -624,11 +658,15 @@
       <section>
         <div class="section-title">
           <h2>Release activity</h2>
-          <p class="note">3 tags in 365d</p>
+          <p class="note">7 tags in 365d</p>
         </div>
         <div class="repo-list">
-          <div class="repo-line"><div><strong>v1.2.0</strong><span><a href="./repos/atlas-app.html">atlas-app</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v2.1.0</strong><span><a href="./repos/design-system.html">design-system</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v0.8.0</strong><span><a href="./repos/ledger-api.html">ledger-api</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div>
-        </div>
+    <div class="repo-line"><div><strong>v1.2.0</strong><span><a href="./repos/atlas-app.html">atlas-app</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v1.3.0</strong><span><a href="./repos/atlas-app.html">atlas-app</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v1.4.0</strong><span><a href="./repos/atlas-app.html">atlas-app</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v2.0.0</strong><span><a href="./repos/design-system.html">design-system</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v2.1.0</strong><span><a href="./repos/design-system.html">design-system</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div>
+    <details class="release-overflow">
+      <summary>Show 2 older releases</summary>
+      <div class="repo-list"><div class="repo-line"><div><strong>v0.8.0</strong><span><a href="./repos/ledger-api.html">ledger-api</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div><div class="repo-line"><div><strong>v0.9.0</strong><span><a href="./repos/ledger-api.html">ledger-api</a> · 4/24/2026, 5:00:00 PM · SemVer</span></div><span>release</span></div></div>
+    </details>
+  </div>
       </section>
 
       <section>
@@ -853,7 +891,7 @@
     <td class="numeric">9</td>
     <td class="numeric">2</td>
     <td class="numeric">2</td>
-    <td class="numeric">1</td>
+    <td class="numeric">3</td>
     <td><span class="pill">clean</span></td>
   </tr><tr data-search="design-system /demo/workspace/design-system main javascript css markdown" data-dirty="false">
     <td><strong><a href="./repos/design-system.html">design-system</a></strong><div class="path">/demo/workspace/design-system</div></td>
@@ -861,7 +899,7 @@
     <td class="numeric">9</td>
     <td class="numeric">2</td>
     <td class="numeric">2</td>
-    <td class="numeric">1</td>
+    <td class="numeric">2</td>
     <td><span class="pill">clean</span></td>
   </tr><tr data-search="ledger-api /demo/workspace/ledger-api main javascript css markdown" data-dirty="false">
     <td><strong><a href="./repos/ledger-api.html">ledger-api</a></strong><div class="path">/demo/workspace/ledger-api</div></td>
@@ -869,7 +907,7 @@
     <td class="numeric">9</td>
     <td class="numeric">2</td>
     <td class="numeric">2</td>
-    <td class="numeric">1</td>
+    <td class="numeric">2</td>
     <td><span class="pill">clean</span></td>
   </tr>
           </tbody>

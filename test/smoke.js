@@ -85,6 +85,7 @@ assert(html.includes('rel="icon"'), 'expected favicon link');
 assert(html.includes('rel="manifest"'), 'expected manifest link');
 assert(html.includes('Dirty repos'), 'expected useful masthead stats');
 assert(html.includes('Release activity'), 'expected release section');
+assert(!html.includes('<details class="release-overflow">'), 'expected no collapsed releases when only five or fewer releases exist');
 assert(html.includes('CSV exports'), 'expected csv export section');
 assert(html.includes('Contributors'), 'expected contributor section');
 assert(html.includes('href="./repos/'), 'expected repository drilldown links');
@@ -119,9 +120,19 @@ assert(report.delta.totals.commits.delta === 1, 'expected one commit delta');
 assert(report.weekly.totals.commits === 2, 'expected two weekly commits after second commit');
 assert(report.weekly.topRepositories[0].commits === 2, 'expected top weekly repo commits');
 
+for (let index = 1; index <= 5; index += 1) {
+  run('git', ['tag', `v0.1.${index}`], repoPath);
+}
+
 runScan(configPath);
+report = JSON.parse(await fsp.readFile(path.join(outputDir, 'report.json'), 'utf8'));
+const releaseHtml = await fsp.readFile(path.join(outputDir, 'report.html'), 'utf8');
 snapshots = await fsp.readdir(path.join(outputDir, 'snapshots'));
+
 assert(snapshots.length === 2, 'expected snapshot retention to keep two snapshots');
+assert(report.releases.latest.length === 6, 'expected six release tags');
+assert(releaseHtml.includes('<details class="release-overflow">'), 'expected collapsed release overflow');
+assert(releaseHtml.includes('Show 1 older releases'), 'expected one collapsed release');
 
 console.log('Smoke test passed');
 

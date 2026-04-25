@@ -2700,7 +2700,7 @@ function renderHtml(report) {
   const topRepoDeltas = report.delta?.repositories?.changed?.slice(0, 8) || [];
   const topWeeklyRepos = report.weekly?.topRepositories?.slice(0, 8) || [];
   const topAiAgents = report.aiAgents?.agents?.slice(0, 6) || [];
-  const topReleases = report.releases?.latest?.slice(0, 8) || [];
+  const releases = report.releases?.latest || [];
   const topContributors = report.contributors?.contributors?.slice(0, 8) || [];
   const dirtyRepos = report.repositories.filter((repo) => repo.isDirty);
   const staleRepos = report.repositories
@@ -3018,6 +3018,40 @@ function renderHtml(report) {
     .repo-list {
       display: grid;
       gap: 10px;
+    }
+
+    .release-overflow {
+      border-bottom: 1px solid var(--line);
+      padding: 2px 0 10px;
+    }
+
+    .release-overflow summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.10em;
+      list-style: none;
+      text-transform: uppercase;
+    }
+
+    .release-overflow summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .release-overflow summary::after {
+      content: "+";
+      float: right;
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .release-overflow[open] summary::after {
+      content: "-";
+    }
+
+    .release-overflow .repo-list {
+      margin-top: 10px;
     }
 
     .link-list {
@@ -3350,9 +3384,7 @@ function renderHtml(report) {
           <h2>Release activity</h2>
           <p class="note">${formatNumber(report.releases?.totals?.tagsLast365Days || 0)} tags in 365d</p>
         </div>
-        <div class="repo-list">
-          ${topReleases.map(releaseHtml).join('') || '<p class="empty">No local tags found.</p>'}
-        </div>
+        ${releaseActivityHtml(releases)}
       </section>
 
       <section>
@@ -3671,6 +3703,23 @@ function weeklyRepoHtml(repo) {
   ];
 
   return `<div class="repo-line"><div><strong>${repoLinkHtml(repo)}</strong><span>${escapeHtml(pieces.join(' · '))}</span></div><span>${formatSignedNumber(repo.netLines)} net</span></div>`;
+}
+
+function releaseActivityHtml(releases) {
+  if (releases.length === 0) {
+    return '<div class="repo-list"><p class="empty">No local tags found.</p></div>';
+  }
+
+  const visible = releases.slice(0, 5);
+  const overflow = releases.slice(5);
+
+  return `<div class="repo-list">
+    ${visible.map(releaseHtml).join('')}
+    ${overflow.length > 0 ? `<details class="release-overflow">
+      <summary>Show ${formatNumber(overflow.length)} older releases</summary>
+      <div class="repo-list">${overflow.map(releaseHtml).join('')}</div>
+    </details>` : ''}
+  </div>`;
 }
 
 function releaseHtml(release) {

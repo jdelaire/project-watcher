@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T07:38:30.532Z",
+  "generatedAt": "2026-04-25T07:53:41.527Z",
   "configPath": "/demo/tmp/demo-config.json",
   "roots": [
     "/demo/workspace"
@@ -11,8 +11,8 @@
     "commitsLast7Days": 6,
     "commitsLast30Days": 6,
     "commitsLast90Days": 6,
-    "tags": 3,
-    "semverTags": 3,
+    "tags": 7,
+    "semverTags": 7,
     "files": 13,
     "physicalFiles": 13,
     "physicalBytes": 1013,
@@ -149,11 +149,11 @@
   },
   "releases": {
     "totals": {
-      "tags": 3,
-      "semverTags": 3,
-      "tagsLast30Days": 3,
-      "tagsLast90Days": 3,
-      "tagsLast365Days": 3,
+      "tags": 7,
+      "semverTags": 7,
+      "tagsLast30Days": 7,
+      "tagsLast90Days": 7,
+      "tagsLast365Days": 7,
       "reposWithTags": 3,
       "reposWithoutTags": 0
     },
@@ -163,6 +163,30 @@
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
         "name": "v1.2.0",
+        "date": "2026-04-24T10:00:00Z",
+        "semver": true
+      },
+      {
+        "repo": "atlas-app",
+        "path": "/demo/workspace/atlas-app",
+        "detailPath": "repos/atlas-app.html",
+        "name": "v1.3.0",
+        "date": "2026-04-24T10:00:00Z",
+        "semver": true
+      },
+      {
+        "repo": "atlas-app",
+        "path": "/demo/workspace/atlas-app",
+        "detailPath": "repos/atlas-app.html",
+        "name": "v1.4.0",
+        "date": "2026-04-24T10:00:00Z",
+        "semver": true
+      },
+      {
+        "repo": "design-system",
+        "path": "/demo/workspace/design-system",
+        "detailPath": "repos/design-system.html",
+        "name": "v2.0.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
       },
@@ -181,6 +205,14 @@
         "name": "v0.8.0",
         "date": "2026-04-24T10:00:00Z",
         "semver": true
+      },
+      {
+        "repo": "ledger-api",
+        "path": "/demo/workspace/ledger-api",
+        "detailPath": "repos/ledger-api.html",
+        "name": "v0.9.0",
+        "date": "2026-04-24T10:00:00Z",
+        "semver": true
       }
     ],
     "repositories": [
@@ -188,11 +220,11 @@
         "name": "atlas-app",
         "path": "/demo/workspace/atlas-app",
         "detailPath": "repos/atlas-app.html",
-        "tags": 1,
-        "semverTags": 1,
-        "tagsLast30Days": 1,
-        "tagsLast90Days": 1,
-        "tagsLast365Days": 1,
+        "tags": 3,
+        "semverTags": 3,
+        "tagsLast30Days": 3,
+        "tagsLast90Days": 3,
+        "tagsLast365Days": 3,
         "latestTag": {
           "name": "v1.2.0",
           "date": "2026-04-24T10:00:00Z"
@@ -203,13 +235,13 @@
         "name": "design-system",
         "path": "/demo/workspace/design-system",
         "detailPath": "repos/design-system.html",
-        "tags": 1,
-        "semverTags": 1,
-        "tagsLast30Days": 1,
-        "tagsLast90Days": 1,
-        "tagsLast365Days": 1,
+        "tags": 2,
+        "semverTags": 2,
+        "tagsLast30Days": 2,
+        "tagsLast90Days": 2,
+        "tagsLast365Days": 2,
         "latestTag": {
-          "name": "v2.1.0",
+          "name": "v2.0.0",
           "date": "2026-04-24T10:00:00Z"
         },
         "daysSinceLatestTag": 0
@@ -218,11 +250,11 @@
         "name": "ledger-api",
         "path": "/demo/workspace/ledger-api",
         "detailPath": "repos/ledger-api.html",
-        "tags": 1,
-        "semverTags": 1,
-        "tagsLast30Days": 1,
-        "tagsLast90Days": 1,
-        "tagsLast365Days": 1,
+        "tags": 2,
+        "semverTags": 2,
+        "tagsLast30Days": 2,
+        "tagsLast90Days": 2,
+        "tagsLast365Days": 2,
         "latestTag": {
           "name": "v0.8.0",
           "date": "2026-04-24T10:00:00Z"
@@ -518,11 +550,11 @@
         "local": 1
       },
       "releases": {
-        "tags": 1,
-        "semverTags": 1,
-        "tagsLast30Days": 1,
-        "tagsLast90Days": 1,
-        "tagsLast365Days": 1,
+        "tags": 3,
+        "semverTags": 3,
+        "tagsLast30Days": 3,
+        "tagsLast90Days": 3,
+        "tagsLast365Days": 3,
         "latestTag": {
           "name": "v1.2.0",
           "date": "2026-04-24T10:00:00Z"
@@ -531,6 +563,14 @@
         "recentTags": [
           {
             "name": "v1.2.0",
+            "date": "2026-04-24T10:00:00Z"
+          },
+          {
+            "name": "v1.3.0",
+            "date": "2026-04-24T10:00:00Z"
+          },
+          {
+            "name": "v1.4.0",
             "date": "2026-04-24T10:00:00Z"
           }
         ]
@@ -776,17 +816,21 @@
         "local": 1
       },
       "releases": {
-        "tags": 1,
-        "semverTags": 1,
-        "tagsLast30Days": 1,
-        "tagsLast90Days": 1,
-        "tagsLast365Days": 1,
+        "tags": 2,
+        "semverTags": 2,
+        "tagsLast30Days": 2,
+        "tagsLast90Days": 2,
+        "tagsLast365Days": 2,
         "latestTag": {
-          "name": "v2.1.0",
+          "name": "v2.0.0",
           "date": "2026-04-24T10:00:00Z"
         },
         "daysSinceLatestTag": 0,
         "recentTags": [
+          {
+            "name": "v2.0.0",
+            "date": "2026-04-24T10:00:00Z"
+          },
           {
             "name": "v2.1.0",
             "date": "2026-04-24T10:00:00Z"
@@ -1017,11 +1061,11 @@
         "local": 1
       },
       "releases": {
-        "tags": 1,
-        "semverTags": 1,
-        "tagsLast30Days": 1,
-        "tagsLast90Days": 1,
-        "tagsLast365Days": 1,
+        "tags": 2,
+        "semverTags": 2,
+        "tagsLast30Days": 2,
+        "tagsLast90Days": 2,
+        "tagsLast365Days": 2,
         "latestTag": {
           "name": "v0.8.0",
           "date": "2026-04-24T10:00:00Z"
@@ -1030,6 +1074,10 @@
         "recentTags": [
           {
             "name": "v0.8.0",
+            "date": "2026-04-24T10:00:00Z"
+          },
+          {
+            "name": "v0.9.0",
             "date": "2026-04-24T10:00:00Z"
           }
         ]
@@ -1229,11 +1277,11 @@
   ],
   "history": {
     "snapshotCount": 1,
-    "firstGeneratedAt": "2026-04-25T07:38:30.532Z",
-    "lastGeneratedAt": "2026-04-25T07:38:30.532Z",
+    "firstGeneratedAt": "2026-04-25T07:53:41.527Z",
+    "lastGeneratedAt": "2026-04-25T07:53:41.527Z",
     "snapshots": [
       {
-        "generatedAt": "2026-04-25T07:38:30.532Z",
+        "generatedAt": "2026-04-25T07:53:41.527Z",
         "repositories": 3,
         "dirtyRepositories": 0,
         "codeLines": 27,
@@ -1244,8 +1292,8 @@
         "commits": 6,
         "commitsLast7Days": 6,
         "commitsLast30Days": 6,
-        "tags": 3,
-        "semverTags": 3
+        "tags": 7,
+        "semverTags": 7
       }
     ]
   },
