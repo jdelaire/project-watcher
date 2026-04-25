@@ -148,6 +148,8 @@ const BINARY_EXTENSIONS = new Set([
 ]);
 
 const SEMVER_TAG = /^v?\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
+const HOURS_TO_MS = 60 * 60 * 1000;
+const DEFAULT_SERVE_SCAN_INTERVAL_HOURS = 12;
 
 const AI_AGENT_DEFINITIONS = [
   {
@@ -278,6 +280,17 @@ async function main() {
 
 async function scanCommand(args) {
   const { configPath, jsonOnly } = parseScanArgs(args);
+  const scan = await writeScanReport(configPath);
+
+  if (jsonOnly) {
+    console.log(JSON.stringify(scan.report, null, 2));
+    return;
+  }
+
+  logScanResult(scan);
+}
+
+async function writeScanReport(configPath) {
   const loaded = await loadConfig(configPath);
   const config = normalizeConfig(loaded.config, loaded.configPath);
 
@@ -323,17 +336,25 @@ async function scanCommand(args) {
   await writeRepositoryPages(outputDir, report);
   await pruneSnapshots(snapshotsDir, config.maxSnapshots);
 
-  if (jsonOnly) {
-    console.log(JSON.stringify(report, null, 2));
-    return;
-  }
+  return {
+    report,
+    outputDir,
+    jsonPath,
+    markdownPath,
+    htmlPath,
+    csvPath: path.join(outputDir, 'csv'),
+    snapshotPath,
+    repositoryCount: repositories.length
+  };
+}
 
-  console.log(`Scanned ${repositories.length} repositories`);
-  console.log(`JSON: ${jsonPath}`);
-  console.log(`Markdown: ${markdownPath}`);
-  console.log(`Dashboard: ${htmlPath}`);
-  console.log(`CSV: ${path.join(outputDir, 'csv')}`);
-  console.log(`Snapshot: ${snapshotPath}`);
+function logScanResult(scan) {
+  console.log(`Scanned ${scan.repositoryCount} repositories`);
+  console.log(`JSON: ${scan.jsonPath}`);
+  console.log(`Markdown: ${scan.markdownPath}`);
+  console.log(`Dashboard: ${scan.htmlPath}`);
+  console.log(`CSV: ${scan.csvPath}`);
+  console.log(`Snapshot: ${scan.snapshotPath}`);
 }
 
 async function initCommand(args) {
@@ -409,15 +430,11 @@ async function doctorCommand(args) {
 }
 
 async function serveCommand(args) {
-  const { configPath, host, port, open } = parseServeArgs(args);
-  const loaded = await loadConfig(configPath);
-  const config = normalizeConfig(loaded.config, loaded.configPath);
-  const outputDir = resolvePath(config.outputDir, path.dirname(loaded.configPath));
-  const dashboardPath = path.join(outputDir, 'report.html');
-
-  if (!fs.existsSync(dashboardPath)) {
-    throw new Error(`Dashboard not found: ${dashboardPath}. Run "node ./src/cli.js scan" first.`);
-  }
+  const { configPath, host, port, open, autoScan, scanIntervalHours } = parseServeArgs(args);
+  const startupScan = autoScan
+    ? await runServeScan(configPath, 'startup')
+    : await prepareStaticOutput(configPath);
+  const outputDir = startupScan.outputDir;
 
   const server = http.createServer(async (request, response) => {
     try {
@@ -437,13 +454,18 @@ async function serveCommand(args) {
         return;
       }
 
-      response.writeHead(200, { 'content-type': contentType(filePath) });
+      response.writeHead(200, {
+        'content-type': contentType(filePath),
+        'cache-control': 'no-store'
+      });
       fs.createReadStream(filePath).pipe(response);
     } catch {
       response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
       response.end('Not found');
     }
   });
+
+  let scanInProgress = false;
 
   await new Promise((resolve, reject) => {
     server.once('error', reject);
@@ -453,10 +475,52 @@ async function serveCommand(args) {
   console.log(`Serving ${outputDir}`);
   const dashboardUrl = `http://${host}:${port}/`;
   console.log(`Dashboard: ${dashboardUrl}`);
+  if (autoScan) {
+    console.log(`Auto-scan: every ${formatHours(scanIntervalHours)}`);
+    const scanTimer = setInterval(() => {
+      if (scanInProgress) {
+        console.log('Skipping scheduled scan; previous scan is still running');
+        return;
+      }
+
+      scanInProgress = true;
+      runServeScan(configPath, 'scheduled')
+        .catch((error) => {
+          console.error(`Scheduled scan failed: ${error.message}`);
+        })
+        .finally(() => {
+          scanInProgress = false;
+        });
+    }, scanIntervalHours * HOURS_TO_MS);
+
+    server.once('close', () => clearInterval(scanTimer));
+  }
 
   if (open) {
     openUrl(dashboardUrl);
   }
+}
+
+async function prepareStaticOutput(configPath) {
+  const loaded = await loadConfig(configPath);
+  const config = normalizeConfig(loaded.config, loaded.configPath);
+  const outputDir = resolvePath(config.outputDir, path.dirname(loaded.configPath));
+  const dashboardPath = path.join(outputDir, 'report.html');
+
+  if (!fs.existsSync(dashboardPath)) {
+    throw new Error(`Dashboard not found: ${dashboardPath}. Run "node ./src/cli.js scan" first.`);
+  }
+
+  return { outputDir };
+}
+
+async function runServeScan(configPath, reason) {
+  console.log(`Running ${reason} scan...`);
+  const startedAt = Date.now();
+  const scan = await writeScanReport(configPath);
+  const elapsedSeconds = ((Date.now() - startedAt) / 1000).toFixed(1);
+  console.log(`Scan complete (${reason}): ${scan.repositoryCount} repositories in ${elapsedSeconds}s`);
+  return scan;
 }
 
 function parseScanArgs(args) {
@@ -491,6 +555,8 @@ function parseServeArgs(args) {
   let host = '127.0.0.1';
   let port = 7341;
   let open = false;
+  let autoScan = true;
+  let scanIntervalHours = DEFAULT_SERVE_SCAN_INTERVAL_HOURS;
 
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -518,6 +584,15 @@ function parseServeArgs(args) {
       index += 1;
     } else if (arg === '--open') {
       open = true;
+    } else if (arg === '--no-auto-scan') {
+      autoScan = false;
+    } else if (arg === '--scan-interval-hours') {
+      const value = Number.parseFloat(args[index + 1]);
+      if (!Number.isFinite(value) || value <= 0) {
+        throw new Error('--scan-interval-hours requires a positive number');
+      }
+      scanIntervalHours = value;
+      index += 1;
     } else {
       throw new Error(`Unknown serve option: ${arg}`);
     }
@@ -527,7 +602,9 @@ function parseServeArgs(args) {
     configPath: resolvePath(configPath, process.cwd()),
     host,
     port,
-    open
+    open,
+    autoScan,
+    scanIntervalHours
   };
 }
 
@@ -4110,6 +4187,23 @@ function formatNumber(value) {
   return new Intl.NumberFormat('en-US').format(value);
 }
 
+function formatHours(value) {
+  if (value >= 1) {
+    return `${Number.isInteger(value) ? value : trimFixed(value, 2)}h`;
+  }
+
+  const minutes = value * 60;
+  if (minutes >= 1) {
+    return `${trimFixed(minutes, 1)}m`;
+  }
+
+  return `${trimFixed(value * 3600, 3)}s`;
+}
+
+function trimFixed(value, digits) {
+  return value.toFixed(digits).replace(/0+$/, '').replace(/\.$/, '');
+}
+
 function formatSignedNumber(value) {
   const number = numberOrZero(value);
   if (number > 0) {
@@ -4148,12 +4242,14 @@ Usage:
   node ./src/cli.js scan [--config path] [--json]
   node ./src/cli.js doctor [--config path]
   node ./src/cli.js serve [--config path] [--host host] [--port port] [--open]
+                    [--scan-interval-hours hours] [--no-auto-scan]
   node ./src/cli.js init [path]
   node ./src/cli.js help
 
 Config:
   The config file must include a "paths" array. Each path can be a Git repo or
   a parent directory containing Git repos. LOC uses locTool: auto by default.
+  Serve mode runs an immediate scan and rescans every 12h by default.
 `);
 }
 

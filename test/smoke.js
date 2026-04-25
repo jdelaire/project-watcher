@@ -1,5 +1,6 @@
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import fsp from 'node:fs/promises';
+import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
@@ -134,6 +135,34 @@ assert(report.releases.latest.length === 6, 'expected six release tags');
 assert(releaseHtml.includes('<details class="release-overflow">'), 'expected collapsed release overflow');
 assert(releaseHtml.includes('Show 1 older releases'), 'expected one collapsed release');
 
+const servePort = await getFreePort();
+const server = spawn(process.execPath, [
+  path.resolve('src/cli.js'),
+  'serve',
+  '--config',
+  configPath,
+  '--host',
+  '127.0.0.1',
+  '--port',
+  String(servePort),
+  '--scan-interval-hours',
+  '0.00003'
+], {
+  cwd: process.cwd(),
+  stdio: ['ignore', 'pipe', 'pipe']
+});
+const serverOutput = collectOutput(server);
+
+try {
+  await waitForOutput(server, serverOutput, 'Auto-scan:', 'expected serve mode to start auto-scan');
+  run('git', ['tag', 'v0.1.6'], repoPath);
+  await waitForReport(outputDir, (latestReport) => (
+    latestReport.releases.latest.some((release) => release.name === 'v0.1.6')
+  ), 'expected scheduled serve scan to refresh releases');
+} finally {
+  await stopProcess(server);
+}
+
 console.log('Smoke test passed');
 
 function runDoctor(configPath) {
@@ -173,6 +202,95 @@ function run(command, args, cwd) {
     console.error(result.stderr);
     throw new Error(`${command} ${args.join(' ')} failed`);
   }
+}
+
+function collectOutput(child) {
+  const output = { value: '' };
+  child.stdout.setEncoding('utf8');
+  child.stderr.setEncoding('utf8');
+  child.stdout.on('data', (chunk) => {
+    output.value += chunk;
+  });
+  child.stderr.on('data', (chunk) => {
+    output.value += chunk;
+  });
+  return output;
+}
+
+async function getFreePort() {
+  const server = net.createServer();
+
+  await new Promise((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(0, '127.0.0.1', resolve);
+  });
+
+  const address = server.address();
+  await new Promise((resolve) => server.close(resolve));
+
+  if (!address || typeof address === 'string') {
+    throw new Error('Could not allocate a free port');
+  }
+
+  return address.port;
+}
+
+async function waitForOutput(child, output, marker, message) {
+  const deadline = Date.now() + 5000;
+
+  while (Date.now() < deadline) {
+    if (output.value.includes(marker)) {
+      return;
+    }
+
+    if (child.exitCode !== null) {
+      throw new Error(`${message}\n${output.value}`);
+    }
+
+    await sleep(50);
+  }
+
+  throw new Error(`${message}\n${output.value}`);
+}
+
+async function waitForReport(outputDir, predicate, message) {
+  const deadline = Date.now() + 7000;
+  let lastError;
+
+  while (Date.now() < deadline) {
+    try {
+      const latestReport = JSON.parse(await fsp.readFile(path.join(outputDir, 'report.json'), 'utf8'));
+      if (predicate(latestReport)) {
+        return;
+      }
+    } catch (error) {
+      lastError = error;
+    }
+
+    await sleep(100);
+  }
+
+  throw new Error(lastError ? `${message}: ${lastError.message}` : message);
+}
+
+async function stopProcess(child) {
+  if (child.exitCode !== null) {
+    return;
+  }
+
+  child.kill('SIGTERM');
+  await Promise.race([
+    new Promise((resolve) => child.once('exit', resolve)),
+    sleep(2000).then(() => {
+      if (child.exitCode === null) {
+        child.kill('SIGKILL');
+      }
+    })
+  ]);
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function assert(condition, message) {

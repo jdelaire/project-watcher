@@ -42,6 +42,8 @@ Open the dashboard with:
 npm run serve
 ```
 
+Serve mode runs a scan on startup and refreshes the report every 12 hours while the server process is running.
+
 Open it automatically in your browser:
 
 ```bash
@@ -125,6 +127,8 @@ node ./src/cli.js doctor --config ./project-watcher.config.json
 node ./src/cli.js serve
 node ./src/cli.js serve --port 7341
 node ./src/cli.js serve --open
+node ./src/cli.js serve --scan-interval-hours 6
+node ./src/cli.js serve --no-auto-scan
 node ./src/cli.js init
 node ./src/cli.js help
 ```
