@@ -1,0 +1,17 @@
+{
+  "name": "Project Watcher",
+  "short_name": "Watcher",
+  "description": "Local Git health report for 3 repositories, 27 code lines, and 13 tracked files.",
+  "start_url": "./report.html",
+  "display": "standalone",
+  "background_color": "#f6f0e5",
+  "theme_color": "#1f1a14",
+  "icons": [
+    {
+      "src": "./assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

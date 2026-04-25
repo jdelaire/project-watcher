@@ -6,6 +6,8 @@ Local reporting for Git repositories on your machine.
 
 The tool reads a config file containing project directories, discovers Git repositories, collects Git and line-count metrics, then writes JSON, Markdown, HTML, and historical snapshots.
 
+![Project Watcher dashboard](https://raw.githubusercontent.com/jdelaire/project-watcher/main/docs/assets/dashboard.png)
+
 ## Quick Start
 
 Create a local config first:
@@ -40,6 +42,33 @@ Open the dashboard with:
 npm run serve
 ```
 
+Open it automatically in your browser:
+
+```bash
+node ./src/cli.js serve --open
+```
+
+## Install
+
+Use it directly from a checkout:
+
+```bash
+npm link
+project-watcher scan
+```
+
+Or run without linking:
+
+```bash
+node ./src/cli.js scan
+```
+
+Once published to npm, run it with:
+
+```bash
+npx @jdelaire/project-watcher scan
+```
+
 ## Config
 
 `project-watcher.config.json` is intentionally ignored by Git because it contains local machine paths. Commit `project-watcher.config.example.json` instead.
@@ -48,6 +77,7 @@ Example:
 
 ```json
 {
+  "$schema": "./project-watcher.schema.json",
   "paths": [
     "~/Projects"
   ],
@@ -61,6 +91,8 @@ Example:
 ```
 
 `paths` can contain direct repository paths or parent directories that contain repositories.
+
+`$schema` is optional but recommended for editor validation. The schema is published in this repo at `project-watcher.schema.json`.
 
 `locTool` can be:
 
@@ -92,6 +124,7 @@ node ./src/cli.js doctor
 node ./src/cli.js doctor --config ./project-watcher.config.json
 node ./src/cli.js serve
 node ./src/cli.js serve --port 7341
+node ./src/cli.js serve --open
 node ./src/cli.js init
 node ./src/cli.js help
 ```
@@ -118,6 +151,25 @@ Every scan writes spreadsheet-friendly exports under `reports/csv/`:
 
 Every scan writes one detail page per repository under `reports/repos/`. These pages break down weekly activity, releases, contributors, file types, languages, AI agent files, and scan details for a single repo.
 
+## Demo
+
+A sanitized demo report is committed under `docs/demo/` and can be opened locally:
+
+```bash
+open docs/demo/index.html
+```
+
+The demo is built from throwaway repositories and does not contain local machine paths or private project data.
+
+## GitHub Pages
+
+The repo includes a manual `Demo Pages` workflow. To publish the sanitized demo:
+
+1. Enable GitHub Pages with source `GitHub Actions` in repository settings.
+2. Run the `Demo Pages` workflow manually from the Actions tab.
+
+The workflow only deploys `docs/demo/`.
+
 ## Doctor
 
 Run `npm run doctor` to validate the local setup before scanning. It checks config parsing, configured paths, output permissions, repository discovery, LOC tools, snapshot retention, and whether the local config file is ignored by Git.
@@ -125,6 +177,18 @@ Run `npm run doctor` to validate the local setup before scanning. It checks conf
 ## CI
 
 GitHub Actions runs syntax checks, `doctor` with a CI-safe config, and the smoke test on Node 20 and Node 22.
+
+## Package Checks
+
+Before publishing to npm, `prepublishOnly` runs:
+
+```bash
+node --check ./src/cli.js
+npm run test:smoke
+npm run test:package
+```
+
+`npm run test:package` performs a dry-run package check and verifies that local config, reports, tests, docs, and CI files are not included in the npm tarball.
 
 ## Metrics
 

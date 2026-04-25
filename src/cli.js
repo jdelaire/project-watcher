@@ -409,7 +409,7 @@ async function doctorCommand(args) {
 }
 
 async function serveCommand(args) {
-  const { configPath, host, port } = parseServeArgs(args);
+  const { configPath, host, port, open } = parseServeArgs(args);
   const loaded = await loadConfig(configPath);
   const config = normalizeConfig(loaded.config, loaded.configPath);
   const outputDir = resolvePath(config.outputDir, path.dirname(loaded.configPath));
@@ -451,7 +451,12 @@ async function serveCommand(args) {
   });
 
   console.log(`Serving ${outputDir}`);
-  console.log(`Dashboard: http://${host}:${port}/`);
+  const dashboardUrl = `http://${host}:${port}/`;
+  console.log(`Dashboard: ${dashboardUrl}`);
+
+  if (open) {
+    openUrl(dashboardUrl);
+  }
 }
 
 function parseScanArgs(args) {
@@ -485,6 +490,7 @@ function parseServeArgs(args) {
   let configPath = process.env.PROJECT_WATCHER_CONFIG || path.join(process.cwd(), 'project-watcher.config.json');
   let host = '127.0.0.1';
   let port = 7341;
+  let open = false;
 
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -510,6 +516,8 @@ function parseServeArgs(args) {
       }
       port = value;
       index += 1;
+    } else if (arg === '--open') {
+      open = true;
     } else {
       throw new Error(`Unknown serve option: ${arg}`);
     }
@@ -518,7 +526,8 @@ function parseServeArgs(args) {
   return {
     configPath: resolvePath(configPath, process.cwd()),
     host,
-    port
+    port,
+    open
   };
 }
 
@@ -4014,6 +4023,23 @@ function contentType(filePath) {
   return types[extension] || 'application/octet-stream';
 }
 
+function openUrl(url) {
+  const opener = process.platform === 'darwin'
+    ? { command: 'open', args: [url] }
+    : process.platform === 'win32'
+      ? { command: 'cmd', args: ['/c', 'start', '', url] }
+      : { command: 'xdg-open', args: [url] };
+
+  const result = spawnSync(opener.command, opener.args, {
+    detached: true,
+    stdio: 'ignore'
+  });
+
+  if (result.error) {
+    console.warn(`Could not open browser automatically: ${result.error.message}`);
+  }
+}
+
 function resolvePath(value, baseDir) {
   if (typeof value !== 'string' || value.trim() === '') {
     throw new Error('Path values must be non-empty strings');
@@ -4072,7 +4098,7 @@ function printHelp() {
 Usage:
   node ./src/cli.js scan [--config path] [--json]
   node ./src/cli.js doctor [--config path]
-  node ./src/cli.js serve [--config path] [--host host] [--port port]
+  node ./src/cli.js serve [--config path] [--host host] [--port port] [--open]
   node ./src/cli.js init [path]
   node ./src/cli.js help
 

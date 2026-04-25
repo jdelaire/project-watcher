@@ -1,0 +1,1230 @@
+{
+  "generatedAt": "2026-04-25T07:38:30.532Z",
+  "configPath": "/demo/tmp/demo-config.json",
+  "roots": [
+    "/demo/workspace"
+  ],
+  "totals": {
+    "repositories": 3,
+    "dirtyRepositories": 0,
+    "commits": 6,
+    "commitsLast7Days": 6,
+    "commitsLast30Days": 6,
+    "commitsLast90Days": 6,
+    "tags": 3,
+    "semverTags": 3,
+    "files": 13,
+    "physicalFiles": 13,
+    "physicalBytes": 1013,
+    "textFiles": 13,
+    "binaryFiles": 0,
+    "oversizedFiles": 0,
+    "textLines": 36,
+    "lines": 36,
+    "blankLines": 9,
+    "commentLines": 0,
+    "codeLines": 27
+  },
+  "weekly": {
+    "windowDays": 7,
+    "trendWeeks": 8,
+    "totals": {
+      "commits": 6,
+      "additions": 36,
+      "deletions": 0,
+      "netLines": 36,
+      "filesChanged": 13,
+      "activeRepos": 3,
+      "activeAuthors": 3
+    },
+    "weeks": [
+      {
+        "weekStart": "2026-03-02",
+        "commits": 0,
+        "additions": 0,
+        "deletions": 0,
+        "netLines": 0,
+        "filesChanged": 0,
+        "activeAuthors": 0
+      },
+      {
+        "weekStart": "2026-03-09",
+        "commits": 0,
+        "additions": 0,
+        "deletions": 0,
+        "netLines": 0,
+        "filesChanged": 0,
+        "activeAuthors": 0
+      },
+      {
+        "weekStart": "2026-03-16",
+        "commits": 0,
+        "additions": 0,
+        "deletions": 0,
+        "netLines": 0,
+        "filesChanged": 0,
+        "activeAuthors": 0
+      },
+      {
+        "weekStart": "2026-03-23",
+        "commits": 0,
+        "additions": 0,
+        "deletions": 0,
+        "netLines": 0,
+        "filesChanged": 0,
+        "activeAuthors": 0
+      },
+      {
+        "weekStart": "2026-03-30",
+        "commits": 0,
+        "additions": 0,
+        "deletions": 0,
+        "netLines": 0,
+        "filesChanged": 0,
+        "activeAuthors": 0
+      },
+      {
+        "weekStart": "2026-04-06",
+        "commits": 0,
+        "additions": 0,
+        "deletions": 0,
+        "netLines": 0,
+        "filesChanged": 0,
+        "activeAuthors": 0
+      },
+      {
+        "weekStart": "2026-04-13",
+        "commits": 0,
+        "additions": 0,
+        "deletions": 0,
+        "netLines": 0,
+        "filesChanged": 0,
+        "activeAuthors": 0
+      },
+      {
+        "weekStart": "2026-04-20",
+        "commits": 6,
+        "additions": 36,
+        "deletions": 0,
+        "netLines": 36,
+        "filesChanged": 13,
+        "activeAuthors": 3
+      }
+    ],
+    "topRepositories": [
+      {
+        "name": "atlas-app",
+        "path": "/demo/workspace/atlas-app",
+        "detailPath": "repos/atlas-app.html",
+        "commits": 2,
+        "additions": 12,
+        "deletions": 0,
+        "netLines": 12,
+        "filesChanged": 5,
+        "activeAuthors": 1
+      },
+      {
+        "name": "design-system",
+        "path": "/demo/workspace/design-system",
+        "detailPath": "repos/design-system.html",
+        "commits": 2,
+        "additions": 12,
+        "deletions": 0,
+        "netLines": 12,
+        "filesChanged": 4,
+        "activeAuthors": 1
+      },
+      {
+        "name": "ledger-api",
+        "path": "/demo/workspace/ledger-api",
+        "detailPath": "repos/ledger-api.html",
+        "commits": 2,
+        "additions": 12,
+        "deletions": 0,
+        "netLines": 12,
+        "filesChanged": 4,
+        "activeAuthors": 1
+      }
+    ]
+  },
+  "releases": {
+    "totals": {
+      "tags": 3,
+      "semverTags": 3,
+      "tagsLast30Days": 3,
+      "tagsLast90Days": 3,
+      "tagsLast365Days": 3,
+      "reposWithTags": 3,
+      "reposWithoutTags": 0
+    },
+    "latest": [
+      {
+        "repo": "atlas-app",
+        "path": "/demo/workspace/atlas-app",
+        "detailPath": "repos/atlas-app.html",
+        "name": "v1.2.0",
+        "date": "2026-04-24T10:00:00Z",
+        "semver": true
+      },
+      {
+        "repo": "design-system",
+        "path": "/demo/workspace/design-system",
+        "detailPath": "repos/design-system.html",
+        "name": "v2.1.0",
+        "date": "2026-04-24T10:00:00Z",
+        "semver": true
+      },
+      {
+        "repo": "ledger-api",
+        "path": "/demo/workspace/ledger-api",
+        "detailPath": "repos/ledger-api.html",
+        "name": "v0.8.0",
+        "date": "2026-04-24T10:00:00Z",
+        "semver": true
+      }
+    ],
+    "repositories": [
+      {
+        "name": "atlas-app",
+        "path": "/demo/workspace/atlas-app",
+        "detailPath": "repos/atlas-app.html",
+        "tags": 1,
+        "semverTags": 1,
+        "tagsLast30Days": 1,
+        "tagsLast90Days": 1,
+        "tagsLast365Days": 1,
+        "latestTag": {
+          "name": "v1.2.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 0
+      },
+      {
+        "name": "design-system",
+        "path": "/demo/workspace/design-system",
+        "detailPath": "repos/design-system.html",
+        "tags": 1,
+        "semverTags": 1,
+        "tagsLast30Days": 1,
+        "tagsLast90Days": 1,
+        "tagsLast365Days": 1,
+        "latestTag": {
+          "name": "v2.1.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 0
+      },
+      {
+        "name": "ledger-api",
+        "path": "/demo/workspace/ledger-api",
+        "detailPath": "repos/ledger-api.html",
+        "tags": 1,
+        "semverTags": 1,
+        "tagsLast30Days": 1,
+        "tagsLast90Days": 1,
+        "tagsLast365Days": 1,
+        "latestTag": {
+          "name": "v0.8.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 0
+      }
+    ]
+  },
+  "contributors": {
+    "totals": {
+      "uniqueContributors": 2,
+      "topContributor": {
+        "name": "Demo Maintainer",
+        "commits": 4,
+        "repoCount": 2,
+        "repositories": [
+          {
+            "name": "atlas-app",
+            "path": "/demo/workspace/atlas-app",
+            "detailPath": "repos/atlas-app.html",
+            "commits": 2
+          },
+          {
+            "name": "design-system",
+            "path": "/demo/workspace/design-system",
+            "detailPath": "repos/design-system.html",
+            "commits": 2
+          }
+        ]
+      },
+      "multiRepoContributors": 1
+    },
+    "contributors": [
+      {
+        "name": "Demo Maintainer",
+        "commits": 4,
+        "repoCount": 2,
+        "repositories": [
+          {
+            "name": "atlas-app",
+            "path": "/demo/workspace/atlas-app",
+            "detailPath": "repos/atlas-app.html",
+            "commits": 2
+          },
+          {
+            "name": "design-system",
+            "path": "/demo/workspace/design-system",
+            "detailPath": "repos/design-system.html",
+            "commits": 2
+          }
+        ]
+      },
+      {
+        "name": "Data Bot",
+        "commits": 2,
+        "repoCount": 1,
+        "repositories": [
+          {
+            "name": "ledger-api",
+            "path": "/demo/workspace/ledger-api",
+            "detailPath": "repos/ledger-api.html",
+            "commits": 2
+          }
+        ]
+      }
+    ]
+  },
+  "aiAgents": {
+    "totals": {
+      "agentsDetected": 4,
+      "reposWithAgents": 3,
+      "signals": 4,
+      "topAgent": {
+        "id": "claude",
+        "name": "Claude Code",
+        "iconUrl": "./assets/agents/claude.svg",
+        "homepage": "https://claude.ai/code",
+        "fallback": "C",
+        "repoCount": 1,
+        "signalCount": 1,
+        "repositories": [
+          {
+            "name": "atlas-app",
+            "path": "/demo/workspace/atlas-app",
+            "signalCount": 1,
+            "signals": [
+              {
+                "label": "CLAUDE.md",
+                "files": [
+                  "CLAUDE.md"
+                ],
+                "count": 1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "agents": [
+      {
+        "id": "claude",
+        "name": "Claude Code",
+        "iconUrl": "./assets/agents/claude.svg",
+        "homepage": "https://claude.ai/code",
+        "fallback": "C",
+        "repoCount": 1,
+        "signalCount": 1,
+        "repositories": [
+          {
+            "name": "atlas-app",
+            "path": "/demo/workspace/atlas-app",
+            "signalCount": 1,
+            "signals": [
+              {
+                "label": "CLAUDE.md",
+                "files": [
+                  "CLAUDE.md"
+                ],
+                "count": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "codex",
+        "name": "Codex",
+        "iconUrl": "https://openai.com/favicon.ico",
+        "homepage": "https://openai.com/codex",
+        "fallback": "O",
+        "repoCount": 1,
+        "signalCount": 1,
+        "repositories": [
+          {
+            "name": "atlas-app",
+            "path": "/demo/workspace/atlas-app",
+            "signalCount": 1,
+            "signals": [
+              {
+                "label": "AGENTS.md",
+                "files": [
+                  "AGENTS.md"
+                ],
+                "count": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cursor",
+        "name": "Cursor",
+        "iconUrl": "https://cursor.com/favicon.ico",
+        "homepage": "https://cursor.com",
+        "fallback": "Cu",
+        "repoCount": 1,
+        "signalCount": 1,
+        "repositories": [
+          {
+            "name": "design-system",
+            "path": "/demo/workspace/design-system",
+            "signalCount": 1,
+            "signals": [
+              {
+                "label": ".cursor/",
+                "files": [
+                  ".cursor/rules.md"
+                ],
+                "count": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "copilot",
+        "name": "GitHub Copilot",
+        "iconUrl": "https://github.githubassets.com/favicons/favicon.svg",
+        "homepage": "https://github.com/features/copilot",
+        "fallback": "GH",
+        "repoCount": 1,
+        "signalCount": 1,
+        "repositories": [
+          {
+            "name": "ledger-api",
+            "path": "/demo/workspace/ledger-api",
+            "signalCount": 1,
+            "signals": [
+              {
+                "label": "copilot-instructions.md",
+                "files": [
+                  ".github/copilot-instructions.md"
+                ],
+                "count": 1
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "languages": [
+    {
+      "language": "JavaScript",
+      "files": 3,
+      "lines": 21,
+      "blankLines": 6,
+      "commentLines": 0,
+      "codeLines": 15,
+      "bytes": 612
+    },
+    {
+      "language": "CSS",
+      "files": 3,
+      "lines": 6,
+      "blankLines": 0,
+      "commentLines": 0,
+      "codeLines": 6,
+      "bytes": 246
+    },
+    {
+      "language": "Markdown",
+      "files": 7,
+      "lines": 9,
+      "blankLines": 3,
+      "commentLines": 0,
+      "codeLines": 6,
+      "bytes": 155
+    }
+  ],
+  "fileTypes": [
+    {
+      "type": ".md",
+      "files": 7,
+      "bytes": 155,
+      "textFiles": 7,
+      "binaryFiles": 0,
+      "oversizedFiles": 0,
+      "textLines": 9,
+      "nonEmptyTextLines": 6
+    },
+    {
+      "type": ".js",
+      "files": 3,
+      "bytes": 612,
+      "textFiles": 3,
+      "binaryFiles": 0,
+      "oversizedFiles": 0,
+      "textLines": 21,
+      "nonEmptyTextLines": 15
+    },
+    {
+      "type": ".css",
+      "files": 3,
+      "bytes": 246,
+      "textFiles": 3,
+      "binaryFiles": 0,
+      "oversizedFiles": 0,
+      "textLines": 6,
+      "nonEmptyTextLines": 6
+    }
+  ],
+  "repositories": [
+    {
+      "name": "atlas-app",
+      "path": "/demo/workspace/atlas-app",
+      "remoteUrl": null,
+      "branch": "main",
+      "isDirty": false,
+      "dirtyFileCount": 0,
+      "commits": {
+        "total": 2,
+        "last7Days": 2,
+        "last30Days": 2,
+        "last90Days": 2
+      },
+      "contributors": {
+        "total": 1,
+        "top": [
+          {
+            "name": "Demo Maintainer",
+            "commits": 2
+          }
+        ],
+        "all": [
+          {
+            "name": "Demo Maintainer",
+            "commits": 2
+          }
+        ]
+      },
+      "branches": {
+        "local": 1
+      },
+      "releases": {
+        "tags": 1,
+        "semverTags": 1,
+        "tagsLast30Days": 1,
+        "tagsLast90Days": 1,
+        "tagsLast365Days": 1,
+        "latestTag": {
+          "name": "v1.2.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 0,
+        "recentTags": [
+          {
+            "name": "v1.2.0",
+            "date": "2026-04-24T10:00:00Z"
+          }
+        ]
+      },
+      "lastCommit": {
+        "date": "2026-04-24T10:00:00Z",
+        "hash": "7e47231",
+        "subject": "Add weekly activity"
+      },
+      "weekly": {
+        "last7Days": {
+          "weekStart": "2026-04-18",
+          "commits": 2,
+          "additions": 12,
+          "deletions": 0,
+          "netLines": 12,
+          "filesChanged": 5,
+          "activeAuthors": 1
+        },
+        "weeks": [
+          {
+            "weekStart": "2026-03-02",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-09",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-16",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-23",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-30",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-06",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-13",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-20",
+            "commits": 2,
+            "additions": 12,
+            "deletions": 0,
+            "netLines": 12,
+            "filesChanged": 5,
+            "activeAuthors": 1
+          }
+        ]
+      },
+      "aiAgents": [
+        {
+          "id": "claude",
+          "name": "Claude Code",
+          "iconUrl": "./assets/agents/claude.svg",
+          "homepage": "https://claude.ai/code",
+          "fallback": "C",
+          "signalCount": 1,
+          "signals": [
+            {
+              "label": "CLAUDE.md",
+              "files": [
+                "CLAUDE.md"
+              ],
+              "count": 1
+            }
+          ]
+        },
+        {
+          "id": "codex",
+          "name": "Codex",
+          "iconUrl": "https://openai.com/favicon.ico",
+          "homepage": "https://openai.com/codex",
+          "fallback": "O",
+          "signalCount": 1,
+          "signals": [
+            {
+              "label": "AGENTS.md",
+              "files": [
+                "AGENTS.md"
+              ],
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "loc": {
+        "tool": "builtin",
+        "duplicatePolicy": "counted",
+        "fileScope": "tracked",
+        "files": 5,
+        "lines": 12,
+        "blankLines": 3,
+        "commentLines": 0,
+        "codeLines": 9,
+        "bytes": 336,
+        "byLanguage": [
+          {
+            "language": "JavaScript",
+            "files": 1,
+            "lines": 7,
+            "blankLines": 2,
+            "commentLines": 0,
+            "codeLines": 5,
+            "bytes": 204
+          },
+          {
+            "language": "CSS",
+            "files": 1,
+            "lines": 2,
+            "blankLines": 0,
+            "commentLines": 0,
+            "codeLines": 2,
+            "bytes": 82
+          },
+          {
+            "language": "Markdown",
+            "files": 3,
+            "lines": 3,
+            "blankLines": 1,
+            "commentLines": 0,
+            "codeLines": 2,
+            "bytes": 50
+          }
+        ]
+      },
+      "fileTypes": {
+        "files": 5,
+        "bytes": 336,
+        "textFiles": 5,
+        "binaryFiles": 0,
+        "oversizedFiles": 0,
+        "textLines": 12,
+        "nonEmptyTextLines": 9,
+        "byType": [
+          {
+            "type": ".md",
+            "files": 3,
+            "bytes": 50,
+            "textFiles": 3,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 3,
+            "nonEmptyTextLines": 2
+          },
+          {
+            "type": ".js",
+            "files": 1,
+            "bytes": 204,
+            "textFiles": 1,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 7,
+            "nonEmptyTextLines": 5
+          },
+          {
+            "type": ".css",
+            "files": 1,
+            "bytes": 82,
+            "textFiles": 1,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 2,
+            "nonEmptyTextLines": 2
+          }
+        ]
+      },
+      "detailPath": "repos/atlas-app.html"
+    },
+    {
+      "name": "design-system",
+      "path": "/demo/workspace/design-system",
+      "remoteUrl": null,
+      "branch": "main",
+      "isDirty": false,
+      "dirtyFileCount": 0,
+      "commits": {
+        "total": 2,
+        "last7Days": 2,
+        "last30Days": 2,
+        "last90Days": 2
+      },
+      "contributors": {
+        "total": 1,
+        "top": [
+          {
+            "name": "Demo Maintainer",
+            "commits": 2
+          }
+        ],
+        "all": [
+          {
+            "name": "Demo Maintainer",
+            "commits": 2
+          }
+        ]
+      },
+      "branches": {
+        "local": 1
+      },
+      "releases": {
+        "tags": 1,
+        "semverTags": 1,
+        "tagsLast30Days": 1,
+        "tagsLast90Days": 1,
+        "tagsLast365Days": 1,
+        "latestTag": {
+          "name": "v2.1.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 0,
+        "recentTags": [
+          {
+            "name": "v2.1.0",
+            "date": "2026-04-24T10:00:00Z"
+          }
+        ]
+      },
+      "lastCommit": {
+        "date": "2026-04-24T10:00:00Z",
+        "hash": "8f65966",
+        "subject": "Add weekly activity"
+      },
+      "weekly": {
+        "last7Days": {
+          "weekStart": "2026-04-18",
+          "commits": 2,
+          "additions": 12,
+          "deletions": 0,
+          "netLines": 12,
+          "filesChanged": 4,
+          "activeAuthors": 1
+        },
+        "weeks": [
+          {
+            "weekStart": "2026-03-02",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-09",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-16",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-23",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-30",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-06",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-13",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-20",
+            "commits": 2,
+            "additions": 12,
+            "deletions": 0,
+            "netLines": 12,
+            "filesChanged": 4,
+            "activeAuthors": 1
+          }
+        ]
+      },
+      "aiAgents": [
+        {
+          "id": "cursor",
+          "name": "Cursor",
+          "iconUrl": "https://cursor.com/favicon.ico",
+          "homepage": "https://cursor.com",
+          "fallback": "Cu",
+          "signalCount": 1,
+          "signals": [
+            {
+              "label": ".cursor/",
+              "files": [
+                ".cursor/rules.md"
+              ],
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "loc": {
+        "tool": "builtin",
+        "duplicatePolicy": "counted",
+        "fileScope": "tracked",
+        "files": 4,
+        "lines": 12,
+        "blankLines": 3,
+        "commentLines": 0,
+        "codeLines": 9,
+        "bytes": 340,
+        "byLanguage": [
+          {
+            "language": "JavaScript",
+            "files": 1,
+            "lines": 7,
+            "blankLines": 2,
+            "commentLines": 0,
+            "codeLines": 5,
+            "bytes": 204
+          },
+          {
+            "language": "CSS",
+            "files": 1,
+            "lines": 2,
+            "blankLines": 0,
+            "commentLines": 0,
+            "codeLines": 2,
+            "bytes": 82
+          },
+          {
+            "language": "Markdown",
+            "files": 2,
+            "lines": 3,
+            "blankLines": 1,
+            "commentLines": 0,
+            "codeLines": 2,
+            "bytes": 54
+          }
+        ]
+      },
+      "fileTypes": {
+        "files": 4,
+        "bytes": 340,
+        "textFiles": 4,
+        "binaryFiles": 0,
+        "oversizedFiles": 0,
+        "textLines": 12,
+        "nonEmptyTextLines": 9,
+        "byType": [
+          {
+            "type": ".md",
+            "files": 2,
+            "bytes": 54,
+            "textFiles": 2,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 3,
+            "nonEmptyTextLines": 2
+          },
+          {
+            "type": ".js",
+            "files": 1,
+            "bytes": 204,
+            "textFiles": 1,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 7,
+            "nonEmptyTextLines": 5
+          },
+          {
+            "type": ".css",
+            "files": 1,
+            "bytes": 82,
+            "textFiles": 1,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 2,
+            "nonEmptyTextLines": 2
+          }
+        ]
+      },
+      "detailPath": "repos/design-system.html"
+    },
+    {
+      "name": "ledger-api",
+      "path": "/demo/workspace/ledger-api",
+      "remoteUrl": null,
+      "branch": "main",
+      "isDirty": false,
+      "dirtyFileCount": 0,
+      "commits": {
+        "total": 2,
+        "last7Days": 2,
+        "last30Days": 2,
+        "last90Days": 2
+      },
+      "contributors": {
+        "total": 1,
+        "top": [
+          {
+            "name": "Data Bot",
+            "commits": 2
+          }
+        ],
+        "all": [
+          {
+            "name": "Data Bot",
+            "commits": 2
+          }
+        ]
+      },
+      "branches": {
+        "local": 1
+      },
+      "releases": {
+        "tags": 1,
+        "semverTags": 1,
+        "tagsLast30Days": 1,
+        "tagsLast90Days": 1,
+        "tagsLast365Days": 1,
+        "latestTag": {
+          "name": "v0.8.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 0,
+        "recentTags": [
+          {
+            "name": "v0.8.0",
+            "date": "2026-04-24T10:00:00Z"
+          }
+        ]
+      },
+      "lastCommit": {
+        "date": "2026-04-24T10:00:00Z",
+        "hash": "45d01c0",
+        "subject": "Add weekly activity"
+      },
+      "weekly": {
+        "last7Days": {
+          "weekStart": "2026-04-18",
+          "commits": 2,
+          "additions": 12,
+          "deletions": 0,
+          "netLines": 12,
+          "filesChanged": 4,
+          "activeAuthors": 1
+        },
+        "weeks": [
+          {
+            "weekStart": "2026-03-02",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-09",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-16",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-23",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-03-30",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-06",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-13",
+            "commits": 0,
+            "additions": 0,
+            "deletions": 0,
+            "netLines": 0,
+            "filesChanged": 0,
+            "activeAuthors": 0
+          },
+          {
+            "weekStart": "2026-04-20",
+            "commits": 2,
+            "additions": 12,
+            "deletions": 0,
+            "netLines": 12,
+            "filesChanged": 4,
+            "activeAuthors": 1
+          }
+        ]
+      },
+      "aiAgents": [
+        {
+          "id": "copilot",
+          "name": "GitHub Copilot",
+          "iconUrl": "https://github.githubassets.com/favicons/favicon.svg",
+          "homepage": "https://github.com/features/copilot",
+          "fallback": "GH",
+          "signalCount": 1,
+          "signals": [
+            {
+              "label": "copilot-instructions.md",
+              "files": [
+                ".github/copilot-instructions.md"
+              ],
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "loc": {
+        "tool": "builtin",
+        "duplicatePolicy": "counted",
+        "fileScope": "tracked",
+        "files": 4,
+        "lines": 12,
+        "blankLines": 3,
+        "commentLines": 0,
+        "codeLines": 9,
+        "bytes": 337,
+        "byLanguage": [
+          {
+            "language": "JavaScript",
+            "files": 1,
+            "lines": 7,
+            "blankLines": 2,
+            "commentLines": 0,
+            "codeLines": 5,
+            "bytes": 204
+          },
+          {
+            "language": "CSS",
+            "files": 1,
+            "lines": 2,
+            "blankLines": 0,
+            "commentLines": 0,
+            "codeLines": 2,
+            "bytes": 82
+          },
+          {
+            "language": "Markdown",
+            "files": 2,
+            "lines": 3,
+            "blankLines": 1,
+            "commentLines": 0,
+            "codeLines": 2,
+            "bytes": 51
+          }
+        ]
+      },
+      "fileTypes": {
+        "files": 4,
+        "bytes": 337,
+        "textFiles": 4,
+        "binaryFiles": 0,
+        "oversizedFiles": 0,
+        "textLines": 12,
+        "nonEmptyTextLines": 9,
+        "byType": [
+          {
+            "type": ".md",
+            "files": 2,
+            "bytes": 51,
+            "textFiles": 2,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 3,
+            "nonEmptyTextLines": 2
+          },
+          {
+            "type": ".js",
+            "files": 1,
+            "bytes": 204,
+            "textFiles": 1,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 7,
+            "nonEmptyTextLines": 5
+          },
+          {
+            "type": ".css",
+            "files": 1,
+            "bytes": 82,
+            "textFiles": 1,
+            "binaryFiles": 0,
+            "oversizedFiles": 0,
+            "textLines": 2,
+            "nonEmptyTextLines": 2
+          }
+        ]
+      },
+      "detailPath": "repos/ledger-api.html"
+    }
+  ]
+}

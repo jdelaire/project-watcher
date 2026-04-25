@@ -1,5 +1,5 @@
 {
-  "name": "project-watcher",
+  "name": "@jdelaire/project-watcher",
   "version": "0.1.0",
   "description": "Local Git repository metrics and reporting tool.",
   "type": "module",
@@ -20,14 +20,26 @@
     "url": "git+https://github.com/jdelaire/project-watcher.git"
   },
   "bin": {
-    "project-watcher": "./src/cli.js"
+    "project-watcher": "src/cli.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src/",
+    "project-watcher.config.example.json",
+    "project-watcher.schema.json",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "scan": "node ./src/cli.js scan",
     "serve": "node ./src/cli.js serve",
     "init": "node ./src/cli.js init",
     "doctor": "node ./src/cli.js doctor",
-    "test:smoke": "node ./test/smoke.js"
+    "test:smoke": "node ./test/smoke.js",
+    "test:package": "node ./test/package-smoke.js",
+    "prepublishOnly": "node --check ./src/cli.js && npm run test:smoke && npm run test:package"
   },
   "engines": {
     "node": ">=18"

@@ -1,4 +1,5 @@
 {
+  "$schema": "./project-watcher.schema.json",
   "paths": [
     "~/Projects"
   ],

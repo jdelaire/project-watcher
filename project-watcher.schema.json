@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/jdelaire/project-watcher/main/project-watcher.schema.json",
+  "title": "Project Watcher Config",
+  "description": "Configuration for Project Watcher local Git repository reporting.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "paths"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional JSON Schema URL for editor validation."
+    },
+    "paths": {
+      "type": "array",
+      "description": "Repository paths or parent directories to scan. Relative paths resolve from the config file directory.",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "maxDepth": {
+      "type": "integer",
+      "description": "Maximum directory recursion depth when a path is a parent directory.",
+      "minimum": 0,
+      "default": 4
+    },
+    "outputDir": {
+      "type": "string",
+      "description": "Directory where reports are written. Relative paths resolve from the config file directory.",
+      "minLength": 1,
+      "default": "reports"
+    },
+    "excludeDirs": {
+      "type": "array",
+      "description": "Directory names to ignore while scanning files or discovering repositories.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "excludeFiles": {
+      "type": "array",
+      "description": "File names to ignore while counting files and LOC.",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "maxFileBytes": {
+      "type": "integer",
+      "description": "Maximum file size read for text/file-type statistics.",
+      "minimum": 1,
+      "default": 1048576
+    },
+    "locTool": {
+      "type": "string",
+      "description": "Line-count backend. Tracked mode only uses cloc externally because it can count git-tracked files directly.",
+      "enum": [
+        "auto",
+        "builtin",
+        "cloc",
+        "tokei",
+        "scc"
+      ],
+      "default": "auto"
+    },
+    "countDuplicateFiles": {
+      "type": "boolean",
+      "description": "Whether cloc should count duplicate files instead of de-duplicating them.",
+      "default": false
+    },
+    "fileScope": {
+      "type": "string",
+      "description": "Whether to count only git-tracked files or the full working tree after excludes.",
+      "enum": [
+        "tracked",
+        "workingTree"
+      ],
+      "default": "tracked"
+    },
+    "maxSnapshots": {
+      "type": "integer",
+      "description": "Number of historical snapshots to retain. Set to 0 to retain all snapshots.",
+      "minimum": 0,
+      "default": 52
+    }
+  }
+}
