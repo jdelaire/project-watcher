@@ -3,6 +3,22 @@
   "version": "0.1.0",
   "description": "Local Git repository metrics and reporting tool.",
   "type": "module",
+  "keywords": [
+    "git",
+    "metrics",
+    "reporting",
+    "dashboard",
+    "repositories",
+    "loc"
+  ],
+  "homepage": "https://github.com/jdelaire/project-watcher#readme",
+  "bugs": {
+    "url": "https://github.com/jdelaire/project-watcher/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdelaire/project-watcher.git"
+  },
   "bin": {
     "project-watcher": "./src/cli.js"
   },
@@ -16,5 +32,6 @@
   "engines": {
     "node": ">=18"
   },
+  "author": "John <jdelaire@gmail.com>",
   "license": "MIT"
 }
