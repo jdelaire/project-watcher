@@ -1,0 +1,51 @@
+{
+  "paths": [
+    "~/Projects"
+  ],
+  "maxDepth": 6,
+  "outputDir": "reports",
+  "excludeDirs": [
+    ".git",
+    "__pycache__",
+    ".env",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".asc",
+    ".tmp",
+    ".venv",
+    ".venv-placeholders",
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    ".next",
+    ".playwright",
+    ".turbo",
+    ".cache",
+    ".build",
+    "DerivedData",
+    "dSYMs",
+    "env",
+    "playwright-profiles",
+    "site-packages",
+    "target",
+    "tmp",
+    "venv",
+    "vendor"
+  ],
+  "excludeFiles": [
+    ".DS_Store",
+    ".env",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock",
+    "Cargo.lock",
+    "Gemfile.lock"
+  ],
+  "maxFileBytes": 1048576,
+  "locTool": "auto",
+  "countDuplicateFiles": false,
+  "fileScope": "tracked",
+  "maxSnapshots": 52
+}
