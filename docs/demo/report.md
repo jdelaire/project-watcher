@@ -1,6 +1,6 @@
 # Project Watcher Report
 
-Generated: 2026-04-25T09:39:37.008Z
+Generated: 2026-04-25T10:07:09.104Z
 Config: /demo/tmp/demo-config.json
 
 ## Summary
@@ -21,6 +21,9 @@ Config: /demo/tmp/demo-config.json
 - Markdown docs: 9
 - Releases last 90 days: 7
 - Repos without tags: 0
+- Release readiness needs attention: 3
+- Release due: 0
+- Stale releases: 0
 - Unique contributors: 2
 - Multi-repo contributors: 2
 - AI agents detected: 4
@@ -54,6 +57,18 @@ Config: /demo/tmp/demo-config.json
 | design-system | v2.0.0 | 2026-04-24T10:00:00Z | yes |
 | ledger-api | v0.9.0 | 2026-04-24T10:00:00Z | yes |
 | ledger-api | v0.8.0 | 2026-04-24T10:00:00Z | yes |
+
+## Release Readiness
+
+- Watch after: 30 days
+- Stale after: 90 days
+- Release due after: 20 commits since latest tag
+
+| Repo | Status | Latest tag | Days | Commits since tag | Files changed | Changelog | Dirty |
+| --- | --- | --- | ---: | ---: | ---: | --- | ---: |
+| atlas-app | watch | v1.4.0 | 1 | 2 | 1 | yes | 0 |
+| design-system | watch | v2.1.0 | 1 | 2 | 1 | yes | 0 |
+| ledger-api | watch | v0.9.0 | 1 | 2 | 1 | yes | 0 |
 
 ## Contributors
 
@@ -120,6 +135,7 @@ No previous comparable snapshot
 - csv/weekly-repositories.csv
 - csv/ai-agents.csv
 - csv/releases.csv
+- csv/release-readiness.csv
 - csv/contributors.csv
 
 ## Repository Drilldowns

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-25T09:39:37.008Z",
+  "generatedAt": "2026-04-25T10:07:09.104Z",
   "configPath": "/demo/tmp/demo-config.json",
   "roots": [
     "/demo/workspace"
@@ -294,7 +294,9 @@
           "name": "v1.4.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0,
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
         "changelog": {
           "path": "docs/changelog.md",
           "title": "Changelog",
@@ -318,7 +320,9 @@
           "name": "v2.1.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0,
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
         "changelog": {
           "path": "docs/changelog.md",
           "title": "Changelog",
@@ -342,7 +346,9 @@
           "name": "v0.9.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0,
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
         "changelog": {
           "path": "docs/changelog.md",
           "title": "Changelog",
@@ -352,6 +358,116 @@
           "detailPath": "repos/ledger-api/docs/changelog.html",
           "kind": "changelog"
         }
+      }
+    ]
+  },
+  "releaseReadiness": {
+    "thresholds": {
+      "watchAfterDays": 30,
+      "staleAfterDays": 90,
+      "releaseDueAfterCommits": 20
+    },
+    "totals": {
+      "fresh": 0,
+      "watch": 3,
+      "releaseDue": 0,
+      "stale": 0,
+      "needsAttention": 3,
+      "missingChangelog": 0
+    },
+    "repositories": [
+      {
+        "name": "atlas-app",
+        "path": "/demo/workspace/atlas-app",
+        "detailPath": "repos/atlas-app.html",
+        "status": "watch",
+        "latestTag": {
+          "name": "v1.4.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
+        "changelogFound": true,
+        "changelog": {
+          "path": "docs/changelog.md",
+          "title": "Changelog",
+          "bytes": 59,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:39:35.966Z",
+          "detailPath": "repos/atlas-app/docs/changelog.html",
+          "kind": "changelog"
+        },
+        "isDirty": false,
+        "dirtyFileCount": 0,
+        "reasons": [
+          "1d since latest tag",
+          "2 commits since tag",
+          "1 files changed since tag",
+          "changelog found"
+        ]
+      },
+      {
+        "name": "design-system",
+        "path": "/demo/workspace/design-system",
+        "detailPath": "repos/design-system.html",
+        "status": "watch",
+        "latestTag": {
+          "name": "v2.1.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
+        "changelogFound": true,
+        "changelog": {
+          "path": "docs/changelog.md",
+          "title": "Changelog",
+          "bytes": 63,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:39:36.036Z",
+          "detailPath": "repos/design-system/docs/changelog.html",
+          "kind": "changelog"
+        },
+        "isDirty": false,
+        "dirtyFileCount": 0,
+        "reasons": [
+          "1d since latest tag",
+          "2 commits since tag",
+          "1 files changed since tag",
+          "changelog found"
+        ]
+      },
+      {
+        "name": "ledger-api",
+        "path": "/demo/workspace/ledger-api",
+        "detailPath": "repos/ledger-api.html",
+        "status": "watch",
+        "latestTag": {
+          "name": "v0.9.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
+        "changelogFound": true,
+        "changelog": {
+          "path": "docs/changelog.md",
+          "title": "Changelog",
+          "bytes": 60,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:39:36.109Z",
+          "detailPath": "repos/ledger-api/docs/changelog.html",
+          "kind": "changelog"
+        },
+        "isDirty": false,
+        "dirtyFileCount": 0,
+        "reasons": [
+          "1d since latest tag",
+          "2 commits since tag",
+          "1 files changed since tag",
+          "changelog found"
+        ]
       }
     ]
   },
@@ -712,7 +828,9 @@
           "name": "v1.4.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0,
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
         "recentTags": [
           {
             "name": "v1.4.0",
@@ -958,7 +1076,38 @@
           }
         ]
       },
-      "detailPath": "repos/atlas-app.html"
+      "detailPath": "repos/atlas-app.html",
+      "releaseReadiness": {
+        "name": "atlas-app",
+        "path": "/demo/workspace/atlas-app",
+        "detailPath": "repos/atlas-app.html",
+        "status": "watch",
+        "latestTag": {
+          "name": "v1.4.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
+        "changelogFound": true,
+        "changelog": {
+          "path": "docs/changelog.md",
+          "title": "Changelog",
+          "bytes": 59,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:39:35.966Z",
+          "detailPath": "repos/atlas-app/docs/changelog.html",
+          "kind": "changelog"
+        },
+        "isDirty": false,
+        "dirtyFileCount": 0,
+        "reasons": [
+          "1d since latest tag",
+          "2 commits since tag",
+          "1 files changed since tag",
+          "changelog found"
+        ]
+      }
     },
     {
       "name": "design-system",
@@ -1009,7 +1158,9 @@
           "name": "v2.1.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0,
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
         "recentTags": [
           {
             "name": "v2.1.0",
@@ -1253,7 +1404,38 @@
           }
         ]
       },
-      "detailPath": "repos/design-system.html"
+      "detailPath": "repos/design-system.html",
+      "releaseReadiness": {
+        "name": "design-system",
+        "path": "/demo/workspace/design-system",
+        "detailPath": "repos/design-system.html",
+        "status": "watch",
+        "latestTag": {
+          "name": "v2.1.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
+        "changelogFound": true,
+        "changelog": {
+          "path": "docs/changelog.md",
+          "title": "Changelog",
+          "bytes": 63,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:39:36.036Z",
+          "detailPath": "repos/design-system/docs/changelog.html",
+          "kind": "changelog"
+        },
+        "isDirty": false,
+        "dirtyFileCount": 0,
+        "reasons": [
+          "1d since latest tag",
+          "2 commits since tag",
+          "1 files changed since tag",
+          "changelog found"
+        ]
+      }
     },
     {
       "name": "ledger-api",
@@ -1304,7 +1486,9 @@
           "name": "v0.9.0",
           "date": "2026-04-24T10:00:00Z"
         },
-        "daysSinceLatestTag": 0,
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
         "recentTags": [
           {
             "name": "v0.9.0",
@@ -1529,16 +1713,47 @@
           }
         ]
       },
-      "detailPath": "repos/ledger-api.html"
+      "detailPath": "repos/ledger-api.html",
+      "releaseReadiness": {
+        "name": "ledger-api",
+        "path": "/demo/workspace/ledger-api",
+        "detailPath": "repos/ledger-api.html",
+        "status": "watch",
+        "latestTag": {
+          "name": "v0.9.0",
+          "date": "2026-04-24T10:00:00Z"
+        },
+        "daysSinceLatestTag": 1,
+        "commitsSinceLatestTag": 2,
+        "filesChangedSinceLatestTag": 1,
+        "changelogFound": true,
+        "changelog": {
+          "path": "docs/changelog.md",
+          "title": "Changelog",
+          "bytes": 60,
+          "lines": 5,
+          "modifiedAt": "2026-04-25T09:39:36.109Z",
+          "detailPath": "repos/ledger-api/docs/changelog.html",
+          "kind": "changelog"
+        },
+        "isDirty": false,
+        "dirtyFileCount": 0,
+        "reasons": [
+          "1d since latest tag",
+          "2 commits since tag",
+          "1 files changed since tag",
+          "changelog found"
+        ]
+      }
     }
   ],
   "history": {
     "snapshotCount": 1,
-    "firstGeneratedAt": "2026-04-25T09:39:37.008Z",
-    "lastGeneratedAt": "2026-04-25T09:39:37.008Z",
+    "firstGeneratedAt": "2026-04-25T10:07:09.104Z",
+    "lastGeneratedAt": "2026-04-25T10:07:09.104Z",
     "snapshots": [
       {
-        "generatedAt": "2026-04-25T09:39:37.008Z",
+        "generatedAt": "2026-04-25T10:07:09.104Z",
         "repositories": 3,
         "dirtyRepositories": 0,
         "codeLines": 41,

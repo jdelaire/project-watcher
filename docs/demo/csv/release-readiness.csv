@@ -1,0 +1,4 @@
+repo,path,status,latestTag,daysSinceLatestTag,commitsSinceLatestTag,filesChangedSinceLatestTag,changelogFound,dirtyFileCount,reasons
+atlas-app,/demo/workspace/atlas-app,watch,v1.4.0,1,2,1,true,0,1d since latest tag; 2 commits since tag; 1 files changed since tag; changelog found
+design-system,/demo/workspace/design-system,watch,v2.1.0,1,2,1,true,0,1d since latest tag; 2 commits since tag; 1 files changed since tag; changelog found
+ledger-api,/demo/workspace/ledger-api,watch,v0.9.0,1,2,1,true,0,1d since latest tag; 2 commits since tag; 1 files changed since tag; changelog found

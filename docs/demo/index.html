@@ -171,6 +171,12 @@
       padding-bottom: 26px;
     }
 
+    .readiness-strip {
+      margin-top: 34px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 26px;
+    }
+
     .delta-metrics {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -379,6 +385,10 @@
     }
 
     .release-badge.warm {
+      color: var(--accent);
+    }
+
+    .release-badge.due {
       color: var(--accent);
     }
 
@@ -731,10 +741,20 @@
           <p class="note">oldest or missing latest tag last</p>
         </div>
         <div class="repo-list">
-          <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.4.0 · 4/24/2026, 5:00:00 PM · 3 total tags</span></div><span class="release-badge fresh">0d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a> <a class="release-changelog" href="./repos/design-system/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v2.1.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">0d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a> <a class="release-changelog" href="./repos/ledger-api/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v0.9.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">0d</span></div>
+          <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.4.0 · 4/24/2026, 5:00:00 PM · 3 total tags</span></div><span class="release-badge fresh">1d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a> <a class="release-changelog" href="./repos/design-system/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v2.1.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">1d</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a> <a class="release-changelog" href="./repos/ledger-api/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v0.9.0 · 4/24/2026, 5:00:00 PM · 2 total tags</span></div><span class="release-badge fresh">1d</span></div>
         </div>
       </section>
     </div>
+
+    <section class="readiness-strip">
+      <div class="section-title">
+        <h2>Release readiness</h2>
+        <p class="note">3 need attention · stale after 90d</p>
+      </div>
+      <div class="repo-list">
+        <div class="release-row"><div><strong class="release-project"><a href="./repos/atlas-app.html">atlas-app</a> <a class="release-changelog" href="./repos/atlas-app/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v1.4.0 · 1d since release · 2 commits since tag · 1 files changed · changelog · clean</span></div><span class="release-badge warm">watch</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/design-system.html">design-system</a> <a class="release-changelog" href="./repos/design-system/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v2.1.0 · 1d since release · 2 commits since tag · 1 files changed · changelog · clean</span></div><span class="release-badge warm">watch</span></div><div class="release-row"><div><strong class="release-project"><a href="./repos/ledger-api.html">ledger-api</a> <a class="release-changelog" href="./repos/ledger-api/docs/changelog.html">(changelog.md)</a></strong><span class="release-meta">v0.9.0 · 1d since release · 2 commits since tag · 1 files changed · changelog · clean</span></div><span class="release-badge warm">watch</span></div>
+      </div>
+    </section>
 
     <section class="delta-strip">
       <div class="section-title">

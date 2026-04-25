@@ -48,5 +48,10 @@
   "locTool": "auto",
   "countDuplicateFiles": false,
   "fileScope": "tracked",
-  "maxSnapshots": 52
+  "maxSnapshots": 52,
+  "releaseReadiness": {
+    "watchAfterDays": 30,
+    "staleAfterDays": 90,
+    "releaseDueAfterCommits": 20
+  }
 }

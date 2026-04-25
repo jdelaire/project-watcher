@@ -55,7 +55,12 @@ const DEFAULT_CONFIG = {
   locTool: 'auto',
   countDuplicateFiles: false,
   fileScope: 'tracked',
-  maxSnapshots: 52
+  maxSnapshots: 52,
+  releaseReadiness: {
+    watchAfterDays: 30,
+    staleAfterDays: 90,
+    releaseDueAfterCommits: 20
+  }
 };
 
 const LANGUAGE_BY_EXTENSION = new Map([
@@ -148,6 +153,12 @@ const BINARY_EXTENSIONS = new Set([
 ]);
 
 const SEMVER_TAG = /^v?\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
+const RELEASE_READINESS_RANK = new Map([
+  ['fresh', 0],
+  ['watch', 1],
+  ['release due', 2],
+  ['stale', 3]
+]);
 const HOURS_TO_MS = 60 * 60 * 1000;
 const DEFAULT_SERVE_SCAN_INTERVAL_HOURS = 12;
 const DOCS_DIR = 'docs';
@@ -312,7 +323,8 @@ async function writeScanReport(configPath) {
     generatedAt: new Date().toISOString(),
     configPath: loaded.configPath,
     roots: config.paths,
-    repositories
+    repositories,
+    config
   });
 
   const outputDir = resolvePath(config.outputDir, path.dirname(loaded.configPath));
@@ -676,7 +688,8 @@ function normalizeConfig(config, configPath) {
     locTool: normalizeLocTool(merged.locTool),
     countDuplicateFiles: Boolean(merged.countDuplicateFiles),
     fileScope: normalizeFileScope(merged.fileScope),
-    maxSnapshots: normalizeMaxSnapshots(merged.maxSnapshots)
+    maxSnapshots: normalizeMaxSnapshots(merged.maxSnapshots),
+    releaseReadiness: normalizeReleaseReadiness(merged.releaseReadiness)
   };
 }
 
@@ -709,6 +722,34 @@ function normalizeMaxSnapshots(value) {
 
   if (!Number.isInteger(value) || value < 0) {
     throw new Error('Config "maxSnapshots" must be a non-negative integer');
+  }
+
+  return value;
+}
+
+function normalizeReleaseReadiness(value) {
+  const defaults = DEFAULT_CONFIG.releaseReadiness;
+  const input = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  const normalized = {
+    watchAfterDays: normalizeIntegerSetting(input.watchAfterDays, defaults.watchAfterDays, 'releaseReadiness.watchAfterDays', 0),
+    staleAfterDays: normalizeIntegerSetting(input.staleAfterDays, defaults.staleAfterDays, 'releaseReadiness.staleAfterDays', 0),
+    releaseDueAfterCommits: normalizeIntegerSetting(input.releaseDueAfterCommits, defaults.releaseDueAfterCommits, 'releaseReadiness.releaseDueAfterCommits', 1)
+  };
+
+  if (normalized.staleAfterDays < normalized.watchAfterDays) {
+    throw new Error('Config "releaseReadiness.staleAfterDays" must be greater than or equal to "releaseReadiness.watchAfterDays"');
+  }
+
+  return normalized;
+}
+
+function normalizeIntegerSetting(value, fallback, name, minimum) {
+  if (value === undefined || value === null) {
+    return fallback;
+  }
+
+  if (!Number.isInteger(value) || value < minimum) {
+    throw new Error(`Config "${name}" must be an integer >= ${minimum}`);
   }
 
   return value;
@@ -789,6 +830,8 @@ async function analyzeRepository(repoPath, config) {
   const changelog = await collectRepositoryChangelog(repoPath, config);
   const loc = await countRepositoryLines(repoPath, config);
   const fileTypes = await collectFileTypeStats(repoPath, config);
+  const totalCommits = numberFromGit(repoPath, ['rev-list', '--count', 'HEAD']);
+  const releaseWork = getReleaseWorkSinceLatestTag(repoPath, tags[0], totalCommits, config);
 
   return {
     name,
@@ -798,7 +841,7 @@ async function analyzeRepository(repoPath, config) {
     isDirty: status.length > 0,
     dirtyFileCount: status ? status.split('\n').filter(Boolean).length : 0,
     commits: {
-      total: numberFromGit(repoPath, ['rev-list', '--count', 'HEAD']),
+      total: totalCommits,
       last7Days: weekly.last7Days.commits,
       last30Days: numberFromGit(repoPath, ['rev-list', '--count', '--since=30 days ago', 'HEAD']),
       last90Days: numberFromGit(repoPath, ['rev-list', '--count', '--since=90 days ago', 'HEAD'])
@@ -819,6 +862,8 @@ async function analyzeRepository(repoPath, config) {
       tagsLast365Days: countTagsSince(tags, 365),
       latestTag: tags[0] || null,
       daysSinceLatestTag: tags[0]?.date ? daysSince(tags[0].date) : null,
+      commitsSinceLatestTag: releaseWork.commitsSinceLatestTag,
+      filesChangedSinceLatestTag: releaseWork.filesChangedSinceLatestTag,
       recentTags: tags.slice(0, 10)
     },
     lastCommit,
@@ -868,6 +913,28 @@ function getTags(repoPath) {
       date: dateParts.join('\t') || null
     };
   }).sort(sortTagRows);
+}
+
+function getReleaseWorkSinceLatestTag(repoPath, latestTag, totalCommits, config) {
+  if (!latestTag?.name) {
+    return {
+      commitsSinceLatestTag: totalCommits,
+      filesChangedSinceLatestTag: listTrackedFiles(repoPath)
+        .map(normalizeReportPath)
+        .filter((relativePath) => shouldIncludeRelativePath(relativePath, config))
+        .length
+    };
+  }
+
+  const range = `${latestTag.name}..HEAD`;
+  const changedFiles = listFromGit(repoPath, ['diff', '--name-only', range, '--'])
+    .map(normalizeReportPath)
+    .filter((relativePath) => shouldIncludeRelativePath(relativePath, config));
+
+  return {
+    commitsSinceLatestTag: numberFromGit(repoPath, ['rev-list', '--count', range]),
+    filesChangedSinceLatestTag: changedFiles.length
+  };
 }
 
 function getContributors(repoPath) {
@@ -1740,7 +1807,7 @@ function detectLanguage(fileName, extension) {
   return LANGUAGE_BY_EXTENSION.get(extension.toLowerCase()) || 'Other';
 }
 
-function buildReport({ generatedAt, configPath, roots, repositories }) {
+function buildReport({ generatedAt, configPath, roots, repositories, config }) {
   const totals = {
     repositories: repositories.length,
     dirtyRepositories: repositories.filter((repo) => repo.isDirty).length,
@@ -1764,6 +1831,7 @@ function buildReport({ generatedAt, configPath, roots, repositories }) {
     commentLines: sum(repositories, (repo) => repo.loc.commentLines || 0),
     codeLines: sum(repositories, (repo) => repo.loc.codeLines)
   };
+  const releaseReadiness = aggregateReleaseReadiness(repositories, config.releaseReadiness);
 
   return {
     generatedAt,
@@ -1772,6 +1840,7 @@ function buildReport({ generatedAt, configPath, roots, repositories }) {
     totals,
     weekly: aggregateWeeklyActivity(repositories),
     releases: aggregateReleases(repositories),
+    releaseReadiness,
     contributors: aggregateContributors(repositories),
     aiAgents: aggregateAiAgents(repositories),
     languages: aggregateLanguages(repositories),
@@ -1894,6 +1963,8 @@ function aggregateReleases(repositories) {
       tagsLast365Days: releases.tagsLast365Days || 0,
       latestTag: releases.latestTag || null,
       daysSinceLatestTag: releases.daysSinceLatestTag ?? null,
+      commitsSinceLatestTag: releases.commitsSinceLatestTag ?? 0,
+      filesChangedSinceLatestTag: releases.filesChangedSinceLatestTag ?? 0,
       changelog: repo.changelog || null
     });
 
@@ -1932,6 +2003,125 @@ function aggregateReleases(repositories) {
     latest: latest.slice(0, 50),
     repositories: perRepository
   };
+}
+
+function aggregateReleaseReadiness(repositories, thresholds) {
+  const rows = repositories.map((repo) => releaseReadinessRow(repo, thresholds));
+
+  for (const row of rows) {
+    const repo = repositories.find((item) => item.path === row.path);
+    if (repo) {
+      repo.releaseReadiness = row;
+    }
+  }
+
+  rows.sort(sortReleaseReadinessRows);
+
+  return {
+    thresholds,
+    totals: {
+      fresh: rows.filter((row) => row.status === 'fresh').length,
+      watch: rows.filter((row) => row.status === 'watch').length,
+      releaseDue: rows.filter((row) => row.status === 'release due').length,
+      stale: rows.filter((row) => row.status === 'stale').length,
+      needsAttention: rows.filter((row) => row.status !== 'fresh').length,
+      missingChangelog: rows.filter((row) => !row.changelogFound).length
+    },
+    repositories: rows
+  };
+}
+
+function releaseReadinessRow(repo, thresholds) {
+  const latestTag = repo.releases?.latestTag || null;
+  const days = latestTag?.date ? daysSince(latestTag.date) : null;
+  const commitsSinceLatestTag = repo.releases?.commitsSinceLatestTag ?? repo.commits?.total ?? 0;
+  const filesChangedSinceLatestTag = repo.releases?.filesChangedSinceLatestTag ?? 0;
+  const changelogFound = Boolean(repo.changelog?.detailPath);
+  const reasons = [];
+
+  if (!latestTag) {
+    reasons.push('no local tags');
+  } else if (days !== null) {
+    reasons.push(`${formatNumber(days)}d since latest tag`);
+  }
+
+  if (commitsSinceLatestTag > 0) {
+    reasons.push(`${formatNumber(commitsSinceLatestTag)} commits since tag`);
+  }
+
+  if (filesChangedSinceLatestTag > 0) {
+    reasons.push(`${formatNumber(filesChangedSinceLatestTag)} files changed since tag`);
+  }
+
+  reasons.push(changelogFound ? 'changelog found' : 'changelog missing');
+
+  if (repo.isDirty) {
+    reasons.push(`${formatNumber(repo.dirtyFileCount)} dirty files`);
+  }
+
+  const status = releaseReadinessStatus({
+    latestTag,
+    days,
+    commitsSinceLatestTag,
+    filesChangedSinceLatestTag,
+    changelogFound,
+    isDirty: repo.isDirty
+  }, thresholds);
+
+  return {
+    name: repo.name,
+    path: repo.path,
+    detailPath: repo.detailPath,
+    status,
+    latestTag,
+    daysSinceLatestTag: days,
+    commitsSinceLatestTag,
+    filesChangedSinceLatestTag,
+    changelogFound,
+    changelog: repo.changelog || null,
+    isDirty: repo.isDirty,
+    dirtyFileCount: repo.dirtyFileCount || 0,
+    reasons
+  };
+}
+
+function releaseReadinessStatus(row, thresholds) {
+  if (!row.latestTag || row.days >= thresholds.staleAfterDays) {
+    return 'stale';
+  }
+
+  if (row.commitsSinceLatestTag >= thresholds.releaseDueAfterCommits) {
+    return 'release due';
+  }
+
+  if (
+    row.days >= thresholds.watchAfterDays
+    || row.commitsSinceLatestTag > 0
+    || row.filesChangedSinceLatestTag > 0
+    || !row.changelogFound
+    || row.isDirty
+  ) {
+    return 'watch';
+  }
+
+  return 'fresh';
+}
+
+function sortReleaseReadinessRows(a, b) {
+  return releaseReadinessRank(b) - releaseReadinessRank(a)
+    || releaseReadinessAgeRank(b) - releaseReadinessAgeRank(a)
+    || b.commitsSinceLatestTag - a.commitsSinceLatestTag
+    || b.filesChangedSinceLatestTag - a.filesChangedSinceLatestTag
+    || Number(b.isDirty) - Number(a.isDirty)
+    || a.name.localeCompare(b.name);
+}
+
+function releaseReadinessRank(row) {
+  return RELEASE_READINESS_RANK.get(row.status) || 0;
+}
+
+function releaseReadinessAgeRank(row) {
+  return row.daysSinceLatestTag === null ? Number.MAX_SAFE_INTEGER : row.daysSinceLatestTag;
 }
 
 function aggregateContributors(repositories) {
@@ -2081,6 +2271,9 @@ function renderMarkdown(report) {
   lines.push(`- Markdown docs: ${formatNumber(report.totals.docsMarkdownFiles || 0)}`);
   lines.push(`- Releases last 90 days: ${formatNumber(report.releases.totals.tagsLast90Days)}`);
   lines.push(`- Repos without tags: ${formatNumber(report.releases.totals.reposWithoutTags)}`);
+  lines.push(`- Release readiness needs attention: ${formatNumber(report.releaseReadiness.totals.needsAttention)}`);
+  lines.push(`- Release due: ${formatNumber(report.releaseReadiness.totals.releaseDue)}`);
+  lines.push(`- Stale releases: ${formatNumber(report.releaseReadiness.totals.stale)}`);
   lines.push(`- Unique contributors: ${formatNumber(report.contributors.totals.uniqueContributors)}`);
   lines.push(`- Multi-repo contributors: ${formatNumber(report.contributors.totals.multiRepoContributors)}`);
   lines.push(`- AI agents detected: ${formatNumber(report.aiAgents.totals.agentsDetected)}`);
@@ -2121,6 +2314,22 @@ function renderMarkdown(report) {
     lines.push('');
   } else {
     lines.push('No local tags found.');
+    lines.push('');
+  }
+
+  lines.push('## Release Readiness');
+  lines.push('');
+  lines.push(`- Watch after: ${formatNumber(report.releaseReadiness.thresholds.watchAfterDays)} days`);
+  lines.push(`- Stale after: ${formatNumber(report.releaseReadiness.thresholds.staleAfterDays)} days`);
+  lines.push(`- Release due after: ${formatNumber(report.releaseReadiness.thresholds.releaseDueAfterCommits)} commits since latest tag`);
+  lines.push('');
+
+  if (report.releaseReadiness.repositories.length > 0) {
+    lines.push('| Repo | Status | Latest tag | Days | Commits since tag | Files changed | Changelog | Dirty |');
+    lines.push('| --- | --- | --- | ---: | ---: | ---: | --- | ---: |');
+    for (const repo of report.releaseReadiness.repositories.slice(0, 15)) {
+      lines.push(`| ${markdownCell(repo.name)} | ${markdownCell(repo.status)} | ${markdownCell(repo.latestTag?.name || 'none')} | ${repo.daysSinceLatestTag ?? ''} | ${formatNumber(repo.commitsSinceLatestTag)} | ${formatNumber(repo.filesChangedSinceLatestTag)} | ${repo.changelogFound ? 'yes' : 'no'} | ${formatNumber(repo.dirtyFileCount)} |`);
+    }
     lines.push('');
   }
 
@@ -2243,6 +2452,7 @@ function renderMarkdown(report) {
   lines.push('- csv/weekly-repositories.csv');
   lines.push('- csv/ai-agents.csv');
   lines.push('- csv/releases.csv');
+  lines.push('- csv/release-readiness.csv');
   lines.push('- csv/contributors.csv');
 
   lines.push('');
@@ -2267,6 +2477,7 @@ async function writeCsvExports(outputDir, report) {
     ['weekly-repositories.csv', csvWeeklyRepositories(report)],
     ['ai-agents.csv', csvAiAgents(report)],
     ['releases.csv', csvReleases(report)],
+    ['release-readiness.csv', csvReleaseReadiness(report)],
     ['contributors.csv', csvContributors(report)]
   ]);
 
@@ -2297,6 +2508,10 @@ function csvRepositories(report) {
       'docsMarkdownFiles',
       'latestTag',
       'daysSinceLatestTag',
+      'releaseStatus',
+      'commitsSinceLatestTag',
+      'filesChangedSinceLatestTag',
+      'changelogFound',
       'dirtyFileCount',
       'locTool',
       'fileScope'
@@ -2321,6 +2536,10 @@ function csvRepositories(report) {
       repo.docs?.markdownFiles || 0,
       repo.releases.latestTag?.name || '',
       repo.releases.daysSinceLatestTag ?? '',
+      repo.releaseReadiness?.status || '',
+      repo.releases.commitsSinceLatestTag ?? 0,
+      repo.releases.filesChangedSinceLatestTag ?? 0,
+      repo.changelog?.detailPath ? 'true' : 'false',
       repo.dirtyFileCount,
       repo.loc.tool || '',
       repo.loc.fileScope || ''
@@ -2395,6 +2614,35 @@ function csvReleases(report) {
       release.name,
       release.date || '',
       release.semver ? 'true' : 'false'
+    ])
+  ];
+}
+
+function csvReleaseReadiness(report) {
+  return [
+    [
+      'repo',
+      'path',
+      'status',
+      'latestTag',
+      'daysSinceLatestTag',
+      'commitsSinceLatestTag',
+      'filesChangedSinceLatestTag',
+      'changelogFound',
+      'dirtyFileCount',
+      'reasons'
+    ],
+    ...report.releaseReadiness.repositories.map((repo) => [
+      repo.name,
+      repo.path,
+      repo.status,
+      repo.latestTag?.name || '',
+      repo.daysSinceLatestTag ?? '',
+      repo.commitsSinceLatestTag,
+      repo.filesChangedSinceLatestTag,
+      repo.changelogFound ? 'true' : 'false',
+      repo.dirtyFileCount,
+      repo.reasons.join('; ')
     ])
   ];
 }
@@ -2559,6 +2807,10 @@ function renderRepositoryHtml(report, repo) {
           ${factHtml('Last subject', repo.lastCommit?.subject || '')}
           ${factHtml('Contributors', formatNumber(repo.contributors.total))}
           ${factHtml('Local branches', formatNumber(repo.branches.local))}
+          ${factHtml('Release status', repo.releaseReadiness?.status || 'unknown')}
+          ${factHtml('Commits since tag', formatNumber(repo.releases.commitsSinceLatestTag || 0))}
+          ${factHtml('Files since tag', formatNumber(repo.releases.filesChangedSinceLatestTag || 0))}
+          ${factHtml('Changelog', repo.changelog?.path || 'missing')}
         </dl>
       </section>
     </div>
@@ -3342,6 +3594,7 @@ function renderHtml(report) {
   const topAiAgents = report.aiAgents?.agents?.slice(0, 6) || [];
   const releases = report.releases?.latest || [];
   const releaseGaps = releaseGapRows(report.repositories).slice(-8);
+  const releaseReadiness = report.releaseReadiness?.repositories?.slice(0, 12) || [];
   const topContributors = report.contributors?.contributors?.slice(0, 8) || [];
   const dirtyRepos = report.repositories.filter((repo) => repo.isDirty);
   const staleRepos = report.repositories
@@ -3531,6 +3784,12 @@ function renderHtml(report) {
     }
 
     .delta-strip {
+      margin-top: 34px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 26px;
+    }
+
+    .readiness-strip {
       margin-top: 34px;
       border-bottom: 1px solid var(--line);
       padding-bottom: 26px;
@@ -3744,6 +4003,10 @@ function renderHtml(report) {
     }
 
     .release-badge.warm {
+      color: var(--accent);
+    }
+
+    .release-badge.due {
       color: var(--accent);
     }
 
@@ -4094,6 +4357,16 @@ function renderHtml(report) {
         </div>
       </section>
     </div>
+
+    <section class="readiness-strip">
+      <div class="section-title">
+        <h2>Release readiness</h2>
+        <p class="note">${formatNumber(report.releaseReadiness?.totals?.needsAttention || 0)} need attention · stale after ${formatNumber(report.releaseReadiness?.thresholds?.staleAfterDays || 0)}d</p>
+      </div>
+      <div class="repo-list">
+        ${releaseReadiness.map(releaseReadinessHtml).join('') || '<p class="empty">No repositories found.</p>'}
+      </div>
+    </section>
 
     <section class="delta-strip">
       <div class="section-title">
@@ -4507,6 +4780,37 @@ function releaseGapHtml(row) {
   ];
 
   return `<div class="release-row"><div><strong class="release-project">${project}</strong><span class="release-meta">${escapeHtml(meta.join(' · '))}</span></div><span class="release-badge ${badgeClass}">${escapeHtml(label)}</span></div>`;
+}
+
+function releaseReadinessHtml(row) {
+  const project = releaseProjectHtml(row);
+  const age = row.daysSinceLatestTag === null ? 'never released' : `${formatNumber(row.daysSinceLatestTag)}d since release`;
+  const meta = [
+    row.latestTag?.name || 'no tag',
+    age,
+    `${formatNumber(row.commitsSinceLatestTag)} commits since tag`,
+    `${formatNumber(row.filesChangedSinceLatestTag)} files changed`,
+    row.changelogFound ? 'changelog' : 'no changelog',
+    row.isDirty ? `${formatNumber(row.dirtyFileCount)} dirty` : 'clean'
+  ];
+
+  return `<div class="release-row"><div><strong class="release-project">${project}</strong><span class="release-meta">${escapeHtml(meta.join(' · '))}</span></div><span class="release-badge ${readinessBadgeClass(row.status)}">${escapeHtml(row.status)}</span></div>`;
+}
+
+function readinessBadgeClass(status) {
+  if (status === 'stale') {
+    return 'stale';
+  }
+
+  if (status === 'release due') {
+    return 'due';
+  }
+
+  if (status === 'watch') {
+    return 'warm';
+  }
+
+  return 'fresh';
 }
 
 function releaseProjectHtml(repo) {

@@ -91,7 +91,12 @@ Example:
   "locTool": "auto",
   "countDuplicateFiles": false,
   "fileScope": "tracked",
-  "maxSnapshots": 52
+  "maxSnapshots": 52,
+  "releaseReadiness": {
+    "watchAfterDays": 30,
+    "staleAfterDays": 90,
+    "releaseDueAfterCommits": 20
+  }
 }
 ```
 
@@ -118,6 +123,8 @@ Example:
 Tracked mode uses the tracked file set but reads current working-tree contents, so modified tracked files affect metrics while untracked files do not.
 
 `maxSnapshots` controls retention for historical snapshots. Set it to `0` to keep all snapshots.
+
+`releaseReadiness` controls the dashboard status for each repository. Repositories with no local tags are `stale`; repositories pass through `watch` and `release due` based on the age of the latest tag and committed work since that tag.
 
 ## CLI
 
@@ -152,6 +159,7 @@ Every scan writes spreadsheet-friendly exports under `reports/csv/`:
 - `weekly-repositories.csv`
 - `ai-agents.csv`
 - `releases.csv`
+- `release-readiness.csv`
 - `contributors.csv`
 
 ## Repository Drilldowns
@@ -222,8 +230,9 @@ npm run test:package
 - Weekly Git activity: commits, additions, deletions, churn, changed files, and active repositories
 - AI agent footprint by tracked instruction/config files, with agent icons where official favicons are available
 - Release activity from local Git tags, including recent tag windows and latest tags
+- Release readiness status by repository, including commits/files since latest tag, changelog presence, and dirty working tree state
 - Contributor totals across repositories, including multi-repo contributors
-- CSV exports for repositories, languages, file types, weekly activity, AI agents, releases, and contributors
+- CSV exports for repositories, languages, file types, weekly activity, AI agents, releases, release readiness, and contributors
 - Per-repository HTML drilldown pages
 - Doctor checks for config, paths, output, LOC tooling, retention, and ignored local config
 - Snapshot retention via `maxSnapshots`

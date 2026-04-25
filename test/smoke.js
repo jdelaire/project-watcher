@@ -39,7 +39,12 @@ await fsp.writeFile(
       locTool: 'auto',
       countDuplicateFiles: false,
       fileScope: 'tracked',
-      maxSnapshots: 2
+      maxSnapshots: 2,
+      releaseReadiness: {
+        watchAfterDays: 1,
+        staleAfterDays: 2,
+        releaseDueAfterCommits: 1
+      }
     },
     null,
     2
@@ -64,6 +69,7 @@ const manifest = JSON.parse(await fsp.readFile(path.join(outputDir, 'assets', 'm
 const robots = await fsp.readFile(path.join(outputDir, 'robots.txt'), 'utf8');
 const repositoriesCsv = await fsp.readFile(path.join(outputDir, 'csv', 'repositories.csv'), 'utf8');
 const releasesCsv = await fsp.readFile(path.join(outputDir, 'csv', 'releases.csv'), 'utf8');
+const releaseReadinessCsv = await fsp.readFile(path.join(outputDir, 'csv', 'release-readiness.csv'), 'utf8');
 const contributorsCsv = await fsp.readFile(path.join(outputDir, 'csv', 'contributors.csv'), 'utf8');
 let snapshots = await fsp.readdir(path.join(outputDir, 'snapshots'));
 
@@ -76,6 +82,8 @@ assert(report.totals.docsMarkdownFiles === 3, 'expected three Markdown docs');
 assert(report.totals.commitsLast7Days === 1, 'expected one recent commit');
 assert(report.releases.totals.tagsLast365Days === 1, 'expected one tag in last year');
 assert(report.releases.latest[0].name === 'v0.1.0', 'expected latest release tag');
+assert(report.releaseReadiness.thresholds.releaseDueAfterCommits === 1, 'expected release readiness threshold');
+assert(report.releaseReadiness.totals.watch === 1, 'expected dirty repo to be watched');
 assert(report.contributors.totals.uniqueContributors === 1, 'expected one contributor');
 assert(report.contributors.contributors[0].name === 'Smoke Test', 'expected contributor name');
 assert(report.weekly.totals.commits === 1, 'expected one weekly commit');
@@ -91,6 +99,8 @@ assert(report.repositories[0].docs.markdownFiles === 3, 'expected repo docs stat
 assert(setupDoc.detailPath.endsWith('.html'), 'expected docs detail page path');
 assert(report.repositories[0].changelog.path === 'docs/changelog.md', 'expected docs changelog detection');
 assert(report.repositories[0].changelog.detailPath.endsWith('/docs/changelog.html'), 'expected docs changelog detail path');
+assert(report.repositories[0].releaseReadiness.status === 'watch', 'expected release readiness status');
+assert(report.repositories[0].releases.commitsSinceLatestTag === 0, 'expected no commits since tag');
 assert(report.repositories[0].loc.tool, 'expected loc tool name');
 assert(report.repositories[0].loc.duplicatePolicy, 'expected duplicate policy');
 assert(report.repositories[0].loc.fileScope === 'tracked', 'expected tracked file scope');
@@ -102,6 +112,7 @@ assert(html.includes('rel="manifest"'), 'expected manifest link');
 assert(html.includes('Dirty repos'), 'expected useful masthead stats');
 assert(html.includes('Release activity'), 'expected release section');
 assert(html.includes('Release gaps'), 'expected release gap overview');
+assert(html.includes('Release readiness'), 'expected release readiness overview');
 assert(html.includes('class="release-project"'), 'expected prominent release project names');
 assert(html.includes('class="release-changelog"'), 'expected changelog link in release section');
 assert(html.includes('(changelog.md)'), 'expected changelog label in release section');
@@ -125,7 +136,9 @@ assert(claudeIcon.includes('<svg'), 'expected Claude svg asset');
 assert(manifest.name === 'Project Watcher', 'expected web manifest');
 assert(robots.includes('Disallow: /'), 'expected robots privacy default');
 assert(repositoriesCsv.includes('name,path,remoteUrl'), 'expected repositories csv');
+assert(repositoriesCsv.includes('releaseStatus'), 'expected release status in repositories csv');
 assert(releasesCsv.includes('v0.1.0'), 'expected releases csv');
+assert(releaseReadinessCsv.includes('repo,path,status'), 'expected release readiness csv');
 assert(contributorsCsv.includes('Smoke Test'), 'expected contributors csv');
 assert(snapshots.length === 1, 'expected one snapshot file');
 assert(report.delta.available === false, 'expected no delta for first scan');
@@ -145,6 +158,8 @@ assert(report.delta.totals.codeLines.delta === 1, 'expected one code line delta'
 assert(report.delta.totals.commits.delta === 1, 'expected one commit delta');
 assert(report.weekly.totals.commits === 2, 'expected two weekly commits after second commit');
 assert(report.weekly.topRepositories[0].commits === 2, 'expected top weekly repo commits');
+assert(report.releaseReadiness.repositories.find((repo) => repo.name === 'example-repo').status === 'release due', 'expected release due after one commit since tag');
+assert(report.releaseReadiness.repositories.find((repo) => repo.name === 'example-repo').filesChangedSinceLatestTag === 1, 'expected one file changed since tag');
 
 const unreleasedRepoPath = path.join(tempRoot, 'unreleased-repo');
 await fsp.mkdir(unreleasedRepoPath, { recursive: true });
@@ -172,6 +187,8 @@ assert(releaseHtml.includes('Show 1 older releases'), 'expected one collapsed re
 assert(releaseHtml.includes('unreleased-repo'), 'expected unreleased repo in release gaps');
 assert(releaseHtml.includes('<span class="release-badge stale">never</span>'), 'expected never release badge');
 assert(releaseHtml.indexOf('example-repo</a></strong><span class="release-meta">v0.1.5') < releaseHtml.indexOf('unreleased-repo'), 'expected oldest or never releases last in release gaps');
+assert(report.releaseReadiness.repositories[0].name === 'unreleased-repo', 'expected release readiness sorted worst-first');
+assert(report.releaseReadiness.repositories[0].status === 'stale', 'expected unreleased repo to be stale');
 
 const servePort = await getFreePort();
 const server = spawn(process.execPath, [
