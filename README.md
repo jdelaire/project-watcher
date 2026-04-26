@@ -47,6 +47,14 @@ npm run serve
 
 Serve mode runs a scan on startup and refreshes the report every 12 hours while the server process is running.
 
+For a local dashboard that refreshes every 3 hours:
+
+```bash
+./scripts/serve-3h.sh
+```
+
+The launcher uses `project-watcher.config.json` by default. Override runtime values with `PROJECT_WATCHER_CONFIG`, `PROJECT_WATCHER_HOST`, `PROJECT_WATCHER_PORT`, or `PROJECT_WATCHER_SCAN_INTERVAL_HOURS`.
+
 Open it automatically in your browser:
 
 ```bash
@@ -139,6 +147,7 @@ node ./src/cli.js serve --port 7341
 node ./src/cli.js serve --open
 node ./src/cli.js serve --scan-interval-hours 6
 node ./src/cli.js serve --no-auto-scan
+./scripts/serve-3h.sh
 node ./src/cli.js init
 node ./src/cli.js help
 ```
