@@ -100,6 +100,14 @@ Example:
   "countDuplicateFiles": false,
   "fileScope": "tracked",
   "maxSnapshots": 52,
+  "sections": [
+    "quick-links",
+    "release-readiness",
+    "since-previous-scan",
+    "repository-table",
+    "roots",
+    "csv-exports"
+  ],
   "releaseReadiness": {
     "watchAfterDays": 30,
     "staleAfterDays": 90,
@@ -131,6 +139,33 @@ Example:
 Tracked mode uses the tracked file set but reads current working-tree contents, so modified tracked files affect metrics while untracked files do not.
 
 `maxSnapshots` controls retention for historical snapshots. Set it to `0` to keep all snapshots.
+
+`sections` controls dashboard section order and visibility. Omit the setting to render every section in the default order. When present, sections are rendered in the listed order and any omitted section is hidden. Valid section IDs are:
+
+- `quick-links`
+- `release-activity`
+- `release-gaps`
+- `release-readiness`
+- `since-previous-scan`
+- `weekly-commits`
+- `weekly-churn`
+- `contributors`
+- `release-coverage`
+- `active-this-week`
+- `weekly-totals`
+- `loc-trend`
+- `thirty-day-commits`
+- `languages`
+- `file-types`
+- `most-active-repositories`
+- `attention`
+- `repository-table`
+- `roots`
+- `csv-exports`
+- `ai-agents`
+- `agent-coverage`
+
+The dashboard also includes a collapsible `Sections` control for browser-local customization. Changes made there apply immediately, are stored in `localStorage`, and override the config default in that browser until reset.
 
 `releaseReadiness` controls the dashboard status for each repository. Repositories with no local tags are `stale`; repositories pass through `watch` and `release due` based on the age of the latest tag and committed work since that tag.
 

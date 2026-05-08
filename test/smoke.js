@@ -113,6 +113,14 @@ assert(html.includes('name="description"'), 'expected description meta');
 assert(html.includes('rel="icon"'), 'expected favicon link');
 assert(html.includes('rel="manifest"'), 'expected manifest link');
 assert(html.includes('Dirty repos'), 'expected useful masthead stats');
+assert(html.includes('<details id="section-customizer"'), 'expected collapsible section customizer control');
+assert(html.includes('<summary class="section-customizer-summary">'), 'expected section customizer summary');
+assert(html.includes('data-section-control="release-activity"'), 'expected section customizer release activity control');
+assert(html.includes('data-action="section-up"'), 'expected section move up controls');
+assert(html.includes('data-action="section-down"'), 'expected section move down controls');
+assert(html.includes('project-watcher:dashboard-sections'), 'expected dashboard section order in localStorage');
+assert(html.includes('applySectionPreferences'), 'expected client-side section preference application');
+assert(html.includes('resetSectionPreferences'), 'expected section reset behavior');
 assert(html.includes('Quick links'), 'expected quick links section');
 for (const sectionId of [
   'release-activity',
@@ -166,6 +174,78 @@ assert(html.includes('href="./repos/'), 'expected repository drilldown links');
 assert(html.includes('./assets/agents/claude.svg'), 'expected local Claude icon');
 assert(html.indexOf('<h2>AI agents</h2>') > html.indexOf('<h2>CSV exports</h2>'), 'expected AI agents near bottom');
 assert(!html.includes('<strong>Config</strong>'), 'expected config path hidden from masthead');
+
+const configuredOutputDir = path.join(tempRoot, 'configured-reports');
+await fsp.writeFile(
+  configPath,
+  JSON.stringify(
+    {
+      paths: [tempRoot],
+      maxDepth: 2,
+      outputDir: configuredOutputDir,
+      excludeDirs: ['.git', 'node_modules'],
+      excludeFiles: [],
+      maxFileBytes: 1048576,
+      locTool: 'auto',
+      countDuplicateFiles: false,
+      fileScope: 'tracked',
+      maxSnapshots: 2,
+      sections: [
+        'quick-links',
+        'ai-agents',
+        'repository-table',
+        'csv-exports'
+      ],
+      releaseReadiness: {
+        watchAfterDays: 1,
+        staleAfterDays: 2,
+        releaseDueAfterCommits: 1
+      }
+    },
+    null,
+    2
+  ),
+  'utf8'
+);
+
+runScan(configPath);
+const configuredHtml = await fsp.readFile(path.join(configuredOutputDir, 'report.html'), 'utf8');
+assert(configuredHtml.includes('id="quick-links-title"'), 'expected configured quick links section');
+assert(configuredHtml.includes('id="ai-agents"'), 'expected configured AI agents section');
+assert(configuredHtml.includes('id="repository-table"'), 'expected configured repository table section');
+assert(configuredHtml.includes('id="csv-exports"'), 'expected configured CSV exports section');
+assert(configuredHtml.includes('id="release-activity" data-dashboard-section="release-activity" data-section-label="Release activity" hidden'), 'expected hidden release activity section');
+assert(!configuredHtml.includes('href="#release-activity"'), 'expected hidden release activity quick link');
+assert(configuredHtml.indexOf('href="#ai-agents"') < configuredHtml.indexOf('href="#repository-table"'), 'expected quick links to follow configured section order');
+assert(configuredHtml.indexOf('<h2>AI agents</h2>') < configuredHtml.indexOf('<h2>Repository table</h2>'), 'expected sections to follow configured order');
+assert(configuredHtml.indexOf('<h2>Repository table</h2>') < configuredHtml.indexOf('<h2>CSV exports</h2>'), 'expected CSV exports to be independently orderable');
+
+await fsp.writeFile(
+  configPath,
+  JSON.stringify(
+    {
+      paths: [tempRoot],
+      maxDepth: 2,
+      outputDir,
+      excludeDirs: ['.git', 'node_modules'],
+      excludeFiles: [],
+      maxFileBytes: 1048576,
+      locTool: 'auto',
+      countDuplicateFiles: false,
+      fileScope: 'tracked',
+      maxSnapshots: 2,
+      releaseReadiness: {
+        watchAfterDays: 1,
+        staleAfterDays: 2,
+        releaseDueAfterCommits: 1
+      }
+    },
+    null,
+    2
+  ),
+  'utf8'
+);
+
 assert(repoDetailHtml.includes('Repository state'), 'expected repo drilldown state section');
 assert(repoDetailHtml.includes('Docs</h2>'), 'expected repo drilldown docs section');
 assert(repoDetailHtml.includes('docs/guides/setup.md'), 'expected docs tree links');

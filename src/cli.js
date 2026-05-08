@@ -8,6 +8,56 @@ import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 
+const DEFAULT_DASHBOARD_SECTIONS = [
+  'quick-links',
+  'release-activity',
+  'release-gaps',
+  'release-readiness',
+  'since-previous-scan',
+  'weekly-commits',
+  'weekly-churn',
+  'contributors',
+  'release-coverage',
+  'active-this-week',
+  'weekly-totals',
+  'loc-trend',
+  'thirty-day-commits',
+  'languages',
+  'file-types',
+  'most-active-repositories',
+  'attention',
+  'repository-table',
+  'roots',
+  'csv-exports',
+  'ai-agents',
+  'agent-coverage'
+];
+
+const DASHBOARD_SECTION_LABELS = new Map([
+  ['quick-links', 'Quick links'],
+  ['release-activity', 'Release activity'],
+  ['release-gaps', 'Release gaps'],
+  ['release-readiness', 'Release readiness'],
+  ['since-previous-scan', 'Since previous scan'],
+  ['weekly-commits', 'Weekly commits'],
+  ['weekly-churn', 'Weekly churn'],
+  ['contributors', 'Contributors'],
+  ['release-coverage', 'Release coverage'],
+  ['active-this-week', 'Active this week'],
+  ['weekly-totals', 'Weekly totals'],
+  ['loc-trend', 'LOC trend'],
+  ['thirty-day-commits', '30-day commits'],
+  ['languages', 'Languages'],
+  ['file-types', 'File types'],
+  ['most-active-repositories', 'Most active repositories'],
+  ['attention', 'Attention'],
+  ['repository-table', 'Repository table'],
+  ['roots', 'Roots'],
+  ['csv-exports', 'CSV exports'],
+  ['ai-agents', 'AI agents'],
+  ['agent-coverage', 'Agent coverage']
+]);
+
 const DEFAULT_CONFIG = {
   paths: ['~/Projects'],
   maxDepth: 4,
@@ -56,6 +106,7 @@ const DEFAULT_CONFIG = {
   countDuplicateFiles: false,
   fileScope: 'tracked',
   maxSnapshots: 52,
+  sections: DEFAULT_DASHBOARD_SECTIONS,
   releaseReadiness: {
     watchAfterDays: 30,
     staleAfterDays: 90,
@@ -692,6 +743,7 @@ function normalizeConfig(config, configPath) {
     countDuplicateFiles: Boolean(merged.countDuplicateFiles),
     fileScope: normalizeFileScope(merged.fileScope),
     maxSnapshots: normalizeMaxSnapshots(merged.maxSnapshots),
+    sections: normalizeDashboardSections(merged.sections),
     releaseReadiness: normalizeReleaseReadiness(merged.releaseReadiness)
   };
 }
@@ -728,6 +780,37 @@ function normalizeMaxSnapshots(value) {
   }
 
   return value;
+}
+
+function normalizeDashboardSections(value) {
+  if (value === undefined || value === null) {
+    return [...DEFAULT_DASHBOARD_SECTIONS];
+  }
+
+  if (!Array.isArray(value)) {
+    throw new Error('Config "sections" must be an array of dashboard section ids');
+  }
+
+  const allowed = new Set(DEFAULT_DASHBOARD_SECTIONS);
+  const seen = new Set();
+
+  for (const section of value) {
+    if (typeof section !== 'string' || !section) {
+      throw new Error('Config "sections" entries must be non-empty strings');
+    }
+
+    if (!allowed.has(section)) {
+      throw new Error(`Config "sections" contains unknown section "${section}"`);
+    }
+
+    if (seen.has(section)) {
+      throw new Error(`Config "sections" contains duplicate section "${section}"`);
+    }
+
+    seen.add(section);
+  }
+
+  return [...value];
 }
 
 function normalizeReleaseReadiness(value) {
@@ -1929,6 +2012,9 @@ function buildReport({ generatedAt, configPath, roots, repositories, config }) {
     aiAgents: aggregateAiAgents(repositories),
     languages: aggregateLanguages(repositories),
     fileTypes: aggregateFileTypes(repositories),
+    dashboard: {
+      sections: config.sections
+    },
     repositories
   };
 }
@@ -3744,6 +3830,28 @@ function renderHtml(report) {
   const title = 'Project Watcher Report';
   const description = dashboardDescription(report);
   const imageAlt = 'Project Watcher local repository health dashboard';
+  const sectionsHtml = dashboardSectionsHtml(report, {
+    topLanguages,
+    topFileTypes,
+    topRepos,
+    topRepoDeltas,
+    topWeeklyRepos,
+    topAiAgents,
+    releases,
+    releaseGaps,
+    releaseReadiness,
+    topContributors,
+    dirtyRepos,
+    staleRepos,
+    historySvg,
+    commitsSvg,
+    weeklyCommitsSvg,
+    weeklyChurnSvg,
+    maxLanguageLoc,
+    maxFileTypeFiles,
+    maxRepoLoc,
+    maxAgentRepoCount
+  });
 
   return `<!doctype html>
 <html lang="en">
@@ -3928,6 +4036,24 @@ function renderHtml(report) {
       padding-bottom: 26px;
     }
 
+    .dashboard-sections {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      gap: 34px;
+      align-items: start;
+      margin-top: 34px;
+    }
+
+    .dashboard-sections .quick-nav,
+    .dashboard-sections .delta-strip,
+    .dashboard-sections .readiness-strip {
+      margin-top: 0;
+    }
+
+    .span-all {
+      grid-column: 1 / -1;
+    }
+
     .delta-metrics {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -4038,6 +4164,115 @@ function renderHtml(report) {
       background: rgba(217, 119, 6, 0.11);
       border-color: rgba(217, 119, 6, 0.42);
       transform: translateY(-1px);
+    }
+
+    .section-customizer {
+      margin-top: 28px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+    }
+
+    .section-customizer-summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: baseline;
+      cursor: pointer;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+      list-style: none;
+    }
+
+    .section-customizer-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .section-customizer-summary::after {
+      content: "+";
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .section-customizer[open] .section-customizer-summary {
+      margin-bottom: 18px;
+    }
+
+    .section-customizer[open] .section-customizer-summary::after {
+      content: "-";
+    }
+
+    .section-customizer-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .section-reset,
+    .section-move {
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.58);
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+    }
+
+    .section-reset {
+      min-height: 34px;
+      padding: 0 11px;
+    }
+
+    .section-move {
+      display: inline-grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+    }
+
+    .section-reset:hover,
+    .section-move:hover {
+      background: rgba(217, 119, 6, 0.11);
+      border-color: rgba(217, 119, 6, 0.42);
+      transform: translateY(-1px);
+    }
+
+    .section-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 8px;
+    }
+
+    .section-control {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.48);
+      padding: 5px 6px 5px 10px;
+    }
+
+    .section-control label {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+      color: var(--ink);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .section-control input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      flex: 0 0 auto;
     }
 
     .trend {
@@ -4535,6 +4770,7 @@ function renderHtml(report) {
 
       .masthead,
       .grid,
+      .dashboard-sections,
       .health {
         grid-template-columns: 1fr;
       }
@@ -4590,90 +4826,419 @@ function renderHtml(report) {
       ${metricHtml('Commits', report.totals.commits)}
     </div>
 
-    <section class="quick-nav" aria-labelledby="quick-links-title">
-      <div class="section-title">
-        <h2 id="quick-links-title">Quick links</h2>
-        <p class="note">jump to dashboard sections</p>
-      </div>
-      <nav class="quick-links" aria-label="Dashboard sections">
-        ${dashboardQuickLinksHtml()}
-      </nav>
-    </section>
+    ${sectionCustomizerHtml(report.dashboard?.sections || DEFAULT_DASHBOARD_SECTIONS)}
 
-    <div class="grid">
-      <section id="release-activity">
+    ${sectionsHtml}
+  </main>
+  <script>
+    const search = document.querySelector('#repo-search');
+    const filterButtons = [...document.querySelectorAll('[data-filter]')];
+    const rows = [...document.querySelectorAll('#repo-rows tr')];
+    const filters = new Set(filterButtons.map((button) => button.dataset.filter));
+    const params = new URLSearchParams(window.location.search);
+    let activeFilter = filters.has(params.get('filter')) ? params.get('filter') : 'all';
+    const sectionStorageKey = 'project-watcher:dashboard-sections';
+    const dashboardSections = document.querySelector('.dashboard-sections');
+    const quickLinks = document.querySelector('.quick-links');
+    const sectionControls = document.querySelector('#section-controls');
+    const sectionReset = document.querySelector('[data-action="section-reset"]');
+
+    if (search) {
+      search.value = params.get('q') || '';
+    }
+
+    function syncFilterButtons() {
+      for (const item of filterButtons) {
+        const isActive = item.dataset.filter === activeFilter;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      }
+    }
+
+    function updateTableUrl() {
+      if (!search) {
+        return;
+      }
+
+      const next = new URL(window.location.href);
+      const query = search.value.trim();
+
+      if (activeFilter === 'all') {
+        next.searchParams.delete('filter');
+      } else {
+        next.searchParams.set('filter', activeFilter);
+      }
+
+      if (query) {
+        next.searchParams.set('q', query);
+      } else {
+        next.searchParams.delete('q');
+      }
+
+      window.history.replaceState(null, '', next);
+    }
+
+    function applyFilters() {
+      if (!search) {
+        return;
+      }
+
+      const query = search.value.trim().toLowerCase();
+
+      for (const row of rows) {
+        const matchesQuery = !query || row.dataset.search.includes(query);
+        const matchesFilter = activeFilter === 'all'
+          || (activeFilter === 'dirty' && row.dataset.dirty === 'true')
+          || (activeFilter === 'no-changelog' && row.dataset.changelog === 'false')
+          || row.dataset.releaseStatus === activeFilter;
+        row.hidden = !matchesQuery || !matchesFilter;
+      }
+
+      updateTableUrl();
+    }
+
+    if (search) {
+      search.addEventListener('input', applyFilters);
+    }
+
+    for (const button of filterButtons) {
+      button.addEventListener('click', () => {
+        activeFilter = button.dataset.filter;
+        syncFilterButtons();
+        applyFilters();
+      });
+    }
+
+    syncFilterButtons();
+    applyFilters();
+
+    function readJson(value, fallback) {
+      try {
+        return value ? JSON.parse(value) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function readStoredSectionState(fallback) {
+      try {
+        return readJson(localStorage.getItem(sectionStorageKey), fallback);
+      } catch {
+        return fallback;
+      }
+    }
+
+    function writeStoredSectionState(nextState) {
+      try {
+        localStorage.setItem(sectionStorageKey, JSON.stringify(nextState));
+      } catch {
+        return;
+      }
+    }
+
+    function clearStoredSectionState() {
+      try {
+        localStorage.removeItem(sectionStorageKey);
+      } catch {
+        return;
+      }
+    }
+
+    const sectionRows = sectionControls ? [...sectionControls.querySelectorAll('[data-section-control]')] : [];
+    const sectionNodes = dashboardSections ? [...dashboardSections.querySelectorAll('[data-dashboard-section]')] : [];
+    const allowedSectionIds = sectionRows.map((row) => row.dataset.sectionControl);
+    const sectionLabels = new Map(sectionRows.map((row) => [row.dataset.sectionControl, row.dataset.sectionLabel || row.dataset.sectionControl]));
+    const sectionNodeById = new Map(sectionNodes.map((section) => [section.dataset.dashboardSection, section]));
+    const sectionRowById = new Map(sectionRows.map((row) => [row.dataset.sectionControl, row]));
+    const defaultVisibleSections = readJson(sectionControls?.dataset.defaultSections, allowedSectionIds);
+    const defaultSectionState = normalizeSectionState({
+      order: allowedSectionIds,
+      visible: defaultVisibleSections
+    });
+    let sectionState = normalizeSectionState(readStoredSectionState(defaultSectionState));
+
+    function normalizeSectionState(nextState) {
+      const order = [];
+      const visible = [];
+
+      for (const id of Array.isArray(nextState?.order) ? nextState.order : []) {
+        if (allowedSectionIds.includes(id) && !order.includes(id)) {
+          order.push(id);
+        }
+      }
+
+      for (const id of allowedSectionIds) {
+        if (!order.includes(id)) {
+          order.push(id);
+        }
+      }
+
+      for (const id of Array.isArray(nextState?.visible) ? nextState.visible : []) {
+        if (allowedSectionIds.includes(id) && !visible.includes(id)) {
+          visible.push(id);
+        }
+      }
+
+      return { order, visible };
+    }
+
+    function applySectionPreferences(nextState, persist = true) {
+      if (!dashboardSections || !sectionControls) {
+        return;
+      }
+
+      sectionState = normalizeSectionState(nextState);
+      const visible = new Set(sectionState.visible);
+
+      for (const id of sectionState.order) {
+        const section = sectionNodeById.get(id);
+        const row = sectionRowById.get(id);
+
+        if (section) {
+          section.hidden = !visible.has(id);
+          dashboardSections.append(section);
+        }
+
+        if (row) {
+          const checkbox = row.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+            checkbox.checked = visible.has(id);
+          }
+          sectionControls.append(row);
+        }
+      }
+
+      if (quickLinks) {
+        quickLinks.textContent = '';
+        for (const id of sectionState.order) {
+          if (!visible.has(id) || id === 'quick-links') {
+            continue;
+          }
+
+          const link = document.createElement('a');
+          link.className = 'quick-link';
+          link.href = '#' + id;
+          link.textContent = sectionLabels.get(id) || id;
+          quickLinks.append(link);
+        }
+      }
+
+      if (persist) {
+        writeStoredSectionState(sectionState);
+      }
+    }
+
+    function resetSectionPreferences() {
+      clearStoredSectionState();
+      applySectionPreferences(defaultSectionState, false);
+    }
+
+    if (sectionControls) {
+      sectionControls.addEventListener('change', (event) => {
+        const checkbox = event.target instanceof Element ? event.target.closest('input[type="checkbox"]') : null;
+        const row = checkbox?.closest('[data-section-control]');
+        if (!checkbox || !row) {
+          return;
+        }
+
+        const visible = new Set(sectionState.visible);
+        if (checkbox.checked) {
+          visible.add(row.dataset.sectionControl);
+        } else {
+          visible.delete(row.dataset.sectionControl);
+        }
+
+        applySectionPreferences({
+          order: sectionState.order,
+          visible: [...visible].filter((id) => sectionState.order.includes(id))
+        });
+      });
+
+      sectionControls.addEventListener('click', (event) => {
+        const button = event.target instanceof Element ? event.target.closest('[data-action]') : null;
+        const row = button?.closest('[data-section-control]');
+        if (!button || !row) {
+          return;
+        }
+
+        const index = sectionState.order.indexOf(row.dataset.sectionControl);
+        const direction = button.dataset.action === 'section-up' ? -1 : button.dataset.action === 'section-down' ? 1 : 0;
+        const nextIndex = index + direction;
+
+        if (index < 0 || nextIndex < 0 || nextIndex >= sectionState.order.length) {
+          return;
+        }
+
+        const order = [...sectionState.order];
+        [order[index], order[nextIndex]] = [order[nextIndex], order[index]];
+        applySectionPreferences({ order, visible: sectionState.visible });
+      });
+    }
+
+    if (sectionReset) {
+      sectionReset.addEventListener('click', resetSectionPreferences);
+    }
+
+    applySectionPreferences(sectionState, false);
+  </script>
+</body>
+</html>
+`;
+}
+
+function sectionCustomizerHtml(sections) {
+  const visible = new Set(sections);
+  const orderedSections = [
+    ...sections,
+    ...DEFAULT_DASHBOARD_SECTIONS.filter((id) => !visible.has(id))
+  ];
+
+  return `<details id="section-customizer" class="section-customizer">
+      <summary class="section-customizer-summary">
+        <h2 id="section-customizer-title">Sections</h2>
+        <p class="note">show, hide, and reorder</p>
+      </summary>
+      <div class="section-customizer-actions">
+        <button class="section-reset" type="button" data-action="section-reset">Reset</button>
+      </div>
+      <div id="section-controls" class="section-controls" data-default-sections="${escapeHtml(JSON.stringify(sections))}">
+        ${orderedSections.map((id) => sectionControlHtml(id, visible.has(id))).join('')}
+      </div>
+    </details>`;
+}
+
+function sectionControlHtml(id, visible) {
+  const label = DASHBOARD_SECTION_LABELS.get(id) || id;
+
+  return `<div class="section-control" data-section-control="${escapeHtml(id)}" data-section-label="${escapeHtml(label)}">
+          <label><input type="checkbox" ${visible ? 'checked' : ''}>${escapeHtml(label)}</label>
+          <button class="section-move" type="button" data-action="section-up" aria-label="Move ${escapeHtml(label)} up"><span aria-hidden="true">^</span></button>
+          <button class="section-move" type="button" data-action="section-down" aria-label="Move ${escapeHtml(label)} down"><span aria-hidden="true">v</span></button>
+        </div>`;
+}
+
+function dashboardSectionsHtml(report, context) {
+  const sections = report.dashboard?.sections || DEFAULT_DASHBOARD_SECTIONS;
+  const definitions = dashboardSectionDefinitions(report, context, sections);
+  const visible = new Set(sections);
+  const orderedSections = [
+    ...sections,
+    ...DEFAULT_DASHBOARD_SECTIONS.filter((id) => !visible.has(id))
+  ];
+
+  return `<div class="dashboard-sections">
+      ${orderedSections.map((sectionId) => {
+        const definition = definitions.get(sectionId);
+        return definition ? dashboardSectionHtml(sectionId, definition.html, visible.has(sectionId)) : '';
+      }).filter(Boolean).join('\n\n      ')}
+    </div>`;
+}
+
+function dashboardSectionHtml(id, html, visible) {
+  const label = DASHBOARD_SECTION_LABELS.get(id) || id;
+  const attributes = `id="${escapeHtml(id)}" data-dashboard-section="${escapeHtml(id)}" data-section-label="${escapeHtml(label)}"${visible ? '' : ' hidden'}`;
+  return html.replace(`<section id="${id}"`, `<section ${attributes}`);
+}
+
+function dashboardSectionDefinitions(report, context, sections) {
+  return new Map([
+    ['quick-links', {
+      label: 'Quick links',
+      html: `<section id="quick-links" class="quick-nav span-all" aria-labelledby="quick-links-title">
+        <div class="section-title">
+          <h2 id="quick-links-title">Quick links</h2>
+          <p class="note">jump to dashboard sections</p>
+        </div>
+        <nav class="quick-links" aria-label="Dashboard sections">
+          ${dashboardQuickLinksHtml(sections)}
+        </nav>
+      </section>`
+    }],
+    ['release-activity', {
+      label: 'Release activity',
+      html: `<section id="release-activity">
         <div class="section-title">
           <h2>Release activity</h2>
           <p class="note">${formatNumber(report.releases?.totals?.tagsLast365Days || 0)} tags in 365d</p>
         </div>
-        ${releaseActivityHtml(releases)}
-      </section>
-
-      <section id="release-gaps">
+        ${releaseActivityHtml(context.releases)}
+      </section>`
+    }],
+    ['release-gaps', {
+      label: 'Release gaps',
+      html: `<section id="release-gaps">
         <div class="section-title">
           <h2>Release gaps</h2>
           <p class="note">oldest or missing latest tag last</p>
         </div>
         <div class="repo-list">
-          ${releaseGaps.map(releaseGapHtml).join('') || '<p class="empty">No repositories found.</p>'}
+          ${context.releaseGaps.map(releaseGapHtml).join('') || '<p class="empty">No repositories found.</p>'}
         </div>
-      </section>
-    </div>
-
-    <section id="release-readiness" class="readiness-strip">
-      <div class="section-title">
-        <h2>Release readiness</h2>
-        <p class="note">${formatNumber(report.releaseReadiness?.totals?.needsAttention || 0)} need attention · stale after ${formatNumber(report.releaseReadiness?.thresholds?.staleAfterDays || 0)}d</p>
-      </div>
-      <div class="repo-list">
-        ${releaseReadiness.map(releaseReadinessHtml).join('') || '<p class="empty">No repositories found.</p>'}
-      </div>
-    </section>
-
-    <section id="since-previous-scan" class="delta-strip">
-      <div class="section-title">
-        <h2>Since previous scan</h2>
-        <p class="note">${report.delta?.available ? `Compared with ${escapeHtml(formatDateTime(report.delta.previousGeneratedAt))}` : escapeHtml(report.delta?.reason || 'No previous comparable snapshot')}</p>
-      </div>
-      <div class="delta-metrics">
-        ${deltaMetricHtml('LOC', report.delta?.totals?.codeLines)}
-        ${deltaMetricHtml('Files', report.delta?.totals?.physicalFiles)}
-        ${deltaMetricHtml('Commits', report.delta?.totals?.commits)}
-        ${deltaMetricHtml('Tags', report.delta?.totals?.tags)}
-      </div>
-      ${topRepoDeltas.length > 0 ? `<div class="repo-list delta-list">${topRepoDeltas.map(repoDeltaHtml).join('')}</div>` : ''}
-    </section>
-
-    <div class="grid">
-      <section id="weekly-commits">
+      </section>`
+    }],
+    ['release-readiness', {
+      label: 'Release readiness',
+      html: `<section id="release-readiness" class="readiness-strip span-all">
+        <div class="section-title">
+          <h2>Release readiness</h2>
+          <p class="note">${formatNumber(report.releaseReadiness?.totals?.needsAttention || 0)} need attention · stale after ${formatNumber(report.releaseReadiness?.thresholds?.staleAfterDays || 0)}d</p>
+        </div>
+        <div class="repo-list">
+          ${context.releaseReadiness.map(releaseReadinessHtml).join('') || '<p class="empty">No repositories found.</p>'}
+        </div>
+      </section>`
+    }],
+    ['since-previous-scan', {
+      label: 'Since previous scan',
+      html: `<section id="since-previous-scan" class="delta-strip span-all">
+        <div class="section-title">
+          <h2>Since previous scan</h2>
+          <p class="note">${report.delta?.available ? `Compared with ${escapeHtml(formatDateTime(report.delta.previousGeneratedAt))}` : escapeHtml(report.delta?.reason || 'No previous comparable snapshot')}</p>
+        </div>
+        <div class="delta-metrics">
+          ${deltaMetricHtml('LOC', report.delta?.totals?.codeLines)}
+          ${deltaMetricHtml('Files', report.delta?.totals?.physicalFiles)}
+          ${deltaMetricHtml('Commits', report.delta?.totals?.commits)}
+          ${deltaMetricHtml('Tags', report.delta?.totals?.tags)}
+        </div>
+        ${context.topRepoDeltas.length > 0 ? `<div class="repo-list delta-list">${context.topRepoDeltas.map(repoDeltaHtml).join('')}</div>` : ''}
+      </section>`
+    }],
+    ['weekly-commits', {
+      label: 'Weekly commits',
+      html: `<section id="weekly-commits">
         <div class="section-title">
           <h2>Weekly commits</h2>
           <p class="note">last ${formatNumber(report.weekly.trendWeeks)} weeks</p>
         </div>
-        <div class="trend">${weeklyCommitsSvg}</div>
-      </section>
-
-      <section id="weekly-churn">
+        <div class="trend">${context.weeklyCommitsSvg}</div>
+      </section>`
+    }],
+    ['weekly-churn', {
+      label: 'Weekly churn',
+      html: `<section id="weekly-churn">
         <div class="section-title">
           <h2>Weekly churn</h2>
           <p class="note">${formatNumber(report.weekly.totals.filesChanged)} files touched in 7d</p>
         </div>
-        <div class="trend">${weeklyChurnSvg}</div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section id="contributors">
+        <div class="trend">${context.weeklyChurnSvg}</div>
+      </section>`
+    }],
+    ['contributors', {
+      label: 'Contributors',
+      html: `<section id="contributors">
         <div class="section-title">
           <h2>Contributors</h2>
           <p class="note">${formatNumber(report.contributors?.totals?.uniqueContributors || 0)} unique authors</p>
         </div>
         <div class="repo-list">
-          ${topContributors.map(contributorHtml).join('') || '<p class="empty">No contributors found.</p>'}
+          ${context.topContributors.map(contributorHtml).join('') || '<p class="empty">No contributors found.</p>'}
         </div>
-      </section>
-
-      <section id="release-coverage">
+      </section>`
+    }],
+    ['release-coverage', {
+      label: 'Release coverage',
+      html: `<section id="release-coverage">
         <div class="section-title">
           <h2>Release coverage</h2>
           <p class="note">local tag footprint</p>
@@ -4688,21 +5253,23 @@ function renderHtml(report) {
             <p class="note">repositories without releases</p>
           </div>
         </div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section id="active-this-week">
+      </section>`
+    }],
+    ['active-this-week', {
+      label: 'Active this week',
+      html: `<section id="active-this-week">
         <div class="section-title">
           <h2>Active this week</h2>
           <p class="note">commits and line churn, last 7 days</p>
         </div>
         <div class="repo-list">
-          ${topWeeklyRepos.map(weeklyRepoHtml).join('') || '<p class="empty">No commits in the last 7 days.</p>'}
+          ${context.topWeeklyRepos.map(weeklyRepoHtml).join('') || '<p class="empty">No commits in the last 7 days.</p>'}
         </div>
-      </section>
-
-      <section id="weekly-totals">
+      </section>`
+    }],
+    ['weekly-totals', {
+      label: 'Weekly totals',
+      html: `<section id="weekly-totals">
         <div class="section-title">
           <h2>Weekly totals</h2>
           <p class="note">committed changes only</p>
@@ -4717,80 +5284,86 @@ function renderHtml(report) {
             <p class="note">lines deleted</p>
           </div>
         </div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section id="loc-trend">
+      </section>`
+    }],
+    ['loc-trend', {
+      label: 'LOC trend',
+      html: `<section id="loc-trend">
         <div class="section-title">
           <h2>LOC trend</h2>
           <p class="note">${formatNumber(report.history?.snapshotCount || 1)} snapshots</p>
         </div>
-        <div class="trend">${historySvg}</div>
-      </section>
-
-      <section id="thirty-day-commits">
+        <div class="trend">${context.historySvg}</div>
+      </section>`
+    }],
+    ['thirty-day-commits', {
+      label: '30-day commits',
+      html: `<section id="thirty-day-commits">
         <div class="section-title">
           <h2>30-day commits</h2>
           <p class="note">current scan window</p>
         </div>
-        <div class="trend">${commitsSvg}</div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section id="languages">
+        <div class="trend">${context.commitsSvg}</div>
+      </section>`
+    }],
+    ['languages', {
+      label: 'Languages',
+      html: `<section id="languages">
         <div class="section-title">
           <h2>Languages</h2>
           <p class="note">by classified code lines</p>
         </div>
         <div class="bars">
-          ${topLanguages.map((language) => barRowHtml(language.language, language.codeLines, maxLanguageLoc)).join('')}
+          ${context.topLanguages.map((language) => barRowHtml(language.language, language.codeLines, context.maxLanguageLoc)).join('')}
         </div>
-      </section>
-
-      <section id="file-types">
+      </section>`
+    }],
+    ['file-types', {
+      label: 'File types',
+      html: `<section id="file-types">
         <div class="section-title">
           <h2>File types</h2>
           <p class="note">${formatBytes(report.totals.physicalBytes || 0)} after excludes</p>
         </div>
         <div class="bars">
-          ${topFileTypes.map((fileType) => fileTypeRowHtml(fileType, maxFileTypeFiles)).join('')}
+          ${context.topFileTypes.map((fileType) => fileTypeRowHtml(fileType, context.maxFileTypeFiles)).join('')}
         </div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section id="most-active-repositories">
+      </section>`
+    }],
+    ['most-active-repositories', {
+      label: 'Most active repositories',
+      html: `<section id="most-active-repositories">
         <div class="section-title">
           <h2>Most active repositories</h2>
           <p class="note">weekly commits, 30d commits, then LOC</p>
         </div>
         <div class="repo-list">
-          ${topRepos.map((repo) => repoLineHtml(repo, maxRepoLoc)).join('') || '<p class="empty">No repositories found.</p>'}
+          ${context.topRepos.map((repo) => repoLineHtml(repo, context.maxRepoLoc)).join('') || '<p class="empty">No repositories found.</p>'}
         </div>
-      </section>
-
-      <section id="attention">
+      </section>`
+    }],
+    ['attention', {
+      label: 'Attention',
+      html: `<section id="attention">
         <div class="section-title">
           <h2>Attention</h2>
           <p class="note">local state only</p>
         </div>
         <div class="health">
           <div class="health-block danger">
-            <span class="health-number">${formatNumber(dirtyRepos.length)}</span>
+            <span class="health-number">${formatNumber(context.dirtyRepos.length)}</span>
             <p class="note">repositories with uncommitted changes</p>
           </div>
           <div class="health-block">
-            <span class="health-number">${formatNumber(staleRepos.length)}</span>
+            <span class="health-number">${formatNumber(context.staleRepos.length)}</span>
             <p class="note">repositories with no commit in 90+ days</p>
           </div>
         </div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section id="repository-table">
+      </section>`
+    }],
+    ['repository-table', {
+      label: 'Repository table',
+      html: `<section id="repository-table" class="span-all">
         <div class="section-title">
           <h2>Repository table</h2>
           <p class="note">filter by name, path, branch, or language</p>
@@ -4819,36 +5392,45 @@ function renderHtml(report) {
             ${report.repositories.map(repoTableRowHtml).join('')}
           </tbody>
         </table>
-      </section>
-
-      <section id="roots">
+      </section>`
+    }],
+    ['roots', {
+      label: 'Roots',
+      html: `<section id="roots">
         <div class="section-title">
           <h2>Roots</h2>
           <p class="note">configured scan targets</p>
         </div>
         ${report.roots.map((root) => `<p class="path">${escapeHtml(root)}</p>`).join('')}
-        <div id="csv-exports" class="section-title" style="margin-top: 32px;">
+      </section>`
+    }],
+    ['csv-exports', {
+      label: 'CSV exports',
+      html: `<section id="csv-exports">
+        <div class="section-title">
           <h2>CSV exports</h2>
           <p class="note">spreadsheet-ready files</p>
         </div>
         <div class="link-list">
           ${csvExportLinksHtml()}
         </div>
-      </section>
-    </div>
-
-    <div class="grid">
-      <section id="ai-agents">
+      </section>`
+    }],
+    ['ai-agents', {
+      label: 'AI agents',
+      html: `<section id="ai-agents">
         <div class="section-title">
           <h2>AI agents</h2>
           <p class="note">tracked instruction/config files</p>
         </div>
         <div class="agent-list">
-          ${topAiAgents.map((agent) => agentRowHtml(agent, maxAgentRepoCount)).join('') || '<p class="empty">No tracked AI agent files detected.</p>'}
+          ${context.topAiAgents.map((agent) => agentRowHtml(agent, context.maxAgentRepoCount)).join('') || '<p class="empty">No tracked AI agent files detected.</p>'}
         </div>
-      </section>
-
-      <section id="agent-coverage">
+      </section>`
+    }],
+    ['agent-coverage', {
+      label: 'Agent coverage',
+      html: `<section id="agent-coverage">
         <div class="section-title">
           <h2>Agent coverage</h2>
           <p class="note">repo footprint, not telemetry</p>
@@ -4863,75 +5445,9 @@ function renderHtml(report) {
             <p class="note">most used by repo count</p>
           </div>
         </div>
-      </section>
-    </div>
-  </main>
-  <script>
-    const search = document.querySelector('#repo-search');
-    const filterButtons = [...document.querySelectorAll('[data-filter]')];
-    const rows = [...document.querySelectorAll('#repo-rows tr')];
-    const filters = new Set(filterButtons.map((button) => button.dataset.filter));
-    const params = new URLSearchParams(window.location.search);
-    let activeFilter = filters.has(params.get('filter')) ? params.get('filter') : 'all';
-    search.value = params.get('q') || '';
-
-    function syncFilterButtons() {
-      for (const item of filterButtons) {
-        const isActive = item.dataset.filter === activeFilter;
-        item.classList.toggle('active', isActive);
-        item.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      }
-    }
-
-    function updateTableUrl() {
-      const next = new URL(window.location.href);
-      const query = search.value.trim();
-
-      if (activeFilter === 'all') {
-        next.searchParams.delete('filter');
-      } else {
-        next.searchParams.set('filter', activeFilter);
-      }
-
-      if (query) {
-        next.searchParams.set('q', query);
-      } else {
-        next.searchParams.delete('q');
-      }
-
-      window.history.replaceState(null, '', next);
-    }
-
-    function applyFilters() {
-      const query = search.value.trim().toLowerCase();
-
-      for (const row of rows) {
-        const matchesQuery = !query || row.dataset.search.includes(query);
-        const matchesFilter = activeFilter === 'all'
-          || (activeFilter === 'dirty' && row.dataset.dirty === 'true')
-          || (activeFilter === 'no-changelog' && row.dataset.changelog === 'false')
-          || row.dataset.releaseStatus === activeFilter;
-        row.hidden = !matchesQuery || !matchesFilter;
-      }
-
-      updateTableUrl();
-    }
-
-    search.addEventListener('input', applyFilters);
-    for (const button of filterButtons) {
-      button.addEventListener('click', () => {
-        activeFilter = button.dataset.filter;
-        syncFilterButtons();
-        applyFilters();
-      });
-    }
-
-    syncFilterButtons();
-    applyFilters();
-  </script>
-</body>
-</html>
-`;
+      </section>`
+    }]
+  ]);
 }
 
 function metricHtml(label, value) {
@@ -4943,32 +5459,10 @@ function mastheadStatHtml(label, value, detail, options = {}) {
   return `<div class="masthead-stat"><span>${escapeHtml(label)}</span><strong>${formatted}</strong><small>${escapeHtml(detail)}</small></div>`;
 }
 
-function dashboardQuickLinksHtml() {
-  const links = [
-    ['Release activity', 'release-activity'],
-    ['Release gaps', 'release-gaps'],
-    ['Release readiness', 'release-readiness'],
-    ['Since previous scan', 'since-previous-scan'],
-    ['Weekly commits', 'weekly-commits'],
-    ['Weekly churn', 'weekly-churn'],
-    ['Contributors', 'contributors'],
-    ['Release coverage', 'release-coverage'],
-    ['Active this week', 'active-this-week'],
-    ['Weekly totals', 'weekly-totals'],
-    ['LOC trend', 'loc-trend'],
-    ['30-day commits', 'thirty-day-commits'],
-    ['Languages', 'languages'],
-    ['File types', 'file-types'],
-    ['Most active repositories', 'most-active-repositories'],
-    ['Attention', 'attention'],
-    ['Repository table', 'repository-table'],
-    ['Roots', 'roots'],
-    ['CSV exports', 'csv-exports'],
-    ['AI agents', 'ai-agents'],
-    ['Agent coverage', 'agent-coverage']
-  ];
-
-  return links
+function dashboardQuickLinksHtml(sections) {
+  return sections
+    .filter((id) => id !== 'quick-links')
+    .map((id) => [DASHBOARD_SECTION_LABELS.get(id) || id, id])
     .map(([label, id]) => `<a class="quick-link" href="#${escapeHtml(id)}">${escapeHtml(label)}</a>`)
     .join('');
 }
