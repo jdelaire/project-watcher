@@ -5560,8 +5560,7 @@ function releaseActivityHtml(releases) {
     return '<div class="repo-list"><p class="empty">No local tags found.</p></div>';
   }
 
-  const visible = releases.slice(0, 5);
-  const overflow = releases.slice(5);
+  const { visible, overflow } = releaseActivityRows(releases, 5);
 
   return `<div class="repo-list">
     ${visible.map(releaseHtml).join('')}
@@ -5570,6 +5569,25 @@ function releaseActivityHtml(releases) {
       <div class="repo-list">${overflow.map(releaseHtml).join('')}</div>
     </details>` : ''}
   </div>`;
+}
+
+function releaseActivityRows(releases, maxVisible) {
+  const visible = [];
+  const overflow = [];
+  const visibleProjects = new Set();
+
+  for (const release of releases) {
+    const projectKey = release.path || release.repo;
+
+    if (visible.length < maxVisible && !visibleProjects.has(projectKey)) {
+      visible.push(release);
+      visibleProjects.add(projectKey);
+    } else {
+      overflow.push(release);
+    }
+  }
+
+  return { visible, overflow };
 }
 
 function releaseHtml(release) {

@@ -317,7 +317,16 @@ assert(snapshots.length === 2, 'expected snapshot retention to keep two snapshot
 assert(report.releases.latest.length === 6, 'expected six release tags');
 assert(report.releases.latest[0].name === 'v0.1.5', 'expected semver tie sort to show newest tag name first');
 assert(releaseHtml.includes('<details class="release-overflow">'), 'expected collapsed release overflow');
-assert(releaseHtml.includes('Show 1 older releases'), 'expected one collapsed release');
+assert(releaseHtml.includes('Show 5 older releases'), 'expected duplicate project releases to collapse');
+const releaseActivityStart = releaseHtml.indexOf('<section id="release-activity"');
+const releaseOverflowStart = releaseHtml.indexOf('<details class="release-overflow">', releaseActivityStart);
+const releaseOverflowEnd = releaseHtml.indexOf('</details>', releaseOverflowStart);
+const visibleReleaseActivityHtml = releaseHtml.slice(releaseActivityStart, releaseOverflowStart);
+const overflowReleaseActivityHtml = releaseHtml.slice(releaseOverflowStart, releaseOverflowEnd);
+assert(countOccurrences(visibleReleaseActivityHtml, 'example-repo</a>') === 1, 'expected one visible release per project');
+assert(visibleReleaseActivityHtml.includes('v0.1.5'), 'expected newest project release to remain visible');
+assert(!visibleReleaseActivityHtml.includes('v0.1.4'), 'expected older duplicate project release to be hidden');
+assert(countOccurrences(overflowReleaseActivityHtml, 'example-repo</a>') === 5, 'expected duplicate project releases in overflow');
 assert(releaseHtml.includes('unreleased-repo'), 'expected unreleased repo in release gaps');
 assert(releaseHtml.includes('<span class="release-badge stale">never</span>'), 'expected never release badge');
 assert(releaseHtml.indexOf('example-repo</a></strong><span class="release-meta">v0.1.5') < releaseHtml.indexOf('unreleased-repo'), 'expected oldest or never releases last in release gaps');
@@ -484,6 +493,10 @@ async function stopProcess(child) {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function countOccurrences(value, needle) {
+  return value.split(needle).length - 1;
 }
 
 function assert(condition, message) {
