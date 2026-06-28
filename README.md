@@ -109,9 +109,9 @@ Example:
     "csv-exports"
   ],
   "releaseReadiness": {
-    "watchAfterDays": 30,
-    "staleAfterDays": 90,
-    "releaseDueAfterCommits": 20
+    "watchAfterDays": 3,
+    "releaseDueAfterDays": 7,
+    "staleAfterDays": 90
   }
 }
 ```
@@ -167,7 +167,7 @@ Tracked mode uses the tracked file set but reads current working-tree contents, 
 
 The dashboard also includes a collapsible `Sections` control for browser-local customization. Changes made there apply immediately, are stored in `localStorage`, and override the config default in that browser until reset.
 
-`releaseReadiness` controls the dashboard status for each repository. Repositories with no local tags are `stale`; repositories pass through `watch` and `release due` based on the age of the latest tag and committed work since that tag.
+`releaseReadiness` controls the dashboard status for each repository. Repositories with no local tags are `stale`; repositories become `release due` when the latest local tag is older than `releaseDueAfterDays`, and move to `watch` sooner when there is unreleased work, a dirty working tree, a missing changelog, or enough time since the latest tag.
 
 ## CLI
 

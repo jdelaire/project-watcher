@@ -60,9 +60,9 @@ Config: /demo/tmp/demo-config.json
 
 ## Release Readiness
 
-- Watch after: 30 days
+- Watch after: 3 days
+- Release due after: 7 days since latest tag
 - Stale after: 90 days
-- Release due after: 20 commits since latest tag
 
 | Repo | Status | Latest tag | Days | Commits since tag | Files changed | Recent commits | Changelog | Dirty |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | ---: |
@@ -144,4 +144,3 @@ No previous comparable snapshot
 - atlas-app: repos/atlas-app.html
 - design-system: repos/design-system.html
 - ledger-api: repos/ledger-api.html
-

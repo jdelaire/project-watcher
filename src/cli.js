@@ -108,9 +108,9 @@ const DEFAULT_CONFIG = {
   maxSnapshots: 52,
   sections: DEFAULT_DASHBOARD_SECTIONS,
   releaseReadiness: {
-    watchAfterDays: 30,
-    staleAfterDays: 90,
-    releaseDueAfterCommits: 20
+    watchAfterDays: 3,
+    releaseDueAfterDays: 7,
+    staleAfterDays: 90
   }
 };
 
@@ -818,8 +818,8 @@ function normalizeReleaseReadiness(value) {
   const input = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
   const normalized = {
     watchAfterDays: normalizeIntegerSetting(input.watchAfterDays, defaults.watchAfterDays, 'releaseReadiness.watchAfterDays', 0),
-    staleAfterDays: normalizeIntegerSetting(input.staleAfterDays, defaults.staleAfterDays, 'releaseReadiness.staleAfterDays', 0),
-    releaseDueAfterCommits: normalizeIntegerSetting(input.releaseDueAfterCommits, defaults.releaseDueAfterCommits, 'releaseReadiness.releaseDueAfterCommits', 1)
+    releaseDueAfterDays: normalizeIntegerSetting(input.releaseDueAfterDays, defaults.releaseDueAfterDays, 'releaseReadiness.releaseDueAfterDays', 1),
+    staleAfterDays: normalizeIntegerSetting(input.staleAfterDays, defaults.staleAfterDays, 'releaseReadiness.staleAfterDays', 0)
   };
 
   if (normalized.staleAfterDays < normalized.watchAfterDays) {
@@ -2264,7 +2264,7 @@ function releaseReadinessStatus(row, thresholds) {
     return 'stale';
   }
 
-  if (row.commitsSinceLatestTag >= thresholds.releaseDueAfterCommits) {
+  if (row.days !== null && row.days >= thresholds.releaseDueAfterDays) {
     return 'release due';
   }
 
@@ -2494,8 +2494,8 @@ function renderMarkdown(report) {
   lines.push('## Release Readiness');
   lines.push('');
   lines.push(`- Watch after: ${formatNumber(report.releaseReadiness.thresholds.watchAfterDays)} days`);
+  lines.push(`- Release due after: ${formatNumber(report.releaseReadiness.thresholds.releaseDueAfterDays)} days since latest tag`);
   lines.push(`- Stale after: ${formatNumber(report.releaseReadiness.thresholds.staleAfterDays)} days`);
-  lines.push(`- Release due after: ${formatNumber(report.releaseReadiness.thresholds.releaseDueAfterCommits)} commits since latest tag`);
   lines.push('');
 
   if (report.releaseReadiness.repositories.length > 0) {
@@ -5181,7 +5181,7 @@ function dashboardSectionDefinitions(report, context, sections) {
       html: `<section id="release-readiness" class="readiness-strip span-all">
         <div class="section-title">
           <h2>Release readiness</h2>
-          <p class="note">${formatNumber(report.releaseReadiness?.totals?.needsAttention || 0)} need attention · stale after ${formatNumber(report.releaseReadiness?.thresholds?.staleAfterDays || 0)}d</p>
+          <p class="note">${formatNumber(report.releaseReadiness?.totals?.needsAttention || 0)} need attention · release due after ${formatNumber(report.releaseReadiness?.thresholds?.releaseDueAfterDays || 0)}d · stale after ${formatNumber(report.releaseReadiness?.thresholds?.staleAfterDays || 0)}d</p>
         </div>
         <div class="repo-list">
           ${context.releaseReadiness.map(releaseReadinessHtml).join('') || '<p class="empty">No repositories found.</p>'}

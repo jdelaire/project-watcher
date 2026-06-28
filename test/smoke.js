@@ -42,8 +42,8 @@ await fsp.writeFile(
       maxSnapshots: 2,
       releaseReadiness: {
         watchAfterDays: 1,
-        staleAfterDays: 2,
-        releaseDueAfterCommits: 1
+        releaseDueAfterDays: 7,
+        staleAfterDays: 30
       }
     },
     null,
@@ -83,7 +83,7 @@ assert(report.totals.docsMarkdownFiles === 3, 'expected three Markdown docs');
 assert(report.totals.commitsLast7Days === 1, 'expected one recent commit');
 assert(report.releases.totals.tagsLast365Days === 1, 'expected one tag in last year');
 assert(report.releases.latest[0].name === 'v0.1.0', 'expected latest release tag');
-assert(report.releaseReadiness.thresholds.releaseDueAfterCommits === 1, 'expected release readiness threshold');
+assert(report.releaseReadiness.thresholds.releaseDueAfterDays === 7, 'expected release due day threshold');
 assert(report.releaseReadiness.totals.watch === 1, 'expected dirty repo to be watched');
 assert(report.contributors.totals.uniqueContributors === 1, 'expected one contributor');
 assert(report.contributors.contributors[0].name === 'Smoke Test', 'expected contributor name');
@@ -198,8 +198,8 @@ await fsp.writeFile(
       ],
       releaseReadiness: {
         watchAfterDays: 1,
-        staleAfterDays: 2,
-        releaseDueAfterCommits: 1
+        releaseDueAfterDays: 7,
+        staleAfterDays: 30
       }
     },
     null,
@@ -236,8 +236,8 @@ await fsp.writeFile(
       maxSnapshots: 2,
       releaseReadiness: {
         watchAfterDays: 1,
-        staleAfterDays: 2,
-        releaseDueAfterCommits: 1
+        releaseDueAfterDays: 7,
+        staleAfterDays: 30
       }
     },
     null,
@@ -284,7 +284,7 @@ assert(report.delta.totals.codeLines.delta === 1, 'expected one code line delta'
 assert(report.delta.totals.commits.delta === 1, 'expected one commit delta');
 assert(report.weekly.totals.commits === 2, 'expected two weekly commits after second commit');
 assert(report.weekly.topRepositories[0].commits === 2, 'expected top weekly repo commits');
-assert(exampleReadiness.status === 'release due', 'expected release due after one commit since tag');
+assert(exampleReadiness.status === 'watch', 'expected recent release with unreleased commits to stay on watch');
 assert(exampleReadiness.filesChangedSinceLatestTag === 1, 'expected one file changed since tag');
 assert(exampleReadiness.unreleasedWork.commits[0].subject === 'Add tracked change', 'expected unreleased commit subject');
 assert(exampleReadiness.unreleasedWork.changedFiles[0].path === 'index.js', 'expected top changed file');
@@ -292,8 +292,22 @@ assert(exampleReadiness.unreleasedWork.authors[0].name === 'Smoke Test', 'expect
 assert(secondHtml.includes('Unreleased work'), 'expected unreleased work details in dashboard');
 assert(secondHtml.includes('Add tracked change'), 'expected unreleased commit in dashboard');
 assert(secondHtml.includes('git log v0.1.0..HEAD --oneline'), 'expected unreleased git command in dashboard');
-assert(secondHtml.includes('data-release-status="release-due"'), 'expected release due table filter data');
+assert(secondHtml.includes('data-release-status="watch"'), 'expected watch table filter data for recent release');
 assert(unreleasedWorkCsv.includes('Add tracked change'), 'expected unreleased commit in csv');
+
+const initialCommit = run('git', ['rev-list', '--max-parents=0', 'HEAD'], repoPath);
+run('git', ['tag', '-d', 'v0.1.0'], repoPath);
+run('git', ['tag', '-a', 'v0.1.0', '-m', 'Old release', initialCommit], repoPath, {
+  env: {
+    GIT_COMMITTER_DATE: daysAgoIso(8)
+  }
+});
+runScan(configPath);
+report = JSON.parse(await fsp.readFile(path.join(outputDir, 'report.json'), 'utf8'));
+const overdueHtml = await fsp.readFile(path.join(outputDir, 'report.html'), 'utf8');
+const overdueReadiness = report.releaseReadiness.repositories.find((repo) => repo.name === 'example-repo');
+assert(overdueReadiness.status === 'release due', 'expected release due when latest release is older than 7 days');
+assert(overdueHtml.includes('data-release-status="release-due"'), 'expected release due table filter data for overdue release');
 
 const unreleasedRepoPath = path.join(tempRoot, 'unreleased-repo');
 await fsp.mkdir(unreleasedRepoPath, { recursive: true });
@@ -393,9 +407,13 @@ function runScan(configPath) {
   }
 }
 
-function run(command, args, cwd) {
+function run(command, args, cwd, options = {}) {
   const result = spawnSync(command, args, {
     cwd,
+    env: {
+      ...process.env,
+      ...(options.env || {})
+    },
     encoding: 'utf8'
   });
 
@@ -404,6 +422,12 @@ function run(command, args, cwd) {
     console.error(result.stderr);
     throw new Error(`${command} ${args.join(' ')} failed`);
   }
+
+  return result.stdout.trim();
+}
+
+function daysAgoIso(days) {
+  return new Date(Date.now() - (days * 24 * 60 * 60 * 1000)).toISOString();
 }
 
 function collectOutput(child) {

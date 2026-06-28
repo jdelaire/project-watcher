@@ -74,8 +74,8 @@
     "agent-coverage"
   ],
   "releaseReadiness": {
-    "watchAfterDays": 30,
-    "staleAfterDays": 90,
-    "releaseDueAfterCommits": 20
+    "watchAfterDays": 3,
+    "releaseDueAfterDays": 7,
+    "staleAfterDays": 90
   }
 }

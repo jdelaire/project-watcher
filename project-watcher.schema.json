@@ -155,25 +155,25 @@
           "type": "integer",
           "description": "Mark a released repository as watch after this many days since its latest local tag.",
           "minimum": 0,
-          "default": 30
+          "default": 3
+        },
+        "releaseDueAfterDays": {
+          "type": "integer",
+          "description": "Mark a repository as release due after this many days since its latest local tag.",
+          "minimum": 1,
+          "default": 7
         },
         "staleAfterDays": {
           "type": "integer",
           "description": "Mark a repository as stale after this many days since its latest local tag. Repositories with no tags are stale.",
           "minimum": 0,
           "default": 90
-        },
-        "releaseDueAfterCommits": {
-          "type": "integer",
-          "description": "Mark a repository as release due after this many commits since its latest local tag.",
-          "minimum": 1,
-          "default": 20
         }
       },
       "default": {
-        "watchAfterDays": 30,
-        "staleAfterDays": 90,
-        "releaseDueAfterCommits": 20
+        "watchAfterDays": 3,
+        "releaseDueAfterDays": 7,
+        "staleAfterDays": 90
       }
     }
   }
