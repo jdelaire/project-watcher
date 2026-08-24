@@ -165,7 +165,7 @@ Tracked mode uses the tracked file set but reads current working-tree contents, 
 - `ai-agents`
 - `agent-coverage`
 
-The dashboard also includes a collapsible `Sections` control for browser-local customization. Changes made there apply immediately, are stored in `localStorage`, and override the config default in that browser until reset.
+The dashboard also includes a collapsible `Sections` control for browser-local customization. Toggle sections with their checkboxes and drag the grip to reorder them. Changes apply immediately, are stored in `localStorage`, and override the config default in that browser until reset.
 
 `releaseReadiness` controls the dashboard status for each repository. Repositories with no local tags are `stale`; repositories become `release due` when the latest local tag is older than `releaseDueAfterDays`, and move to `watch` sooner when there is unreleased work, a dirty working tree, a missing changelog, or enough time since the latest tag.
 

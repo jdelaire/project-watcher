@@ -4,6 +4,7 @@ import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
+import vm from 'node:vm';
 
 const tempRoot = await fsp.mkdtemp(path.join(os.tmpdir(), 'project-watcher-'));
 const repoPath = path.join(tempRoot, 'example-repo');
@@ -117,11 +118,20 @@ assert(html.includes('Dirty repos'), 'expected useful masthead stats');
 assert(html.includes('<details id="section-customizer"'), 'expected collapsible section customizer control');
 assert(html.includes('<summary class="section-customizer-summary">'), 'expected section customizer summary');
 assert(html.includes('data-section-control="release-activity"'), 'expected section customizer release activity control');
-assert(html.includes('data-action="section-up"'), 'expected section move up controls');
-assert(html.includes('data-action="section-down"'), 'expected section move down controls');
 assert(html.includes('project-watcher:dashboard-sections'), 'expected dashboard section order in localStorage');
 assert(html.includes('applySectionPreferences'), 'expected client-side section preference application');
 assert(html.includes('resetSectionPreferences'), 'expected section reset behavior');
+const reorderSectionOrder = browserFunction(html, 'reorderSectionOrder');
+assert(
+  JSON.stringify(reorderSectionOrder(['quick-links', 'release-activity', 'release-gaps', 'languages'], 'release-activity', 'languages', 'after'))
+    === JSON.stringify(['quick-links', 'release-gaps', 'languages', 'release-activity']),
+  'expected drag reorder to move a section after its drop target'
+);
+assert(
+  JSON.stringify(reorderSectionOrder(['quick-links', 'release-activity', 'release-gaps', 'languages'], 'languages', 'release-activity', 'before'))
+    === JSON.stringify(['quick-links', 'languages', 'release-activity', 'release-gaps']),
+  'expected drag reorder to move a section before its drop target'
+);
 assert(html.includes('Quick links'), 'expected quick links section');
 for (const sectionId of [
   'release-activity',
@@ -524,6 +534,33 @@ function sleep(ms) {
 
 function countOccurrences(value, needle) {
   return value.split(needle).length - 1;
+}
+
+function browserFunction(html, name) {
+  const start = html.indexOf(`function ${name}(`);
+  if (start < 0) {
+    throw new Error(`Browser function ${name} not found`);
+  }
+
+  const openingBrace = html.indexOf('{', start);
+  let depth = 0;
+  let end = openingBrace;
+
+  for (; end < html.length; end += 1) {
+    if (html[end] === '{') {
+      depth += 1;
+    } else if (html[end] === '}') {
+      depth -= 1;
+      if (depth === 0) {
+        end += 1;
+        break;
+      }
+    }
+  }
+
+  const context = {};
+  vm.runInNewContext(`${html.slice(start, end)}\nthis.extracted = ${name};`, context);
+  return context.extracted;
 }
 
 function assert(condition, message) {

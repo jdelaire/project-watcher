@@ -4226,7 +4226,7 @@ function renderHtml(report) {
     }
 
     .section-reset,
-    .section-move {
+    .section-drag-handle {
       border: 1px solid var(--line);
       background: rgba(255, 250, 240, 0.58);
       color: var(--ink);
@@ -4244,15 +4244,30 @@ function renderHtml(report) {
       padding: 0 11px;
     }
 
-    .section-move {
+    .section-drag-handle {
       display: inline-grid;
       place-items: center;
       width: 32px;
       height: 32px;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .section-drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .section-drag-handle span {
+      width: 14px;
+      height: 20px;
+      background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.7px);
+      background-position: center;
+      background-size: 7px 7px;
     }
 
     .section-reset:hover,
-    .section-move:hover {
+    .section-drag-handle:hover {
       background: rgba(217, 119, 6, 0.11);
       border-color: rgba(217, 119, 6, 0.42);
       transform: translateY(-1px);
@@ -4265,14 +4280,28 @@ function renderHtml(report) {
     }
 
     .section-control {
+      position: relative;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 8px;
       align-items: center;
       min-height: 42px;
       border: 1px solid var(--line);
       background: rgba(255, 250, 240, 0.48);
       padding: 5px 6px 5px 10px;
+      transition: background 120ms ease, border-color 120ms ease, opacity 120ms ease;
+    }
+
+    .section-control.is-dragging {
+      opacity: 0.38;
+    }
+
+    .section-control.drop-before {
+      box-shadow: inset 4px 0 0 var(--accent);
+    }
+
+    .section-control.drop-after {
+      box-shadow: inset -4px 0 0 var(--accent);
     }
 
     .section-control label {
@@ -4859,6 +4888,10 @@ function renderHtml(report) {
     const quickLinks = document.querySelector('.quick-links');
     const sectionControls = document.querySelector('#section-controls');
     const sectionReset = document.querySelector('[data-action="section-reset"]');
+    let draggedSectionId = null;
+    let dragPointerId = null;
+    let dropTargetSectionId = null;
+    let dropPlacement = null;
 
     if (search) {
       search.value = params.get('q') || '';
@@ -4999,6 +5032,38 @@ function renderHtml(report) {
       return { order, visible };
     }
 
+    function reorderSectionOrder(order, draggedId, targetId, placement) {
+      if (!order.includes(draggedId) || draggedId === targetId) {
+        return [...order];
+      }
+
+      const nextOrder = order.filter((id) => id !== draggedId);
+      const targetIndex = nextOrder.indexOf(targetId);
+      if (targetIndex < 0) {
+        return [...order];
+      }
+
+      nextOrder.splice(targetIndex + (placement === 'after' ? 1 : 0), 0, draggedId);
+      return nextOrder;
+    }
+
+    function clearSectionDropIndicators() {
+      for (const row of sectionRows) {
+        row.classList.remove('drop-before', 'drop-after');
+      }
+    }
+
+    function finishSectionDrag() {
+      clearSectionDropIndicators();
+      for (const row of sectionRows) {
+        row.classList.remove('is-dragging');
+      }
+      draggedSectionId = null;
+      dragPointerId = null;
+      dropTargetSectionId = null;
+      dropPlacement = null;
+    }
+
     function applySectionPreferences(nextState, persist = true) {
       if (!dashboardSections || !sectionControls) {
         return;
@@ -5071,25 +5136,56 @@ function renderHtml(report) {
         });
       });
 
-      sectionControls.addEventListener('click', (event) => {
-        const button = event.target instanceof Element ? event.target.closest('[data-action]') : null;
-        const row = button?.closest('[data-section-control]');
-        if (!button || !row) {
+      sectionControls.addEventListener('pointerdown', (event) => {
+        const handle = event.target instanceof Element ? event.target.closest('[data-section-drag]') : null;
+        const row = handle?.closest('[data-section-control]');
+        if (!handle || !row || event.button !== 0) {
           return;
         }
 
-        const index = sectionState.order.indexOf(row.dataset.sectionControl);
-        const direction = button.dataset.action === 'section-up' ? -1 : button.dataset.action === 'section-down' ? 1 : 0;
-        const nextIndex = index + direction;
-
-        if (index < 0 || nextIndex < 0 || nextIndex >= sectionState.order.length) {
-          return;
-        }
-
-        const order = [...sectionState.order];
-        [order[index], order[nextIndex]] = [order[nextIndex], order[index]];
-        applySectionPreferences({ order, visible: sectionState.visible });
+        draggedSectionId = row.dataset.sectionControl;
+        dragPointerId = event.pointerId;
+        row.classList.add('is-dragging');
+        handle.setPointerCapture(event.pointerId);
+        event.preventDefault();
       });
+
+      sectionControls.addEventListener('pointermove', (event) => {
+        if (!draggedSectionId || event.pointerId !== dragPointerId) {
+          return;
+        }
+
+        event.preventDefault();
+        const target = document.elementFromPoint(event.clientX, event.clientY);
+        const row = target instanceof Element ? target.closest('[data-section-control]') : null;
+        if (!row || row.dataset.sectionControl === draggedSectionId) {
+          clearSectionDropIndicators();
+          dropTargetSectionId = null;
+          dropPlacement = null;
+          return;
+        }
+
+        const bounds = row.getBoundingClientRect();
+        const placement = event.clientX < bounds.left + (bounds.width / 2) ? 'before' : 'after';
+        clearSectionDropIndicators();
+        row.classList.add(placement === 'before' ? 'drop-before' : 'drop-after');
+        dropTargetSectionId = row.dataset.sectionControl;
+        dropPlacement = placement;
+      });
+
+      sectionControls.addEventListener('pointerup', (event) => {
+        if (!draggedSectionId || event.pointerId !== dragPointerId) {
+          return;
+        }
+
+        if (dropTargetSectionId && dropPlacement) {
+          const order = reorderSectionOrder(sectionState.order, draggedSectionId, dropTargetSectionId, dropPlacement);
+          applySectionPreferences({ order, visible: sectionState.visible });
+        }
+        finishSectionDrag();
+      });
+
+      sectionControls.addEventListener('pointercancel', finishSectionDrag);
     }
 
     if (sectionReset) {
@@ -5113,7 +5209,7 @@ function sectionCustomizerHtml(sections) {
   return `<details id="section-customizer" class="section-customizer">
       <summary class="section-customizer-summary">
         <h2 id="section-customizer-title">Sections</h2>
-        <p class="note">show, hide, and reorder</p>
+        <p class="note">show, hide, and drag to reorder</p>
       </summary>
       <div class="section-customizer-actions">
         <button class="section-reset" type="button" data-action="section-reset">Reset</button>
@@ -5129,8 +5225,7 @@ function sectionControlHtml(id, visible) {
 
   return `<div class="section-control" data-section-control="${escapeHtml(id)}" data-section-label="${escapeHtml(label)}">
           <label><input type="checkbox" ${visible ? 'checked' : ''}>${escapeHtml(label)}</label>
-          <button class="section-move" type="button" data-action="section-up" aria-label="Move ${escapeHtml(label)} up"><span aria-hidden="true">^</span></button>
-          <button class="section-move" type="button" data-action="section-down" aria-label="Move ${escapeHtml(label)} down"><span aria-hidden="true">v</span></button>
+          <button class="section-drag-handle" type="button" data-section-drag aria-label="Drag ${escapeHtml(label)} to reorder" title="Drag to reorder"><span aria-hidden="true"></span></button>
         </div>`;
 }
 
