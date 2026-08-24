@@ -203,6 +203,8 @@ const BINARY_EXTENSIONS = new Set([
   '.zip'
 ]);
 
+const LOC_EXCLUDED_EXTENSIONS = new Set(['.md']);
+
 const SEMVER_TAG = /^v?\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/;
 const RELEASE_READINESS_RANK = new Map([
   ['fresh', 0],
@@ -1509,6 +1511,7 @@ function countRepositoryLinesWithCloc(repoPath, config) {
     '--json',
     '--quiet',
     '--timeout=0',
+    `--exclude-ext=${[...LOC_EXCLUDED_EXTENSIONS].map((extension) => extension.slice(1)).join(',')}`,
     `--exclude-dir=${[...config.excludeDirs].join(',')}`
   ];
 
@@ -1552,6 +1555,10 @@ function countRepositoryLinesWithCloc(repoPath, config) {
 function countRepositoryLinesWithTokei(repoPath, config) {
   const args = ['--output', 'json'];
 
+  for (const extension of LOC_EXCLUDED_EXTENSIONS) {
+    args.push('--exclude', `*${extension}`);
+  }
+
   for (const dir of config.excludeDirs) {
     args.push('--exclude', dir);
   }
@@ -1579,7 +1586,13 @@ function countRepositoryLinesWithTokei(repoPath, config) {
 }
 
 function countRepositoryLinesWithScc(repoPath, config) {
-  const args = ['--format', 'json', '--no-cocomo'];
+  const args = [
+    '--format',
+    'json',
+    '--no-cocomo',
+    '--exclude-ext',
+    [...LOC_EXCLUDED_EXTENSIONS].map((extension) => extension.slice(1)).join(',')
+  ];
 
   for (const dir of config.excludeDirs) {
     args.push('--exclude-dir', dir);
@@ -1755,6 +1768,10 @@ async function countRepositoryLinesBuiltin(repoPath, config) {
   await forEachRepositoryFile(repoPath, config, async (filePath, stat) => {
     const fileName = path.basename(filePath);
     const extension = path.extname(fileName);
+
+    if (LOC_EXCLUDED_EXTENSIONS.has(extension.toLowerCase())) {
+      return;
+    }
 
     if (BINARY_EXTENSIONS.has(extension.toLowerCase())) {
       return;

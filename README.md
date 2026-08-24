@@ -286,4 +286,4 @@ npm run test:package
 
 ## Notes
 
-Line counts are calculated locally and intentionally exclude common generated/heavy files such as lockfiles, build outputs, Python virtualenvs, browser profiles, local archives, temporary folders, and package vendor directories. For reliable LOC, install one of `tokei`, `scc`, or `cloc`; this machine currently has `cloc`, so `locTool: "auto"` will use it. With `cloc`, duplicate files are de-duplicated by default unless `countDuplicateFiles` is `true`. By default only tracked Git files are measured, so untracked local junk does not pollute reports.
+Line counts are calculated locally and intentionally exclude Markdown (`.md`) plus common generated/heavy files such as lockfiles, build outputs, Python virtualenvs, browser profiles, local archives, temporary folders, and package vendor directories. For reliable LOC, install one of `tokei`, `scc`, or `cloc`; this machine currently has `cloc`, so `locTool: "auto"` will use it. With `cloc`, duplicate files are de-duplicated by default unless `countDuplicateFiles` is `true`. By default only tracked Git files are measured, so untracked local junk does not pollute reports.

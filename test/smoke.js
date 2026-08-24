@@ -15,7 +15,7 @@ run('git', ['init'], repoPath);
 run('git', ['config', 'user.email', 'smoke@example.com'], repoPath);
 run('git', ['config', 'user.name', 'Smoke Test'], repoPath);
 await fsp.writeFile(path.join(repoPath, 'index.js'), 'const value = 1;\n\nconsole.log(value);\n', 'utf8');
-await fsp.writeFile(path.join(repoPath, 'CLAUDE.md'), '', 'utf8');
+await fsp.writeFile(path.join(repoPath, 'CLAUDE.md'), '# Project instructions\n', 'utf8');
 await fsp.writeFile(path.join(repoPath, 'AGENTS.md'), '', 'utf8');
 run('git', ['add', '.'], repoPath);
 run('git', ['commit', '-m', 'Initial commit'], repoPath);
@@ -76,6 +76,7 @@ let snapshots = await fsp.readdir(path.join(outputDir, 'snapshots'));
 
 assert(report.totals.repositories === 1, 'expected one repository');
 assert(report.totals.codeLines === 2, 'expected two code lines');
+assert(!report.languages.some((language) => language.language === 'Markdown'), 'expected Markdown excluded from LOC');
 assert(report.totals.physicalFiles === 3, 'expected three physical files');
 assert(report.totals.tags === 1, 'expected one tag');
 assert(report.totals.docsRepositories === 1, 'expected one repo with docs');
@@ -186,7 +187,6 @@ await fsp.writeFile(
       excludeDirs: ['.git', 'node_modules'],
       excludeFiles: [],
       maxFileBytes: 1048576,
-      locTool: 'auto',
       countDuplicateFiles: false,
       fileScope: 'tracked',
       maxSnapshots: 2,
@@ -196,6 +196,7 @@ await fsp.writeFile(
         'repository-table',
         'csv-exports'
       ],
+      locTool: 'builtin',
       releaseReadiness: {
         watchAfterDays: 1,
         releaseDueAfterDays: 7,
@@ -209,7 +210,9 @@ await fsp.writeFile(
 );
 
 runScan(configPath);
+const configuredReport = JSON.parse(await fsp.readFile(path.join(configuredOutputDir, 'report.json'), 'utf8'));
 const configuredHtml = await fsp.readFile(path.join(configuredOutputDir, 'report.html'), 'utf8');
+assert(configuredReport.totals.codeLines === 2, 'expected builtin LOC to exclude Markdown');
 assert(configuredHtml.includes('id="quick-links-title"'), 'expected configured quick links section');
 assert(configuredHtml.includes('id="ai-agents"'), 'expected configured AI agents section');
 assert(configuredHtml.includes('id="repository-table"'), 'expected configured repository table section');
